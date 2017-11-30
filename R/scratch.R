@@ -1,5 +1,5 @@
-
-
+# 
+# 
 # library(sf)
 # 
 # df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
@@ -25,7 +25,23 @@
 # 	st_sf(geo = point)
 # 	)
 # 
-# sfencode:::encodeGeometry(st_geometry(sf))
+# sfe <- sfencode::encodeSf(sf)
+# 
+# 
+# library(googleway)
+# mapKey <- read.dcf("~/Documents/.googleAPI", field = "GOOGLE_MAP_KEY")
+# 
+# ## polygons
+# idx <- vapply(sfe[['attributes']], function(x) { "POLYGON" %in% x || "MULTIPOLYGON" %in% x }, FUN.VALUE = T)
+# 
+# google_map(key = mapKey) %>%
+#   add_polygons(sfe[idx,], polyline = "geo")
+# 
+# ## lines
+# idx <- vapply(sfe[['attributes']], function(x) { "LINESTRING" %in% x || "MULTILINESTRING" %in% x }, FUN.VALUE = T)
+# 
+# google_map(key = mapKey) %>%
+#   add_polylines(sfe[idx,], polyline = "geo")
 
 # library(sf)
 # nc <- st_read(system.file("shape/nc.shp", package="sf"))
@@ -45,16 +61,3 @@
 # 
 # google_map(key = mapKey) %>%
 #   add_polygons(data = nce, polyline = "geometry")
-
-
-# pl_outer <- encode_pl(lat = c(25.774, 18.466,32.321),
-#                       lon = c(-80.190, -66.118, -64.757))
-# 
-# pl_inner <- encode_pl(lat = c(28.745, 29.570, 27.339),
-#                       lon = c(-70.579, -67.514, -66.668))
-# 
-# df <- data.frame(id = c(1, 1),
-#                  polyline = c(pl_outer, pl_inner),
-#                  stringsAsFactors = FALSE)
-# 
-# df <- aggregate(polyline ~ id, data = df, list)
