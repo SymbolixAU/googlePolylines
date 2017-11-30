@@ -1,0 +1,20 @@
+Package: sfencode
+Type: Package
+Title: Encodes and decodes sf objects using Google's polyline encoding algorithm
+Version: 0.0.1
+Date: 2017-11-30
+Authors@R: c(
+    person("David", "Cooley", ,"dcooley@symbolix.com.au", role = c("aut", "cre"))
+    )
+Description: One paragraph description of what the package does as one
+        or more full sentences.
+License: GPL (>= 2)
+Imports: Rcpp (>= 0.12.13)
+LinkingTo:
+  Rcpp,
+  BH
+RoxygenNote: 6.0.1
+Suggests: testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
