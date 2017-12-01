@@ -13,7 +13,7 @@
 #' 
 #' @importFrom sf st_geometry
 #' @export
-encode <- function(sf, strip) UseMethod("encode")
+encode <- function(sf, strip = FALSE) UseMethod("encode")
 
 # encodeGeometry <- function(sf) UseMethod("encodeGeometry")
 
@@ -21,16 +21,16 @@ encode <- function(sf, strip) UseMethod("encode")
 encode.sf <- function(sf, strip) {
   
   geomCol <- attr(sf, "sf_column")
-  lst <- encodeSfGeometry(sf[[geomCol]])
+  lst <- encodeSfGeometry(sf[[geomCol]], strip)
   st_geometry(sf) <- NULL
 
   sf[[geomCol]] <- lst
   #attr(sf[[geomCol]], 'encoded_column') <- geomCol
   
-  if(!strip){
+  # if(!strip){
     attr(sf[[geomCol]], 'class') <- 'encoded_column'
     attr(sf, 'encoded_column') <- geomCol
-  }
+  # }
   
   if (! inherits(sf, 'sfencoded'))
     attr(sf, 'class') <- c("sfencoded", attr(sf, 'class'))
@@ -39,7 +39,7 @@ encode.sf <- function(sf, strip) {
 }
 
 #' @export
-encode.sfc <- function(sfc) encodeSfGeometry(sfc)
+encode.sfc <- function(sfc, strip) encodeSfGeometry(sfc, strip)
 
 
 #' @export
@@ -64,5 +64,6 @@ getPolygons <- function(encoded)  which(grepl("*POLYGON", encodedColumnTypes(enc
 
 encodedColumn <- function(encoded) encoded[[attr(encoded, 'encoded_column')]]
 
-encodedColumnTypes <- function(encoded) vapply(encodedColumn(encoded), function(x) { attr(x, 'sfc')[2] }, '' )
-
+encodedColumnTypes <- function(encoded) {
+  vapply(encodedColumn(encoded), function(x) { attr(x, 'sfc')[2] }, '' )
+}

@@ -46,22 +46,12 @@
 # library(sf)
 # nc <- st_read(system.file("shape/nc.shp", package="sf"))
 # 
-# nce <- encode(n)
-
-
-## Attributes
-# sf <- nc
-# attr(sf, 'class') <- "data.frame"
+# nce <- encode(nc, FALSE)
+# ncest <- encode(nc, TRUE)
 # 
-# sf
-# 
-# sf1 <- sf[1,]
-# 
-# nce1 <- nce[1,]
-# 
-# 
-# attr(nce[1, 'geometry'], 'sfc')
-
+# vapply(mget(c('nc', 'nce', 'ncest') ), function(x) { format(object.size(x), units = "Kb") }, '')
+# #         nc        nce      ncest 
+# # "132.2 Kb"  "82.9 Kb"  "50.1 Kb"
 
 # library(spatialdatatable)
 # library(microbenchmark)

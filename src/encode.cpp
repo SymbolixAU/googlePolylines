@@ -178,13 +178,12 @@ void write_data(std::ostringstream& os, SEXP sfc,
 }
 
 
-
 // [[Rcpp::export]]
-Rcpp::List encodeSfGeometry(Rcpp::List sfc){
+Rcpp::List encodeSfGeometry(Rcpp::List sfc, bool strip){
   
   Rcpp::CharacterVector cls_attr = sfc.attr("class");
   
-  //Rcpp::List attributes(sfc.size());
+////  Rcpp::List attributes(sfc.size());
   Rcpp::List output(sfc.size());
   
   for (int i = 0; i < sfc.size(); i++){
@@ -192,7 +191,7 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc){
     std::ostringstream os;
     Rcpp::checkUserInterrupt();
     
-//    Rcpp::CharacterVector cv = getSfClass(sfc[i]);
+////    Rcpp::CharacterVector cv = getSfClass(sfc[i]);
 
     write_data(os, sfc[i], cls_attr[0], 0);
     
@@ -204,10 +203,10 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc){
   
     Rcpp::CharacterVector sv = wrap(strs);
     
-    //if(strip == FALSE){
+    if(strip == FALSE){
       //attributes[i] = getSfClass(sfc[i]);
       sv.attr("sfc") = getSfClass(sfc[i]);
-    //}
+    }
     
     output[i] = sv;
   }
@@ -215,5 +214,5 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc){
   //output.attr("class") = "encoded_column";
   
   return output;
-  //return Rcpp::List::create(_["encoded"] = output, _["attributes"] = attributes);
+//  //return Rcpp::List::create(_["encoded"] = output, _["attributes"] = attributes);
 }

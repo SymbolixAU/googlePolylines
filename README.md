@@ -9,7 +9,7 @@ The goal of sfencode is to encode sf objects using [Google's polyline encoding a
 You can install sfencode from github with:
 
 
-``` r
+```
 # install.packages("devtools")
 devtools::install_github("SymbolixAU/sfencode")
 ```
@@ -24,11 +24,12 @@ devtools::install_github("SymbolixAU/sfencode")
 library(sf)
 nc <- st_read(system.file("shape/nc.shp", package="sf"))
 
-nce <- encode(nc)
+nce <- encode(nc, FALSE)
+ncest <- encode(nc, TRUE)
 
-vapply(mget(c('nc', 'nce') ), function(x) { format(object.size(x), units = "Kb") }, '')
-#         nc        nce 
-# "132.2 Kb"  "82.9 Kb"
+vapply(mget(c('nc', 'nce', 'ncest') ), function(x) { format(object.size(x), units = "Kb") }, '')
+#         nc        nce      ncest 
+# "132.2 Kb"  "82.9 Kb"  "50.1 Kb"
 ```
 
 

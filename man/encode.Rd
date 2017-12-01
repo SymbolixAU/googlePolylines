@@ -4,7 +4,7 @@
 \alias{encode}
 \title{Encode sf}
 \usage{
-encode(sf, strip)
+encode(sf, strip = FALSE)
 }
 \arguments{
 \item{sf}{object}
