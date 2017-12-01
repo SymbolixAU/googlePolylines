@@ -3,11 +3,13 @@
 NULL
 
 #' @export
-str.encoded <- function(object, ...) {
-  n <- length(object)
-  cat(paste0(class(object)[1], " of length ", n))
+str.encoded_column <- function(encoded, ...) {
+  n <- length(encoded)
+  cat(paste0(class(encoded)[1], " of length ", n))
   if (n > 0) {
     cat("; first list element: ")
-    str(object[[1]], ...)
+    str(encoded[[1]], ...)
   }
 }
+
+

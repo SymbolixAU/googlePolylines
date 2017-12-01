@@ -208,7 +208,7 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc){
     output[i] = sv;
   }
   
-  output.attr("class") = "encoded";
+  output.attr("class") = "encoded_column";
   
   return output;
   //return Rcpp::List::create(_["encoded"] = output, _["attributes"] = attributes);
