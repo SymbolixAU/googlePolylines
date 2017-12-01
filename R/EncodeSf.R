@@ -10,7 +10,7 @@
 #' 
 #' @importFrom sf st_geometry
 #' @export
-encodeSf <- function(sf) UseMethod("encodeSfGeometry")
+encode <- function(sf) UseMethod("encode")
 
 ## TODO:
 ## - encodeSf is designed to encode a whole sf object.
@@ -20,19 +20,19 @@ encodeSf <- function(sf) UseMethod("encodeSfGeometry")
 # encodeGeometry <- function(sf) UseMethod("encodeGeometry")
 
 #' @export
-encodeSfGeometry.sf <- function(sf) {
+encode.sf <- function(sf) {
   
   geomCol <- attr(sf, "sf_column")
   lst <- encodeSfGeometry(sf[[geomCol]])
   st_geometry(sf) <- NULL
 
-  sf[[geomCol]] <- lst[['encoded']]
-  # attr(sf[[geomCol]], 'sfc') <- c(lst[['attributes']])
-  sf[['attributes']] <- lst[['attributes']]
+  sf[[geomCol]] <- lst
+  
   attr(sf, 'class') <- c("sfencoded", attr(sf, 'class'))
+  #attr(sf[[geomCol]], 'class') <- "encoded"
   return(sf)
 }
 
 #' @export
-encodeSfGeometry.default <- function(sf) stop("expecting an sf object") 
+encodeSfGeometry.default <- function(sf) stop("can't do this at the moment") 
 

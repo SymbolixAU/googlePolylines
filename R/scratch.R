@@ -46,7 +46,22 @@
 # library(sf)
 # nc <- st_read(system.file("shape/nc.shp", package="sf"))
 # 
-# nce <- encodeSf(nc)
+# nce <- encode(nc)
+
+
+## Attributes
+# sf <- nc
+# attr(sf, 'class') <- "data.frame"
+# 
+# sf
+# 
+# sf1 <- sf[1,]
+# 
+# nce1 <- nce[1,]
+# 
+# 
+# attr(nce[1, 'geometry'], 'sfc')
+
 
 # library(spatialdatatable)
 # library(microbenchmark)

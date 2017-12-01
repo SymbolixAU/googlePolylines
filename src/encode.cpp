@@ -202,8 +202,14 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc){
     boost::split(strs, str, boost::is_any_of("\t "));
     
     strs.erase(strs.end() - 1);
-    output[i] = strs;
+    
+    Rcpp::CharacterVector sv = wrap(strs);
+    sv.attr("sfc") = attributes[i];
+    output[i] = sv;
   }
   
-  return Rcpp::List::create(_["encoded"] = output, _["attributes"] = attributes);
+  output.attr("class") = "encoded";
+  
+  return output;
+  //return Rcpp::List::create(_["encoded"] = output, _["attributes"] = attributes);
 }
