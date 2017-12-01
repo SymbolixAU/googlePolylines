@@ -4,10 +4,14 @@
 \alias{encode}
 \title{Encode sf}
 \usage{
-encode(sf)
+encode(sf, strip)
 }
 \arguments{
 \item{sf}{object}
+
+\item{strip}{logical indicating if attributes should be stripped. Useful if
+the object contains only one type of geometry and you want to reduce the size
+even further}
 }
 \value{
 \code{sfencoded} object

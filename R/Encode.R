@@ -3,6 +3,9 @@
 #' Converts an sf object into an encoded sf object
 #' 
 #' @param sf object
+#' @param strip logical indicating if attributes should be stripped. Useful if
+#' the object contains only one type of geometry and you want to reduce the size
+#' even further
 #' 
 #' @return \code{sfencoded} object
 #' 
@@ -10,12 +13,12 @@
 #' 
 #' @importFrom sf st_geometry
 #' @export
-encode <- function(sf) UseMethod("encode")
+encode <- function(sf, strip) UseMethod("encode")
 
 # encodeGeometry <- function(sf) UseMethod("encodeGeometry")
 
 #' @export
-encode.sf <- function(sf) {
+encode.sf <- function(sf, strip) {
   
   geomCol <- attr(sf, "sf_column")
   lst <- encodeSfGeometry(sf[[geomCol]])
@@ -24,7 +27,10 @@ encode.sf <- function(sf) {
   sf[[geomCol]] <- lst
   #attr(sf[[geomCol]], 'encoded_column') <- geomCol
   
-  attr(sf, 'encoded_column') <- geomCol
+  if(!strip){
+    attr(sf[[geomCol]], 'class') <- 'encoded_column'
+    attr(sf, 'encoded_column') <- geomCol
+  }
   
   if (! inherits(sf, 'sfencoded'))
     attr(sf, 'class') <- c("sfencoded", attr(sf, 'class'))

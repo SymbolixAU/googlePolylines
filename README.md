@@ -26,9 +26,9 @@ nc <- st_read(system.file("shape/nc.shp", package="sf"))
 
 nce <- encode(nc)
 
-vapply(mget(c('nc', 'nce') ), object.size, 0.0)
-#    nc    nce 
- 135376  84872
+vapply(mget(c('nc', 'nce') ), function(x) { format(object.size(x), units = "Kb") }, '')
+#         nc        nce 
+# "132.2 Kb"  "82.9 Kb"
 ```
 
 

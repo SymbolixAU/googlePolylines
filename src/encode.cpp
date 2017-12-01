@@ -184,7 +184,7 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc){
   
   Rcpp::CharacterVector cls_attr = sfc.attr("class");
   
-  Rcpp::List attributes(sfc.size());
+  //Rcpp::List attributes(sfc.size());
   Rcpp::List output(sfc.size());
   
   for (int i = 0; i < sfc.size(); i++){
@@ -193,7 +193,6 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc){
     Rcpp::checkUserInterrupt();
     
 //    Rcpp::CharacterVector cv = getSfClass(sfc[i]);
-    attributes[i] = getSfClass(sfc[i]);
 
     write_data(os, sfc[i], cls_attr[0], 0);
     
@@ -202,13 +201,18 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc){
     boost::split(strs, str, boost::is_any_of("\t "));
     
     strs.erase(strs.end() - 1);
-    
+  
     Rcpp::CharacterVector sv = wrap(strs);
-    sv.attr("sfc") = attributes[i];
+    
+    //if(strip == FALSE){
+      //attributes[i] = getSfClass(sfc[i]);
+      sv.attr("sfc") = getSfClass(sfc[i]);
+    //}
+    
     output[i] = sv;
   }
   
-  output.attr("class") = "encoded_column";
+  //output.attr("class") = "encoded_column";
   
   return output;
   //return Rcpp::List::create(_["encoded"] = output, _["attributes"] = attributes);
