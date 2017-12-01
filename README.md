@@ -16,3 +16,19 @@ devtools::install_github("SymbolixAU/sfencode")
 
 ## Examples
 
+
+## Motivation
+
+
+```
+library(sf)
+nc <- st_read(system.file("shape/nc.shp", package="sf"))
+
+nce <- encode(nc)
+
+vapply(mget(c('nc', 'nce') ), object.size, 0.0)
+#    nc    nce 
+ 135376  84872
+```
+
+
