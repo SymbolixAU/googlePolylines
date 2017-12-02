@@ -3,13 +3,28 @@
 #' Encodes coordinates into an encoded polyline
 #' 
 #' @param obj object
-#' @param strip logical indicating if attributes should be stripped. Useful if
-#' the object contains only one type of geometry and you want to reduce the size
+#' @param strip (optional) logical indicating if \code{sf} attributes should be stripped. 
+#' Useful if the object contains only one type of geometry and you want to reduce the size
 #' even further
+#' @param lon (optional) vector of longitudes
+#' @param lat (optional) vector of latitudes
 #' 
-#' @return \code{sfencoded} object
+#' @return encoded object
 #' 
 #' @examples 
+#' \dontrun{
+#' 
+#' ## sf objects
+#' library(sf)
+#' nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+#' 
+#' encoded <- encode(nc)
+#' 
+#' ## strip off attributes
+#' encodedLite <- encode(nc, TRUE)
+#' 
+#' 
+#' }
 #' 
 #' 
 #' @importFrom sf st_geometry
