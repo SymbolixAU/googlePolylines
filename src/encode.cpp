@@ -64,21 +64,21 @@ unsigned int make_type(const char *cls, int *tp = NULL,
 
 void write_multipolygon(std::ostringstream& os, Rcpp::List lst) {
   
+  Rcpp::Rcout << "multipolygon size: " << lst.size() << std::endl;
+  
   for (int i = 0; i < lst.length(); i++){
     write_matrix_list(os, lst[i]);
   }
 }
 
 void write_geometrycollection(std::ostringstream& os, Rcpp::List lst) {
-  
-  Rcpp::Function Rclass("class");
+
   for (int i = 0; i < lst.length(); i++) {
     Rcpp::CharacterVector cl_attr = lst[i];
   }
 }
 
 void addToStream(std::ostringstream& os, Rcpp::String encodedString ) {
-
   std::string strng = encodedString;
   os << strng << ' ';
 }
@@ -123,6 +123,7 @@ void encode_matrix(std::ostringstream& os, Rcpp::NumericMatrix mat ) {
 void write_matrix_list(std::ostringstream& os, Rcpp::List lst) {
   
   size_t len = lst.length();
+  Rcpp::Rcout << "write matrix size: " << len << std::endl;
   
   //TODO:
   // is this ever greater than 1?
@@ -130,6 +131,8 @@ void write_matrix_list(std::ostringstream& os, Rcpp::List lst) {
     Rcpp::NumericVector lats = lst[j];
     encode_matrix(os, lst[j]);
   }
+  
+  addToStream(os, "-");
 }
 
 void write_geometry(std::ostringstream& os, SEXP s) {
@@ -137,7 +140,6 @@ void write_geometry(std::ostringstream& os, SEXP s) {
   Rcpp::CharacterVector cls_attr = getSfClass(s);
   
   write_data(os, s, cls_attr[1], 0);
-  
 }
 
 
@@ -182,16 +184,12 @@ void write_data(std::ostringstream& os, SEXP sfc,
 Rcpp::List encodeSfGeometry(Rcpp::List sfc, bool strip){
   
   Rcpp::CharacterVector cls_attr = sfc.attr("class");
-  
-////  Rcpp::List attributes(sfc.size());
   Rcpp::List output(sfc.size());
   
   for (int i = 0; i < sfc.size(); i++){
 
     std::ostringstream os;
     Rcpp::checkUserInterrupt();
-    
-////    Rcpp::CharacterVector cv = getSfClass(sfc[i]);
 
     write_data(os, sfc[i], cls_attr[0], 0);
     
@@ -203,16 +201,13 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc, bool strip){
   
     Rcpp::CharacterVector sv = wrap(strs);
     
+    
     if(strip == FALSE){
-      //attributes[i] = getSfClass(sfc[i]);
       sv.attr("sfc") = getSfClass(sfc[i]);
     }
     
     output[i] = sv;
   }
-  
-  //output.attr("class") = "encoded_column";
-  
+
   return output;
-//  //return Rcpp::List::create(_["encoded"] = output, _["attributes"] = attributes);
 }

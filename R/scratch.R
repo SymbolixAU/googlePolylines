@@ -1,5 +1,8 @@
-# 
-# 
+
+### ---------------------------------------------
+### MULTI*
+### nested list of lists
+
 # library(sf)
 # 
 # df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
@@ -16,6 +19,12 @@
 # polygon <- sf::st_sfc(sf::st_polygon(x = list(p1, p2)))
 # linestring <- sf::st_sfc(sf::st_linestring(p3))
 # multilinestring <- sf::st_sfc(sf::st_multilinestring(list(p3, p3)))
+# multipolygon <- sf::st_sfc(sf::st_multipolygon(x = list(list(p1, p2), list(p3))))
+# 
+# encode(multipolygon)
+
+
+
 # 
 # 
 # sf <- rbind(
@@ -27,23 +36,8 @@
 # 
 # sfe <- sfencode::encodeSf(sf)
 # 
-# 
-# library(googleway)
-# mapKey <- read.dcf("~/Documents/.googleAPI", field = "GOOGLE_MAP_KEY")
-# 
-# ## polygons
-# idx <- vapply(sfe[['attributes']], function(x) { "POLYGON" %in% x || "MULTIPOLYGON" %in% x }, FUN.VALUE = T)
-# 
-# google_map(key = mapKey) %>%
-#   add_polygons(sfe[idx,], polyline = "geo")
-# 
-# ## lines
-# idx <- vapply(sfe[['attributes']], function(x) { "LINESTRING" %in% x || "MULTILINESTRING" %in% x }, FUN.VALUE = T)
-# 
-# google_map(key = mapKey) %>%
-#   add_polylines(sfe[idx,], polyline = "geo")
-
 # library(sf)
+# library(sfencode)
 # nc <- st_read(system.file("shape/nc.shp", package="sf"))
 # 
 # nce <- encode(nc, FALSE)
@@ -53,16 +47,40 @@
 # #         nc        nce      ncest 
 # # "132.2 Kb"  "82.9 Kb"  "50.1 Kb"
 
-# library(spatialdatatable)
+# df <- encode(nc)
+# 
+# ## if sfencoded; get the encoded column
+# polyline <- attr(nce, 'encoded_column')
+# attr(df, 'encoded_column') <- NULL
+# 
+# library(googleway)
+# mapKey <- read.dcf("~/Documents/.googleAPI", field = "GOOGLE_MAP_KEY")
+# 
+
+# attr(df, 'encoded_column') <- NULL
+# str(df)
+# 
+# attr(df[['geometry']], 'class') <- 'character'
+# 
+
+# library(leaflet)
 # library(microbenchmark)
 # 
 # microbenchmark(
-#   sdt = { spatialdatatable::EncodeSF(nc) },
-#   esf = { sfencode::encodeSf(nc) },
-#   times = 5
+#   
+#   google = { 
+#     df <- encode(nc)
+#     attr(df, 'encoded_column') <- NULL
+#     
+#     google_map(key = mapKey) %>%
+#       add_polygons(data = df, polyline = "geometry")
+#   },
+#   
+#   leaflet = {
+#     leaflet(nc) %>%
+#       addTiles() %>%
+#       addPolygons() 
+#   },
+#   times = 25
 # )
 
-# mapKey <- read.dcf("~/Documents/.googleAPI", field = "GOOGLE_MAP_KEY")
-# 
-# google_map(key = mapKey) %>%
-#   add_polygons(data = nce, polyline = "geometry")

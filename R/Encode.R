@@ -13,25 +13,23 @@
 #' 
 #' @importFrom sf st_geometry
 #' @export
-encode <- function(sf, strip = FALSE) UseMethod("encode")
+encode <- function(sf, strip = FALSE) doEncoding(sf, strip)
 
-# encodeGeometry <- function(sf) UseMethod("encodeGeometry")
+doEncoding <- function(sf, strip) UseMethod("encode")
 
 #' @export
 encode.sf <- function(sf, strip) {
-  
+
   geomCol <- attr(sf, "sf_column")
   lst <- encodeSfGeometry(sf[[geomCol]], strip)
-  st_geometry(sf) <- NULL
+  
+  sf::st_geometry(sf) <- NULL
 
   sf[[geomCol]] <- lst
-  #attr(sf[[geomCol]], 'encoded_column') <- geomCol
-  
-  # if(!strip){
-    attr(sf[[geomCol]], 'class') <- 'encoded_column'
-    attr(sf, 'encoded_column') <- geomCol
-  # }
-  
+
+  # attr(sf[[geomCol]], 'class') <- 'encoded_column'
+  # attr(sf, 'encoded_column') <- geomCol
+
   if (! inherits(sf, 'sfencoded'))
     attr(sf, 'class') <- c("sfencoded", attr(sf, 'class'))
   
