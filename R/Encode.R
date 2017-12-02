@@ -27,8 +27,8 @@ encode.sf <- function(sf, strip) {
 
   sf[[geomCol]] <- lst
 
-  # attr(sf[[geomCol]], 'class') <- 'encoded_column'
-  # attr(sf, 'encoded_column') <- geomCol
+  attr(sf[[geomCol]], 'class') <- c('encoded_column', class(sf[[geomCol]]) )
+  attr(sf, 'encoded_column') <- geomCol
 
   if (! inherits(sf, 'sfencoded'))
     attr(sf, 'class') <- c("sfencoded", attr(sf, 'class'))

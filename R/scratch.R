@@ -3,8 +3,6 @@
 ### MULTI*
 ### nested list of lists
 
-# library(sf)
-# 
 # df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
 # 								 lineId = c(1,1,1,1,2,2,2,2,1,1,1,2),
 # 								 lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, -66.668, -70.579, -70, -49, -51, -70),
@@ -18,12 +16,40 @@
 # # multipoint <- sf::st_sfc(sf::st_multipoint(x = as.matrix(df[1:2, c("lon", "lat")])))
 # polygon <- sf::st_sfc(sf::st_polygon(x = list(p1, p2)))
 # linestring <- sf::st_sfc(sf::st_linestring(p3))
-# multilinestring <- sf::st_sfc(sf::st_multilinestring(list(p3, p3)))
+# multilinestring <- sf::st_sfc(sf::st_multilinestring(list(p1, p2)))
 # multipolygon <- sf::st_sfc(sf::st_multipolygon(x = list(list(p1, p2), list(p3))))
-# 
+
 # encode(multipolygon)
 
+# library(googleway)
+# mapKey <- read.dcf("~/Documents/.googleAPI", field = "GOOGLE_MAP_KEY")
+# 
+# sf <- sf::st_sf(geometry = multipolygon)
+# df <- encode(sf)
+# 
+# google_map(key = mapKey) %>%
+#   add_polygons(df, polyline = "geometry")
 
+# encode(multilinestring)
+# sf <- sf::st_sf(line = multilinestring)
+# df <- encode(sf)
+#
+# library(googleway)
+# google_map(key = mapKey) %>%
+#  add_polygons(df, polyline = "line")
+# 
+# decode_pl(df$line[[1]][2])
+
+# 
+# 
+# m <- melbourne[1:5,]
+# m <- aggregate(polyline ~ polygonId, data = m, list)
+# 
+# google_map(key = mapKey) %>%
+#   add_polylines(m, polyline = "polyline", stroke_colour = "polygonId")
+# 
+# google_map(key = mapKey) %>%
+#   add_polygons(m, polyline = "polyline", fill_colour = "polygonId")
 
 # 
 # 
@@ -38,7 +64,7 @@
 # 
 # library(sf)
 # library(sfencode)
-# nc <- st_read(system.file("shape/nc.shp", package="sf"))
+# nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
 # 
 # nce <- encode(nc, FALSE)
 # ncest <- encode(nc, TRUE)
@@ -55,7 +81,7 @@
 # 
 # library(googleway)
 # mapKey <- read.dcf("~/Documents/.googleAPI", field = "GOOGLE_MAP_KEY")
-# 
+
 
 # attr(df, 'encoded_column') <- NULL
 # str(df)
@@ -72,8 +98,8 @@
 #     df <- encode(nc)
 #     attr(df, 'encoded_column') <- NULL
 #     
-#     google_map(key = mapKey) %>%
-#       add_polygons(data = df, polyline = "geometry")
+# google_map(key = mapKey) %>%
+#   add_polygons(data = df, polyline = "geometry")
 #   },
 #   
 #   leaflet = {

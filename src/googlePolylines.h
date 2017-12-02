@@ -24,6 +24,8 @@ using namespace Rcpp;
 #define SF_Triangle           17
 #define SF_Geometry           18
 
+#define SPLIT_CHAR "-"
+
 #endif
 
 

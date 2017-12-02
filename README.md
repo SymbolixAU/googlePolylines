@@ -1,4 +1,4 @@
-# sfencode
+# googlePolylines
 
 The goal of sfencode is to encode sf objects using [Google's polyline encoding algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
 
@@ -29,7 +29,7 @@ ncest <- encode(nc, TRUE)
 
 vapply(mget(c('nc', 'nce', 'ncest') ), function(x) { format(object.size(x), units = "Kb") }, '')
 #         nc        nce      ncest 
-# "132.2 Kb"  "82.9 Kb"  "50.1 Kb"
+# "132.2 Kb"  "83.3 Kb"  "50.5 Kb"
 ```
 
 

@@ -64,8 +64,6 @@ unsigned int make_type(const char *cls, int *tp = NULL,
 
 void write_multipolygon(std::ostringstream& os, Rcpp::List lst) {
   
-  Rcpp::Rcout << "multipolygon size: " << lst.size() << std::endl;
-  
   for (int i = 0; i < lst.length(); i++){
     write_matrix_list(os, lst[i]);
   }
@@ -87,13 +85,13 @@ void encode_vector( std::ostringstream& os, Rcpp::List vec ) {
   
   int n = vec.size() / 2;
   Rcpp::String encodedString;
-  
+
   Rcpp::NumericVector lats(n);
   Rcpp::NumericVector lons(n);
   
   for (int i = 0; i < n; i++){
-    lons[i] = vec[i * 2];
-    lats[i] = vec[(i * 2) + 1];
+    lons[i] = vec[i];
+    lats[i] = vec[(i + n)];
   }
   encodedString = encode_polyline(lats, lons, n);
   addToStream(os, encodedString);
@@ -101,8 +99,8 @@ void encode_vector( std::ostringstream& os, Rcpp::List vec ) {
 
 void encode_vectors( std::ostringstream& os, Rcpp::List sfc ){
   
-  int n = sfc.size();
-  for (int i = 0; i < n; i++) {
+  size_t n = sfc.size();
+  for (size_t i = 0; i < n; i++) {
     encode_vector(os, sfc[i]);
   }
 }
@@ -123,16 +121,12 @@ void encode_matrix(std::ostringstream& os, Rcpp::NumericMatrix mat ) {
 void write_matrix_list(std::ostringstream& os, Rcpp::List lst) {
   
   size_t len = lst.length();
-  Rcpp::Rcout << "write matrix size: " << len << std::endl;
-  
-  //TODO:
-  // is this ever greater than 1?
+
   for (size_t j = 0; j < len; j++){
-    Rcpp::NumericVector lats = lst[j];
     encode_matrix(os, lst[j]);
   }
   
-  addToStream(os, "-");
+  addToStream(os, SPLIT_CHAR);
 }
 
 void write_geometry(std::ostringstream& os, SEXP s) {
@@ -185,6 +179,7 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc, bool strip){
   
   Rcpp::CharacterVector cls_attr = sfc.attr("class");
   Rcpp::List output(sfc.size());
+  int lastItem;
   
   for (int i = 0; i < sfc.size(); i++){
 
@@ -198,8 +193,20 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc, bool strip){
     boost::split(strs, str, boost::is_any_of("\t "));
     
     strs.erase(strs.end() - 1);
+    lastItem = strs.size() - 1;
+    
+    if (strs[lastItem] == "-") {
+      strs.erase(strs.end() - 1);
+    }
   
     Rcpp::CharacterVector sv = wrap(strs);
+    
+//    for (int j = 0; j < sv.size(); j++ ) {
+//      Rcpp::Rcout << "sv size - j : " << j << std::endl;
+//      if (sv[j].size() == 1 && sv[j] == "-") {
+//        Rcpp::Rcout << "splitter" << std::endl;
+//      }
+//    }
     
     
     if(strip == FALSE){
