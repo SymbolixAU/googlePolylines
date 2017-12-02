@@ -9,17 +9,34 @@ encode(obj, strip = NA, lon = NA, lat = NA)
 \arguments{
 \item{obj}{object}
 
-\item{strip}{logical indicating if attributes should be stripped. Useful if
-the object contains only one type of geometry and you want to reduce the size
+\item{strip}{(optional) logical indicating if \code{sf} attributes should be stripped. 
+Useful if the object contains only one type of geometry and you want to reduce the size
 even further}
+
+\item{lon}{(optional) vector of longitudes}
+
+\item{lat}{(optional) vector of latitudes}
 }
 \value{
-\code{sfencoded} object
+encoded object
 }
 \description{
 Encodes coordinates into an encoded polyline
 }
 \examples{
+\dontrun{
+
+## sf objects
+library(sf)
+nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+
+encoded <- encode(nc)
+
+## strip off attributes
+encodedLite <- encode(nc, TRUE)
+
+
+}
 
 
 }

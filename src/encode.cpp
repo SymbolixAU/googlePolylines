@@ -94,7 +94,7 @@ void encode_vector( std::ostringstream& os, Rcpp::List vec ) {
     lats[i] = vec[(i + n)];
   }
   
-  encodedString = encode_polyline(lats, lons);
+  encodedString = encode_polyline(lons, lats);
   addToStream(os, encodedString);
 }
 
@@ -114,7 +114,7 @@ void encode_matrix(std::ostringstream& os, Rcpp::NumericMatrix mat ) {
   Rcpp::NumericVector lons = mat(_, 0);
   
   //int n = lats.size();
-  encodedString = encode_polyline(lats, lons);
+  encodedString = encode_polyline(lons, lats);
   
   addToStream(os, encodedString);
 }
