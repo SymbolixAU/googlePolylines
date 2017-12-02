@@ -29,12 +29,11 @@ using namespace Rcpp;
 #endif
 
 
-DataFrame decode_polyline(std::string encoded);
+Rcpp::DataFrame decode_polyline(std::string encoded);
 
 Rcpp::String EncodeNumber(int num);
 
 Rcpp::String EncodeSignedNumber(int num);
 
 Rcpp::String encode_polyline(Rcpp::NumericVector latitude,
-                             Rcpp::NumericVector longitude,
-                             int num_coords);
+                             Rcpp::NumericVector longitude);

@@ -93,7 +93,8 @@ void encode_vector( std::ostringstream& os, Rcpp::List vec ) {
     lons[i] = vec[i];
     lats[i] = vec[(i + n)];
   }
-  encodedString = encode_polyline(lats, lons, n);
+  
+  encodedString = encode_polyline(lats, lons);
   addToStream(os, encodedString);
 }
 
@@ -112,8 +113,8 @@ void encode_matrix(std::ostringstream& os, Rcpp::NumericMatrix mat ) {
   Rcpp::NumericVector lats = mat(_, 1);
   Rcpp::NumericVector lons = mat(_, 0);
   
-  int n = lats.size();
-  encodedString = encode_polyline(lats, lons, n);
+  //int n = lats.size();
+  encodedString = encode_polyline(lats, lons);
   
   addToStream(os, encodedString);
 }
@@ -212,9 +213,7 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc, bool strip){
     if(strip == FALSE){
       sv.attr("sfc") = getSfClass(sfc[i]);
     }
-    
     output[i] = sv;
   }
-
   return output;
 }

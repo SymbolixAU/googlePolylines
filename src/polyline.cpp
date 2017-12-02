@@ -4,7 +4,33 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-DataFrame rcpp_decode_polyline(std::string encoded){
+Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings) {
+  
+  int encodedSize = encodedStrings.size();
+  //Rcpp::List resultLats(encodedSize);
+  //Rcpp::List resultLons(encodedSize);
+  Rcpp::List results(encodedSize);
+  
+  for(int i = 0; i < encodedSize; i++){
+    
+    std::string encoded = Rcpp::as< std::string >(encodedStrings[i]);
+    
+    Rcpp::DataFrame decoded = decode_polyline(encoded);
+    
+    //resultLons[i] = decoded["lon"];
+    //resultLats[i] = decoded["lat"];
+    
+    results[i] = decoded;
+  }
+  
+  return results;
+  //return Rcpp::List::create(resultLons, resultLats);
+}
+
+
+
+Rcpp::DataFrame decode_polyline(std::string encoded){
+  
   int len = encoded.size();
   int index = 0;
   float lat = 0;
@@ -39,7 +65,13 @@ DataFrame rcpp_decode_polyline(std::string encoded){
     pointsLon.push_back(lng * (float)1e-5);
   }
   
-  return DataFrame::create(Named("lat") = pointsLat, Named("lon") = pointsLon);
+  return Rcpp::DataFrame::create(
+    Named("lon") = pointsLon,
+    Named("lat") = pointsLat);
+  
+//  return Rcpp::List::create(
+//    _["lon"] = pointsLon,
+//    _["lat"] = pointsLat);
 }
 
 Rcpp::String EncodeNumber(int num){
@@ -66,12 +98,12 @@ Rcpp::String EncodeSignedNumber(int num){
   return EncodeNumber(sgn_num);
 }
 
-Rcpp::String encode_polyline(Rcpp::NumericVector latitude,
-                             Rcpp::NumericVector longitude,
-                             int num_coords){
+Rcpp::String encode_polyline(Rcpp::NumericVector longitude,
+                             Rcpp::NumericVector latitude){
   
   int plat = 0;
   int plon = 0;
+  int num_coords = latitude.size();
   
   Rcpp::String output_str;
   
@@ -90,11 +122,10 @@ Rcpp::String encode_polyline(Rcpp::NumericVector latitude,
 }
 
 // [[Rcpp::export]]
-Rcpp::String rcpp_encode_polyline(Rcpp::NumericVector latitude,
-                            Rcpp::NumericVector longitude,
-                            int num_coords){
+Rcpp::String rcpp_encode_polyline(Rcpp::NumericVector longitude,
+                                  Rcpp::NumericVector latitude){
   
-  Rcpp::String output_str = encode_polyline(latitude, longitude, num_coords);
-  return output_str;
+  Rcpp::String output = encode_polyline(longitude,latitude);
+  return output;
 }
 

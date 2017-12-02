@@ -1,8 +1,8 @@
-#' Encode sf
+#' Encode
 #' 
-#' Converts an sf object into an encoded sf object
+#' Encodes coordinates into an encoded polyline
 #' 
-#' @param sf object
+#' @param obj object
 #' @param strip logical indicating if attributes should be stripped. Useful if
 #' the object contains only one type of geometry and you want to reduce the size
 #' even further
@@ -11,14 +11,17 @@
 #' 
 #' @examples 
 #' 
+#' 
 #' @importFrom sf st_geometry
 #' @export
-encode <- function(sf, strip = FALSE) doEncoding(sf, strip)
+encode <- function(obj, strip = NA, lon = NA, lat = NA) UseMethod("encode")
 
-doEncoding <- function(sf, strip) UseMethod("encode")
+## TODO:
+## - non-sf objects
+## - will require other parameters, such as lat & long
 
 #' @export
-encode.sf <- function(sf, strip) {
+encode.sf <- function(sf, strip = FALSE) {
 
   geomCol <- attr(sf, "sf_column")
   lst <- encodeSfGeometry(sf[[geomCol]], strip)
@@ -37,12 +40,26 @@ encode.sf <- function(sf, strip) {
 }
 
 #' @export
-encode.sfc <- function(sfc, strip) encodeSfGeometry(sfc, strip)
-
+encode.sfc <- function(sfc, strip = FALSE) encodeSfGeometry(sfc, strip)
 
 #' @export
-encode.default <- function(sf) stop("can't do this at the moment") 
+encode.data.frame <- function(df, lat = NULL, lon = NULL ) {
 
+ if(is.null(lat)) lat <- find_lat_column(names(df))
+ if(is.null(lon)) lon <- find_lon_column(names(df))
+
+ rcpp_encode_polyline(df[[lon]], df[[lat]])
+}
+
+#' @export
+encode.numeric <- function(lon, lat, ...) {
+  rcpp_encode_polyline(lon, lat)
+}
+
+#' @export
+encode.default <- function(obj, ...) {
+  stop(paste0("I currently don't know how to encode ", class(obj), " objects"))
+}
 
 
 

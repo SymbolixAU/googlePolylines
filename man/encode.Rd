@@ -2,12 +2,12 @@
 % Please edit documentation in R/Encode.R
 \name{encode}
 \alias{encode}
-\title{Encode sf}
+\title{Encode}
 \usage{
-encode(sf, strip = FALSE)
+encode(obj, strip = NA, lon = NA, lat = NA)
 }
 \arguments{
-\item{sf}{object}
+\item{obj}{object}
 
 \item{strip}{logical indicating if attributes should be stripped. Useful if
 the object contains only one type of geometry and you want to reduce the size
@@ -17,8 +17,9 @@ even further}
 \code{sfencoded} object
 }
 \description{
-Converts an sf object into an encoded sf object
+Encodes coordinates into an encoded polyline
 }
 \examples{
+
 
 }

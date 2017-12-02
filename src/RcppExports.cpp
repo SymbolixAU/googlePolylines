@@ -18,26 +18,25 @@ BEGIN_RCPP
 END_RCPP
 }
 // rcpp_decode_polyline
-DataFrame rcpp_decode_polyline(std::string encoded);
-RcppExport SEXP _googlePolylines_rcpp_decode_polyline(SEXP encodedSEXP) {
+Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings);
+RcppExport SEXP _googlePolylines_rcpp_decode_polyline(SEXP encodedStringsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type encoded(encodedSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_decode_polyline(encoded));
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type encodedStrings(encodedStringsSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_decode_polyline(encodedStrings));
     return rcpp_result_gen;
 END_RCPP
 }
 // rcpp_encode_polyline
-Rcpp::String rcpp_encode_polyline(Rcpp::NumericVector latitude, Rcpp::NumericVector longitude, int num_coords);
-RcppExport SEXP _googlePolylines_rcpp_encode_polyline(SEXP latitudeSEXP, SEXP longitudeSEXP, SEXP num_coordsSEXP) {
+Rcpp::String rcpp_encode_polyline(Rcpp::NumericVector longitude, Rcpp::NumericVector latitude);
+RcppExport SEXP _googlePolylines_rcpp_encode_polyline(SEXP longitudeSEXP, SEXP latitudeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type latitude(latitudeSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type longitude(longitudeSEXP);
-    Rcpp::traits::input_parameter< int >::type num_coords(num_coordsSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_encode_polyline(latitude, longitude, num_coords));
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type latitude(latitudeSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_encode_polyline(longitude, latitude));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -45,7 +44,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_googlePolylines_encodeSfGeometry", (DL_FUNC) &_googlePolylines_encodeSfGeometry, 2},
     {"_googlePolylines_rcpp_decode_polyline", (DL_FUNC) &_googlePolylines_rcpp_decode_polyline, 1},
-    {"_googlePolylines_rcpp_encode_polyline", (DL_FUNC) &_googlePolylines_rcpp_encode_polyline, 3},
+    {"_googlePolylines_rcpp_encode_polyline", (DL_FUNC) &_googlePolylines_rcpp_encode_polyline, 2},
     {NULL, NULL, 0}
 };
 
