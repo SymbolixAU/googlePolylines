@@ -1,6 +1,6 @@
-Package: sfencode
+Package: googlePolylines
 Type: Package
-Title: Encodes and decodes sf objects using Google's polyline encoding algorithm
+Title: Encode and decode coordinates using Google's polyline encoding algorithm
 Version: 0.0.1
 Date: 2017-11-30
 Authors@R: c(

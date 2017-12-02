@@ -1,8 +1,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-#ifndef SFENCODE_H
-#define SFENCODE_H
+#ifndef GOOGLEPOLYLINES_H
+#define GOOGLEPOLYLINES_H
 
 #define SF_Unknown             0
 #define SF_Point               1

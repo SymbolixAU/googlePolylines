@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include "sfencode.h"
+#include "googlePolylines.h"
 
 using namespace Rcpp;
 

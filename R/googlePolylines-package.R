@@ -1,4 +1,4 @@
-#' @useDynLib sfencode
+#' @useDynLib googlePolylines
 #' @importFrom Rcpp sourceCpp
 NULL
 

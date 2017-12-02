@@ -1,4 +1,4 @@
 library(testthat)
-library(sfencode)
+library(googlePolylines)
 
-test_check("sfencode")
+test_check("googlePolylines")

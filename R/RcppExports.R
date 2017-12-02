@@ -2,14 +2,14 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 encodeSfGeometry <- function(sfc, strip) {
-    .Call('_sfencode_encodeSfGeometry', PACKAGE = 'sfencode', sfc, strip)
+    .Call('_googlePolylines_encodeSfGeometry', PACKAGE = 'googlePolylines', sfc, strip)
 }
 
 rcpp_decode_polyline <- function(encoded) {
-    .Call('_sfencode_rcpp_decode_polyline', PACKAGE = 'sfencode', encoded)
+    .Call('_googlePolylines_rcpp_decode_polyline', PACKAGE = 'googlePolylines', encoded)
 }
 
 rcpp_encode_polyline <- function(latitude, longitude, num_coords) {
-    .Call('_sfencode_rcpp_encode_polyline', PACKAGE = 'sfencode', latitude, longitude, num_coords)
+    .Call('_googlePolylines_rcpp_encode_polyline', PACKAGE = 'googlePolylines', latitude, longitude, num_coords)
 }
 

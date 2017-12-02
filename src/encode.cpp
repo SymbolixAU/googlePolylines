@@ -1,6 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
-#include "sfencode.h"
+#include "googlePolylines.h"
 
 // [[Rcpp::depends(BH)]]
 
