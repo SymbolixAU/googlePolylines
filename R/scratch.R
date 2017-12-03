@@ -93,6 +93,7 @@
 # 	st_sf(geo = point)
 # 	)
 # 
+# encode(sf)
 
 ### SELECTING SPECIFIC TYPES
 # library(googleway)

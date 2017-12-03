@@ -90,8 +90,6 @@ void encode_point( std::ostringstream& os, Rcpp::NumericVector point) {
   lon[0] = point[0];
   lat[0] = point[1];
   
-  Rcpp::Rcout << lon << "," << lat << std::endl;
-  
   Rcpp::String encodedString = encode_polyline(lon, lat);
   addToStream(os, encodedString);
 }
