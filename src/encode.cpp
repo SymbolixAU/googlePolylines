@@ -58,8 +58,8 @@ unsigned int make_type(const char *cls, int *tp = NULL,
     type = SF_MultiPolygon;
   else if (strcmp(cls, "GEOMETRY") == 0)
     type = SF_Geometry;
-  //	else if (strcmp(cls, "GEOMETRYCOLLECTION") == 0)
-  //		type = SF_GeometryCollection;
+  else if (strcmp(cls, "GEOMETRYCOLLECTION") == 0)
+  	type = SF_GeometryCollection;
   else
     type = SF_Unknown; // a mix: GEOMETRY
   if (tp != NULL)
@@ -72,13 +72,6 @@ void write_multipolygon(std::ostringstream& os, Rcpp::List lst) {
   
   for (int i = 0; i < lst.length(); i++){
     write_matrix_list(os, lst[i]);
-  }
-}
-
-void write_geometrycollection(std::ostringstream& os, Rcpp::List lst) {
-
-  for (int i = 0; i < lst.length(); i++) {
-    Rcpp::CharacterVector cl_attr = lst[i];
   }
 }
 
@@ -163,6 +156,22 @@ void write_geometry(std::ostringstream& os, SEXP s) {
   write_data(os, s, cls_attr[1], 0);
 }
 
+//void write_geometrycollection(std::ostringstream& os, Rcpp::List lst) {
+//  
+//  SEXP geom;
+//  
+//  for (int i = 0; i < lst.length(); i++) {
+//    
+//    Rcpp::Rcout << i << std::endl;
+//    geom = lst[i];
+//    Rcpp::CharacterVector cls_attr = getSfClass(geom);
+//    
+//    Rcpp::Rcout << cls_attr[1] << std::endl;
+//    
+//    write_data(os, geom, cls_attr[1], 0);
+//  }
+//}
+
 
 void write_data(std::ostringstream& os, SEXP sfc,
                 const char *cls = NULL, int srid = 0) {
@@ -192,12 +201,12 @@ void write_data(std::ostringstream& os, SEXP sfc,
   case SF_Geometry:
     write_geometry(os, sfc);
     break;
-    //		case SF_GeometryCollection:
-    //			write_geometrycollection(os, sfc[i]);
-    //			break;
+//  case SF_GeometryCollection:
+//  	write_geometrycollection(os, sfc);
+//    break;
   default: {
-      Rcpp::Rcout << "type is " << sf_type << "\n"; // #nocov
-      Rcpp::stop("writing this sf type is not supported, please file an issue"); // #nocov
+//      Rcpp::Rcout << "type is " << sf_type << "\n";
+      Rcpp::stop("writing this sf type is currently not supported");
     }
   }
 }
