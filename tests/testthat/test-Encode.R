@@ -10,16 +10,32 @@ test_that("encode algorithim works", {
 
 test_that("*POINTs are encoded", {
   
+  ## sfc
   point <- sf::st_sfc(sf::st_point(x = c(144, -37)))
   
   expect_true(
     encode(point)[[1]] == encode(lon = 144, lat = -37)
   )
   
+  ## sf
+  sf <- sf::st_sf(point)
+  
+  expect_true(
+    encode(sf)[, 'point'][[1]] == encode(lon = 144, lat = -37)
+  )
+  
+  ## sfc
   multipoint <- sf::st_sfc(sf::st_multipoint(x = matrix(c(144, 145, -37, -37), ncol = 2)))
   
   expect_true(
     all(encode(multipoint)[[1]] %in% c(encode(lon = 144, lat = -37), encode(lon = 145, lat = -37)))
+  )
+  
+  ## sf
+  sf <- sf::st_sf(multipoint)
+  
+  expect_true(
+    all(encode(sf)[, 'multipoint'][[1]]  %in% c(encode(lon = 144, lat = -37), encode(lon = 145, lat = -37)))
   )
   
 })
@@ -27,6 +43,11 @@ test_that("*POINTs are encoded", {
 
 test_that("*LINES are encoded", {
   
+  line <- sf::st_sfc(sf::st_linestring(matrix(c(144, 144.1, 144.2, -37, -37.1, -37.2), ncol = 2)))
+  
+  expect_true(
+    encode(line)[[1]] == encode(lon = c(144, 144.1, 144.2), lat = c(-37, -37.1, -37.2))
+  )
   
 })
 
