@@ -3,13 +3,17 @@
 ### data.table
 # library(data.table)
 # df <- data.table(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
-#                  lineId = c(1,1,1,1,2,2,2,2,1,1,1,2),
+#                  lineId = c(1,1,1,1,2,2,2,2,1,1,1,1),
 #                  lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, -66.668, -70.579, -70, -49, -51, -70),
 #                  lat = c(26.774, 18.466, 32.321, 26.774, 28.745, 29.570, 27.339, 28.745, 22, 23, 22, 22))
 # 
 # 
 # encode(df)
-# df[, encode(lon = lon, lat = lat), by = myId]
+# df[, encode(lon = lon, lat = lat), by = .(myId, lineId)]
+# 
+# df %>%
+#   group_by(myId, lineId) %>%
+#   summarise(polyline = encode(lon, lat))
 
 
 ### ---------------------------------------------

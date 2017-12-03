@@ -2,6 +2,15 @@
 #' 
 #' Encodes coordinates into an encoded polyline
 #' 
+#' @details 
+#' Will work with
+#' \itemize{
+#'   \item{\code{sf} and \code{sfc} objects}
+#'   \item{\code{data.frames}} - It will attempt to find lat & lon coordinates, 
+#'   or you can explicitely define them using the \code{lat} and \code{lon} arguments
+#'   \item{latitude and longitude coordinate vectors}
+#' }
+#' 
 #' @param obj object
 #' @param strip (optional) logical indicating if \code{sf} attributes should be stripped. 
 #' Useful if the object contains only one type of geometry and you want to reduce the size
@@ -20,10 +29,37 @@
 #' 
 #' encoded <- encode(nc)
 #' 
-#' ## strip off attributes
-#' encodedLite <- encode(nc, TRUE)
+#' ## strip attributes
+#' encodedLite <- encode(nc, strip = TRUE)
+#' 
+#' ## data.frame
+#' df <- data.frame(polygonId = c(1,1,1,1),
+#'   lineId = c(1,1,1,1),
+#'   lon = c(-80.190, -66.118, -64.757, -80.190),
+#'   lat = c(26.774, 18.466, 32.321, 26.774))
+#'   
+#' ## on a data.frame, it will attemp to find the lon & lat columns
+#' encode(df)
+#'   
+#' ## Grouping by polygons and lines
+#' df <- data.frame(polygonId = c(1,1,1,1,1,1,1,1,2,2,2,2),
+#'   lineId = c(1,1,1,1,2,2,2,2,1,1,1,1),
+#'   lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, -66.668, -70.579, -70, -49, -51, -70),
+#'   lat = c(26.774, 18.466, 32.321, 26.774, 28.745, 29.570, 27.339, 28.745, 22, 23, 22, 22))
 #' 
 #' 
+#' ## using dplyr groups   
+#' 
+#' library(dplyr)   
+#' df %>%
+#'   group_by(polygonId, lineId) %>% 
+#'   summarise(polyline = encode(lon, lat))
+#'   
+#' ## using data.table
+#' library(data.table)
+#' setDT(df)
+#' df[, encode(lon = lon, lat = lat), by = .(polygonId, lineId)]
+#'   
 #' }
 #' 
 #' 
@@ -31,9 +67,6 @@
 #' @export
 encode <- function(obj, strip = NA, lon = NA, lat = NA) UseMethod("encode")
 
-## TODO:
-## - non-sf objects
-## - will require other parameters, such as lat & long
 
 #' @export
 encode.sf <- function(sf, strip = FALSE) {
@@ -83,14 +116,15 @@ encode.default <- function(obj, ...) {
 ##- extract specific rows of sfencoded depending on the 'type' you want
 
 #' @export
-getPoints <- function(encoded) which(grepl("*POINT", encodedColumnTypes(encoded)))
+getPoints <- function(encoded)getColumnType("*POINT", encoded)
 
 #' @export
-getPolylines <- function(encoded) which(grepl("*LINESTRING", encodedColumnTypes(encoded)))
+getPolylines <- function(encoded) getColumnType("*LINESTRING", encoded)
 
 #' @export
-getPolygons <- function(encoded)  which(grepl("*POLYGON", encodedColumnTypes(encoded)))
+getPolygons <- function(encoded)  getColumnType("*POLYGON", encoded)
 
+getColumnType <- function(encoded, type) which(grepl(type, encodedColumnTypes(encoded)))
 
 encodedColumn <- function(encoded) encoded[[attr(encoded, 'encoded_column')]]
 
