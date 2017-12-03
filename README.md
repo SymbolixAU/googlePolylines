@@ -119,4 +119,5 @@ microbenchmark(
 #  leaflet 53.90745 58.151913 61.50368 60.217514 64.08792 74.51588    25
  
 ```
+These benchmarks don't account for the time taken for the browswer to render the maps
 
