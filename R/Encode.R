@@ -75,7 +75,6 @@ encode.sf <- function(sf, strip = FALSE) {
   lst <- encodeSfGeometry(sf[[geomCol]], strip)
   
   sf::st_geometry(sf) <- NULL
-
   sf[[geomCol]] <- lst
 
   attr(sf[[geomCol]], 'class') <- c('encoded_column', class(sf[[geomCol]]) )
