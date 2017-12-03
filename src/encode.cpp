@@ -14,8 +14,12 @@ Rcpp::CharacterVector sfClass(Vector<RTYPE> v) {
 Rcpp::CharacterVector getSfClass(SEXP sf) {
   
   switch( TYPEOF(sf) ) {
-  case REALSXP: return sfClass<REALSXP>(sf);
-  case VECSXP: return sfClass<VECSXP>(sf);
+    case REALSXP: 
+      return sfClass<REALSXP>(sf);
+    case VECSXP: 
+      return sfClass<VECSXP>(sf);
+    case INTSXP: 
+      return sfClass<INTSXP>(sf);
   default: Rcpp::stop("unknown sf type");
   }
   return "";
@@ -42,6 +46,8 @@ unsigned int make_type(const char *cls, int *tp = NULL,
     cls += 4;
   if (strcmp(cls, "POINT") == 0)
     type = SF_Point;
+  else if (strcmp(cls, "MULTIPOINT") == 0)
+    type = SF_MultiPoint;
   else if (strcmp(cls, "LINESTRING") == 0)
     type = SF_LineString;
   else if (strcmp(cls, "POLYGON") == 0)
@@ -81,9 +87,30 @@ void addToStream(std::ostringstream& os, Rcpp::String encodedString ) {
   os << strng << ' ';
 }
 
+void encode_point( std::ostringstream& os, Rcpp::NumericMatrix point) {
+  
+}
+
+void encode_points( std::ostringstream& os, Rcpp::NumericMatrix point) {
+  
+  int n = point.size() / 2;
+  Rcpp::String encodedString;
+  Rcpp::NumericVector pointLon;
+  Rcpp::NumericVector pointLat;
+  
+  for (int i = 0; i < n; i++){
+    pointLon = point(i, 0);
+    pointLat = point(i, 1);
+    encodedString = encode_polyline( pointLon, pointLat);
+    addToStream(os, encodedString);
+  }
+  
+}
+
 void encode_vector( std::ostringstream& os, Rcpp::List vec ) {
   
   int n = vec.size() / 2;
+  
   Rcpp::String encodedString;
 
   Rcpp::NumericVector lats(n);
@@ -113,7 +140,6 @@ void encode_matrix(std::ostringstream& os, Rcpp::NumericMatrix mat ) {
   Rcpp::NumericVector lats = mat(_, 1);
   Rcpp::NumericVector lons = mat(_, 0);
   
-  //int n = lats.size();
   encodedString = encode_polyline(lons, lats);
   
   addToStream(os, encodedString);
@@ -146,8 +172,10 @@ void write_data(std::ostringstream& os, SEXP sfc,
 
   switch(tp) {
   case SF_Point:
-    //encode_point(os, sfc);
-    encode_vector(os, sfc);
+    encode_points(os, sfc);
+    break;
+  case SF_MultiPoint:
+    encode_points(os, sfc);
     break;
   case SF_LineString:
     encode_vector(os, sfc);
@@ -201,7 +229,7 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc, bool strip){
     }
   
     Rcpp::CharacterVector sv = wrap(strs);
-    
+//    Rcpp::Rcout << "sv: " << sv << std::endl;
 //    for (int j = 0; j < sv.size(); j++ ) {
 //      Rcpp::Rcout << "sv size - j : " << j << std::endl;
 //      if (sv[j].size() == 1 && sv[j] == "-") {

@@ -1,4 +1,27 @@
 
+## MultipPoints
+# library(sf)
+# 
+# pts = matrix(1:10, , 2)
+# mp1 = st_multipoint(pts)
+# mp1 = sf::st_sfc(mp1)
+# encode(mp1)
+# sf <- sf::st_sf(mp1)
+# encode(sf)
+
+# pt <- matrix(c(1,2), ncol = 2)
+# 
+# mp1 <- st_multipoint(pt)
+# mp1 <- sf::st_sfc(mp1)
+# encode(mp1)
+
+# pt <- matrix(c(1,2), ncol = 2)
+# 
+# mp1 <- sf::st_point(pt)
+# mp1 <- sf::st_sfc(mp1)
+# encode(mp1)
+
+
 ### ---------------------------------------------
 ### data.table
 # library(data.table)
@@ -30,7 +53,7 @@
 # p3 <- as.matrix(df[9:12, c("lon", "lat")])
 # 
 # point <- sf::st_sfc(sf::st_point(x = c(df[1,"lon"], df[1,"lat"])))
-# # multipoint <- sf::st_sfc(sf::st_multipoint(x = as.matrix(df[1:2, c("lon", "lat")])))
+# multipoint <- sf::st_sfc(sf::st_multipoint(x = as.matrix(df[1:2, c("lon", "lat")])))
 # polygon <- sf::st_sfc(sf::st_polygon(x = list(p1, p2)))
 # linestring <- sf::st_sfc(sf::st_linestring(p3))
 # multilinestring <- sf::st_sfc(sf::st_multilinestring(list(p1, p2)))
