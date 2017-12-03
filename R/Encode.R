@@ -116,13 +116,13 @@ encode.default <- function(obj, ...) {
 ##- extract specific rows of sfencoded depending on the 'type' you want
 
 #' @export
-getPoints <- function(encoded) getColumnType("*POINT", encoded)
+getPoints <- function(encoded) getColumnType(encoded, "*POINT")
 
 #' @export
-getPolylines <- function(encoded) getColumnType("*LINESTRING", encoded)
+getPolylines <- function(encoded) getColumnType(encoded, "*LINESTRING")
 
 #' @export
-getPolygons <- function(encoded) getColumnType("*POLYGON", encoded)
+getPolygons <- function(encoded) getColumnType(encoded, "*POLYGON")
 
 getColumnType <- function(encoded, type) which(grepl(type, encodedColumnTypes(encoded)))
 

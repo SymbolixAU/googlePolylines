@@ -85,40 +85,7 @@
 # multilinestring <- sf::st_sfc(sf::st_multilinestring(list(p1, p2)))
 # multipolygon <- sf::st_sfc(sf::st_multipolygon(x = list(list(p1, p2), list(p3))))
 
-# encode(multipolygon)
 
-# library(googleway)
-# mapKey <- read.dcf("~/Documents/.googleAPI", field = "GOOGLE_MAP_KEY")
-# 
-# sf <- sf::st_sf(geometry = multipolygon)
-# df <- encode(sf)
-# 
-# google_map(key = mapKey) %>%
-#   add_polygons(df, polyline = "geometry")
-
-# encode(multilinestring)
-# sf <- sf::st_sf(line = multilinestring)
-# df <- encode(sf)
-#
-# library(googleway)
-# google_map(key = mapKey) %>%
-#  add_polygons(df, polyline = "line")
-# 
-# decode_pl(df$line[[1]][2])
-
-# 
-# 
-# m <- melbourne[1:5,]
-# m <- aggregate(polyline ~ polygonId, data = m, list)
-# 
-# google_map(key = mapKey) %>%
-#   add_polylines(m, polyline = "polyline", stroke_colour = "polygonId")
-# 
-# google_map(key = mapKey) %>%
-#   add_polygons(m, polyline = "polyline", fill_colour = "polygonId")
-
-# 
-# 
 # sf <- rbind(
 # 	st_sf(geo = polygon),
 # 	st_sf(geo = multilinestring),
@@ -126,6 +93,18 @@
 # 	st_sf(geo = point)
 # 	)
 # 
+
+### SELECTING SPECIFIC TYPES
+# library(googleway)
+# mapKey <- read.dcf("~/Documents/.googleAPI", field = "GOOGLE_MAP_KEY")
+# 
+# encoded <- encode(sf[1:3,])
+# 
+# encoded[getPolygons(encoded), ]
+# 
+# encode(sf[4,])
+#encode(sf)
+
 # sfe <- sfencode::encodeSf(sf)
 # 
 # library(sf)

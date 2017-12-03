@@ -61,7 +61,7 @@ unsigned int make_type(const char *cls, int *tp = NULL,
   else if (strcmp(cls, "GEOMETRYCOLLECTION") == 0)
   	type = SF_GeometryCollection;
   else
-    type = SF_Unknown; // a mix: GEOMETRY
+    type = SF_Unknown;
   if (tp != NULL)
     *tp = type;
   //	Rcpp::Rcout << "type: " << type << std::endl;
@@ -80,8 +80,20 @@ void addToStream(std::ostringstream& os, Rcpp::String encodedString ) {
   os << strng << ' ';
 }
 
-void encode_point( std::ostringstream& os, Rcpp::NumericMatrix point) {
+void encode_point( std::ostringstream& os, Rcpp::NumericVector point) {
   
+//  Rcpp::Rcout << point << std::endl;
+//  Rcpp::Rcout << "size: " << point.size() << " length: " << point.length() << std::endl;
+  Rcpp::NumericVector lon(1);
+  Rcpp::NumericVector lat(1);
+  
+  lon[0] = point[0];
+  lat[0] = point[1];
+  
+  Rcpp::Rcout << lon << "," << lat << std::endl;
+  
+  Rcpp::String encodedString = encode_polyline(lon, lat);
+  addToStream(os, encodedString);
 }
 
 void encode_points( std::ostringstream& os, Rcpp::NumericMatrix point) {
@@ -181,7 +193,7 @@ void write_data(std::ostringstream& os, SEXP sfc,
 
   switch(tp) {
   case SF_Point:
-    encode_points(os, sfc);
+    encode_point(os, sfc);
     break;
   case SF_MultiPoint:
     encode_points(os, sfc);
