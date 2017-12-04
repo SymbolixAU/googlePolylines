@@ -1,4 +1,18 @@
 
+### DECODE
+## data.table
+# library(data.table)
+# polylines <- c(
+#   "ohlbDnbmhN~suq@am{tAw`qsAeyhGvkz`@fge}A",
+#   "ggmnDt}wmLgc`DesuQvvrLofdDorqGtzzV"
+# )
+# 
+# decodePolyline(polylines)
+#  
+# dt <- data.table(polyline = polylines)
+# 
+# dt[, c("lon", "lat") := decodePolyline(polyline)]
+
 ### GEOMETRYCOLLECTION
 # p <- rbind(c(3.2,4), c(3,4.6), c(3.8,4.4), c(3.5,3.8), c(3.4,3.6), c(3.9,4.5))
 # (mp <- st_multipoint(p))

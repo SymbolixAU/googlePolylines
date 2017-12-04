@@ -15,7 +15,7 @@ Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings) {
     
     std::string encoded = Rcpp::as< std::string >(encodedStrings[i]);
     
-    Rcpp::DataFrame decoded = decode_polyline(encoded);
+    Rcpp::List decoded = decode_polyline(encoded);
     
     //resultLons[i] = decoded["lon"];
     //resultLats[i] = decoded["lat"];
@@ -29,7 +29,7 @@ Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings) {
 
 
 
-Rcpp::DataFrame decode_polyline(std::string encoded){
+Rcpp::List decode_polyline(std::string encoded){
   
   int len = encoded.size();
   int index = 0;
@@ -65,13 +65,13 @@ Rcpp::DataFrame decode_polyline(std::string encoded){
     pointsLon.push_back(lng * (float)1e-5);
   }
   
-  return Rcpp::DataFrame::create(
-    Named("lon") = pointsLon,
-    Named("lat") = pointsLat);
+//  return Rcpp::DataFrame::create(
+//    Named("lon") = pointsLon,
+//    Named("lat") = pointsLat);
   
-//  return Rcpp::List::create(
-//    _["lon"] = pointsLon,
-//    _["lat"] = pointsLat);
+  return Rcpp::List::create(
+    _["lon"] = pointsLon,
+    _["lat"] = pointsLat);
 }
 
 Rcpp::String EncodeNumber(int num){

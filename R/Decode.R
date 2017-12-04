@@ -5,8 +5,6 @@
 # decode <- function(obj, ...) { }  ## - to decode objects
 
 
-## TODO
-
 #' Decode Polyline
 #' 
 #' Decodes encoded polylines 

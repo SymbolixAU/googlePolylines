@@ -29,7 +29,7 @@ using namespace Rcpp;
 #endif
 
 
-Rcpp::DataFrame decode_polyline(std::string encoded);
+Rcpp::List decode_polyline(std::string encoded);
 
 Rcpp::String EncodeNumber(int num);
 
