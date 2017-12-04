@@ -3,6 +3,11 @@ context("encode")
 
 test_that("encode algorithim works", {
   
+  expect_equal(
+    encode(lon = c(144.9731, 144.9729, 144.9731), lat = c(-37.8090, -37.8094, -37.8083)),
+    "dqweFy`zsZnAd@yEe@"
+  )
+  
   
   
 })

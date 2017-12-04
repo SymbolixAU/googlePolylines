@@ -68,6 +68,10 @@
 encode <- function(obj, strip = NA, lon = NA, lat = NA) UseMethod("encode")
 
 
+## TODO:
+## - contributor credit for SF/C++ code
+
+
 #' @export
 encode.sf <- function(sf, strip = FALSE) {
 
