@@ -1,15 +1,15 @@
 context("encode")
 
+library(sf)
 
 test_that("encode algorithim works", {
+  
   
   expect_equal(
     encode(lon = c(144.9731, 144.9729, 144.9731), lat = c(-37.8090, -37.8094, -37.8083)),
     "dqweFy`zsZnAd@yEe@"
   )
-  
-  
-  
+
 })
 
 
@@ -53,6 +53,9 @@ test_that("*LINES are encoded", {
   expect_true(
     encode(line)[[1]] == encode(lon = c(144, 144.1, 144.2), lat = c(-37, -37.1, -37.2))
   )
+  
+  sf <- sf::st_sf(line)
+  
   
 })
 
