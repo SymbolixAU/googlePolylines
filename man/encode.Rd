@@ -3,17 +3,14 @@
 \name{encode}
 \alias{encode}
 \alias{encode.sf}
-\alias{encode.sfc}
-\alias{encode.numeric}
+\alias{encode.data.frame}
 \title{Encode}
 \usage{
 encode(obj, ...)
 
 \method{encode}{sf}(obj, strip = FALSE, ...)
 
-\method{encode}{sfc}(obj, strip = FALSE, ...)
-
-\method{encode}{numeric}(obj = NA, ..., lon, lat)
+\method{encode}{data.frame}(obj, lon = NULL, lat = NULL, ...)
 }
 \arguments{
 \item{obj}{object}
@@ -24,9 +21,9 @@ encode(obj, ...)
 Useful if the object contains only one type of geometry and you want to reduce the size
 even further}
 
-\item{lon}{(optional) vector of longitudes}
+\item{lon}{vector of longitudes}
 
-\item{lat}{(optional) vector of latitudes}
+\item{lat}{vector of latitudes}
 }
 \value{
 encoded object
@@ -64,26 +61,6 @@ df <- data.frame(polygonId = c(1,1,1,1),
 ## on a data.frame, it will attemp to find the lon & lat columns
 encode(df)
   
-## Grouping by polygons and lines
-df <- data.frame(polygonId = c(1,1,1,1,1,1,1,1,2,2,2,2),
-  lineId = c(1,1,1,1,2,2,2,2,1,1,1,1),
-  lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, -66.668, -70.579, 
-  -70, -49, -51, -70),
-  lat = c(26.774, 18.466, 32.321, 26.774, 28.745, 29.570, 27.339, 28.745, 
-  22, 23, 22, 22))
-
-
-## using dplyr groups   
-
-library(dplyr)   
-df \%>\%
-  group_by(polygonId, lineId) \%>\% 
-  summarise(polyline = encode(lon, lat))
-  
-## using data.table
-library(data.table)
-setDT(df)
-df[, encode(lon = lon, lat = lat), by = .(polygonId, lineId)]
   
 }
 
