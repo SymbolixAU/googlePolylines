@@ -1,52 +1,52 @@
 context("encode")
 
-test_that("encode algorithim works", {
-  
-  expect_equal(
-    encode(lon = c(144.9731, 144.9729, 144.9731), lat = c(-37.8090, -37.8094, -37.8083)),
-    "dqweFy`zsZnAd@yEe@"
-  )
-})
+# test_that("encode algorithim works", {
+#   
+#   expect_equal(
+#     encode(lon = c(144.9731, 144.9729, 144.9731), lat = c(-37.8090, -37.8094, -37.8083)),
+#     "dqweFy`zsZnAd@yEe@"
+#   )
+# })
 
 
-test_that("*POINTs are encoded", {
-
-  ## sfc
-  # p <- c(144, -37)
-  # attr(p, 'class') <- c("XY", "POINT", "sfg")
-  # 
-  
-  # p <- list(p)
-  # attr(p, 'class') <- c("sfc_POINT", "sfc", class(p))
-  
-  # point <- sf::st_sfc(sf::st_point(x = c(144, -37)))
-  # 
-  # expect_true(
-  #   encode(point)[[1]] == encode(lon = 144, lat = -37)
-  # )
-  # 
-  # ## sf
-  # sf <- sf::st_sf(point)
-  # 
-  # expect_true(
-  #   encode(sf)[, 'point'][[1]] == encode(lon = 144, lat = -37)
-  # )
-  # 
-  # ## sfc
-  # multipoint <- sf::st_sfc(sf::st_multipoint(x = matrix(c(144, 145, -37, -37), ncol = 2)))
-  # 
-  # expect_true(
-  #   all(encode(multipoint)[[1]] %in% c(encode(lon = 144, lat = -37), encode(lon = 145, lat = -37)))
-  # )
-  # 
-  # ## sf
-  # sf <- sf::st_sf(multipoint)
-  # 
-  # expect_true(
-  #   all(encode(sf)[, 'multipoint'][[1]]  %in% c(encode(lon = 144, lat = -37), encode(lon = 145, lat = -37)))
-  # )
-
-})
+# test_that("*POINTs are encoded", {
+# 
+#   ## sfc
+#   # p <- c(144, -37)
+#   # attr(p, 'class') <- c("XY", "POINT", "sfg")
+# 
+#   
+#   # p <- list(p)
+#   # attr(p, 'class') <- c("sfc_POINT", "sfc", class(p))
+#   
+#   point <- sf::st_sfc(sf::st_point(x = c(144, -37)))
+# 
+#   expect_true(
+#     encode(point)[[1]] == encode(lon = 144, lat = -37)
+#   )
+# 
+#   ## sf
+#   sf <- sf::st_sf(point)
+# 
+#   expect_true(
+#     encode(sf)[, 'point'][[1]] == encode(lon = 144, lat = -37)
+#   )
+# 
+#   ## sfc
+#   multipoint <- sf::st_sfc(sf::st_multipoint(x = matrix(c(144, 145, -37, -37), ncol = 2)))
+# 
+#   expect_true(
+#     all(encode(multipoint)[[1]] %in% c(encode(lon = 144, lat = -37), encode(lon = 145, lat = -37)))
+#   )
+# 
+#   ## sf
+#   sf <- sf::st_sf(multipoint)
+# 
+#   expect_true(
+#     all(encode(sf)[, 'multipoint'][[1]]  %in% c(encode(lon = 144, lat = -37), encode(lon = 145, lat = -37)))
+#   )
+# 
+# })
 # 
 # 
 # test_that("*LINES are encoded", {
