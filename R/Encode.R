@@ -119,7 +119,7 @@ encode.data.frame <- function(obj, lon = NULL, lat = NULL, ...) {
 
 #' @export
 encode.default <- function(obj, ...) {
-  stop(paste0("I currently don't know how to encode ", class(obj), " objects"))
+  stop(paste0("I currently don't know how to encode ", paste0(class(obj), collapse = ", "), " objects"))
 }
 
 
