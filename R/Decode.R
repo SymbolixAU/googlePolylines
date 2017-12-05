@@ -9,7 +9,7 @@
 #' 
 #' Decodes encoded polylines 
 #' 
-#' @param polylines
+#' @param polylines strings of encoded polylines
 #' 
 #' @examples 
 #' polylines <- c(

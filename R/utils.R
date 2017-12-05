@@ -23,10 +23,7 @@ find_lon_column <- function(names, calling_function) {
   if (length(lon) == 1) {
     return(lon)
   }
-  
-  if (stopOnFailure) {
-    stop("Couldn't infer longitude column")
-  }
+  stop("Couldn't infer longitude column")
 }
 
 

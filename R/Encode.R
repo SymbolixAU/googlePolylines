@@ -44,8 +44,10 @@
 #' ## Grouping by polygons and lines
 #' df <- data.frame(polygonId = c(1,1,1,1,1,1,1,1,2,2,2,2),
 #'   lineId = c(1,1,1,1,2,2,2,2,1,1,1,1),
-#'   lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, -66.668, -70.579, -70, -49, -51, -70),
-#'   lat = c(26.774, 18.466, 32.321, 26.774, 28.745, 29.570, 27.339, 28.745, 22, 23, 22, 22))
+#'   lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, -66.668, -70.579, 
+#'   -70, -49, -51, -70),
+#'   lat = c(26.774, 18.466, 32.321, 26.774, 28.745, 29.570, 27.339, 28.745, 
+#'   22, 23, 22, 22))
 #' 
 #' 
 #' ## using dplyr groups   
@@ -73,7 +75,7 @@ encode <- function(obj, strip = NA, lon = NA, lat = NA) UseMethod("encode")
 
 
 #' @export
-encode.sf <- function(sf, strip = FALSE) {
+encode.sf <- function(sf, strip = FALSE, ...) {
 
   geomCol <- attr(sf, "sf_column")
   lst <- encodeSfGeometry(sf[[geomCol]], strip)
@@ -91,10 +93,10 @@ encode.sf <- function(sf, strip = FALSE) {
 }
 
 #' @export
-encode.sfc <- function(sfc, strip = FALSE) encodeSfGeometry(sfc, strip)
+encode.sfc <- function(sfc, strip = FALSE, ...) encodeSfGeometry(sfc, strip)
 
 #' @export
-encode.data.frame <- function(df, lat = NULL, lon = NULL ) {
+encode.data.frame <- function(df, lat = NULL, lon = NULL, ...) {
 
  if(is.null(lat)) lat <- find_lat_column(names(df))
  if(is.null(lon)) lon <- find_lon_column(names(df))
@@ -118,13 +120,10 @@ encode.default <- function(obj, ...) {
 ## TODO:
 ##- extract specific rows of sfencoded depending on the 'type' you want
 
-#' @export
 getPoints <- function(encoded) getColumnType(encoded, "*POINT")
 
-#' @export
 getPolylines <- function(encoded) getColumnType(encoded, "*LINESTRING")
 
-#' @export
 getPolygons <- function(encoded) getColumnType(encoded, "*POLYGON")
 
 getColumnType <- function(encoded, type) which(grepl(type, encodedColumnTypes(encoded)))

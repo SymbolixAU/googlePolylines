@@ -11,7 +11,6 @@ Description: One paragraph description of what the package does as one
 License: GPL-3
 Imports:
   Rcpp (>= 0.12.13),
-  BH,
   sf
 LinkingTo:
   BH,
@@ -21,6 +20,5 @@ Suggests:
   covr,
   knitr,
   rmarkdown,
-  sf,
   testthat
 VignetteBuilder: knitr

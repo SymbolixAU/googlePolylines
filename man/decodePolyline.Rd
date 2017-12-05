@@ -7,7 +7,7 @@
 decodePolyline(polylines)
 }
 \arguments{
-\item{polylines}{}
+\item{polylines}{strings of encoded polylines}
 }
 \description{
 Decodes encoded polylines
