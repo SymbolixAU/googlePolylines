@@ -65,10 +65,10 @@
 #' }
 #' 
 #' 
-#' @importFrom sf st_geometry
 #' @export
 encode <- function(obj, strip = NA, lon = NA, lat = NA) UseMethod("encode")
 
+### # @importFrom sf st_geometry
 
 ## TODO:
 ## - contributor credit for SF/C++ code
@@ -80,7 +80,7 @@ encode.sf <- function(sf, strip = FALSE, ...) {
   geomCol <- attr(sf, "sf_column")
   lst <- encodeSfGeometry(sf[[geomCol]], strip)
   
-  sf::st_geometry(sf) <- NULL
+  ###sf::st_geometry(sf) <- NULL
   sf[[geomCol]] <- lst
 
   attr(sf[[geomCol]], 'class') <- c('encoded_column', class(sf[[geomCol]]) )
