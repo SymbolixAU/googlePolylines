@@ -4,12 +4,12 @@ language: R
 sudo: false
 cache: packages
 
-before_install:
-  - Rscript -e 'update.packages(ask = FALSE)'
+# before_install:
+#   - Rscript -e 'update.packages(ask = FALSE)'
 
-install:
-  - Rscript -e 'install.packages("sf", repos = "http://cran.rstudio.com")'
-  - Rscript -e 'install.packages("knitr", repos = "http://cran.rstudio.com")'
+# install:
+#   - Rscript -e 'install.packages("sf", repos = "http://cran.rstudio.com")'
+#   - Rscript -e 'install.packages("knitr", repos = "http://cran.rstudio.com")'
 
 
 after_success:
