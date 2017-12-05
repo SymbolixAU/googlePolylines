@@ -12,11 +12,7 @@
 #' }
 #' 
 #' @param obj object
-#' @param strip (optional) logical indicating if \code{sf} attributes should be stripped. 
-#' Useful if the object contains only one type of geometry and you want to reduce the size
-#' even further
-#' @param lon (optional) vector of longitudes
-#' @param lat (optional) vector of latitudes
+#' @param ... other parameters passed to methods
 #' 
 #' @return encoded object
 #' 
@@ -64,18 +60,20 @@
 #'   
 #' }
 #' 
-#' 
 #' @export
-encode <- function(obj, strip = NA, lat = NA) UseMethod("encode")
+encode <- function(obj, ...) UseMethod("encode")
 
 ### # @importFrom sf st_geometry
 
 ## TODO:
 ## - contributor credit for SF/C++ code
 
-
+#' @rdname encode
+#' @param strip (optional) logical indicating if \code{sf} attributes should be stripped. 
+#' Useful if the object contains only one type of geometry and you want to reduce the size
+#' even further
 #' @export
-encode.sf <- function(obj, strip = FALSE, lat = NA) {
+encode.sf <- function(obj, strip = FALSE, ...) {
 
   geomCol <- attr(obj, "sf_column")
   lst <- encodeSfGeometry(obj[[geomCol]], strip)
@@ -93,11 +91,13 @@ encode.sf <- function(obj, strip = FALSE, lat = NA) {
   return(obj)
 }
 
+#' @rdname encode
+#' 
 #' @export
-encode.sfc <- function(obj, strip = FALSE, lat = NA) encodeSfGeometry(obj, strip)
+encode.sfc <- function(obj, strip = FALSE, ...) encodeSfGeometry(obj, strip)
 
 #' @export
-encode.data.frame <- function(obj, strip = FALSE, lat = NULL) {
+encode.data.frame <- function(obj, ..., lon = NULL, lat = NULL) {
 
  if(is.null(lat)) lat <- find_lat_column(names(obj))
  if(is.null(lon)) lon <- find_lon_column(names(obj))
@@ -105,13 +105,17 @@ encode.data.frame <- function(obj, strip = FALSE, lat = NULL) {
  rcpp_encode_polyline(obj[[lon]], obj[[lat]])
 }
 
+
+#' @rdname encode
+#' @param lon (optional) vector of longitudes
+#' @param lat (optional) vector of latitudes
 #' @export
-encode.numeric <- function(obj, strip = NA, lat) {
-  rcpp_encode_polyline(obj, lat)
+encode.numeric <- function(obj = NA, ..., lon, lat) {
+  rcpp_encode_polyline(lon, lat)
 }
 
 #' @export
-encode.default <- function(obj, strip = NA, lat = NA) {
+encode.default <- function(obj, ...) {
   stop(paste0("I currently don't know how to encode ", class(obj), " objects"))
 }
 

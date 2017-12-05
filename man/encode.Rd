@@ -2,20 +2,31 @@
 % Please edit documentation in R/Encode.R
 \name{encode}
 \alias{encode}
+\alias{encode.sf}
+\alias{encode.sfc}
+\alias{encode.numeric}
 \title{Encode}
 \usage{
-encode(obj, strip = NA, lat = NA)
+encode(obj, ...)
+
+\method{encode}{sf}(obj, strip = FALSE, ...)
+
+\method{encode}{sfc}(obj, strip = FALSE, ...)
+
+\method{encode}{numeric}(obj = NA, ..., lon, lat)
 }
 \arguments{
 \item{obj}{object}
+
+\item{...}{other parameters passed to methods}
 
 \item{strip}{(optional) logical indicating if \code{sf} attributes should be stripped. 
 Useful if the object contains only one type of geometry and you want to reduce the size
 even further}
 
-\item{lat}{(optional) vector of latitudes}
-
 \item{lon}{(optional) vector of longitudes}
+
+\item{lat}{(optional) vector of latitudes}
 }
 \value{
 encoded object
@@ -75,6 +86,5 @@ setDT(df)
 df[, encode(lon = lon, lat = lat), by = .(polygonId, lineId)]
   
 }
-
 
 }
