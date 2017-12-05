@@ -75,42 +75,42 @@ encode <- function(obj, strip = NA, lon = NA, lat = NA) UseMethod("encode")
 
 
 #' @export
-encode.sf <- function(sf, strip = FALSE, ...) {
+encode.sf <- function(obj, strip = FALSE, lon = NA, lat = NA) {
 
-  geomCol <- attr(sf, "sf_column")
-  lst <- encodeSfGeometry(sf[[geomCol]], strip)
+  geomCol <- attr(obj, "sf_column")
+  lst <- encodeSfGeometry(obj[[geomCol]], strip)
   
-  ###sf::st_geometry(sf) <- NULL
-  sf[[geomCol]] <- lst
+  ###sf::st_geometry(obj) <- NULL
+  obj[[geomCol]] <- lst
 
-  attr(sf[[geomCol]], 'class') <- c('encoded_column', class(sf[[geomCol]]) )
-  attr(sf, 'encoded_column') <- geomCol
+  attr(obj[[geomCol]], 'class') <- c('encoded_column', class(obj[[geomCol]]) )
+  attr(obj, 'encoded_column') <- geomCol
 
-  if (! inherits(sf, 'sfencoded'))
-    attr(sf, 'class') <- c("sfencoded", attr(sf, 'class'))
+  if (! inherits(obj, 'sfencoded'))
+    attr(obj, 'class') <- c("sfencoded", attr(obj, 'class'))
   
-  return(sf)
+  return(obj)
 }
 
 #' @export
-encode.sfc <- function(sfc, strip = FALSE, ...) encodeSfGeometry(sfc, strip)
+encode.sfc <- function(obj, strip = FALSE, lon = NA, lat = NA) encodeSfGeometry(obj, strip)
 
 #' @export
-encode.data.frame <- function(df, lat = NULL, lon = NULL, ...) {
+encode.data.frame <- function(obj, strip = FALSE, lon = NULL, lat = NULL) {
 
- if(is.null(lat)) lat <- find_lat_column(names(df))
- if(is.null(lon)) lon <- find_lon_column(names(df))
+ if(is.null(lat)) lat <- find_lat_column(names(obj))
+ if(is.null(lon)) lon <- find_lon_column(names(obj))
 
- rcpp_encode_polyline(df[[lon]], df[[lat]])
+ rcpp_encode_polyline(obj[[lon]], obj[[lat]])
 }
 
 #' @export
-encode.numeric <- function(lon, lat, ...) {
+encode.numeric <- function(obj = NA, strip = NA, lon, lat) {
   rcpp_encode_polyline(lon, lat)
 }
 
 #' @export
-encode.default <- function(obj, ...) {
+encode.default <- function(obj, strip = NA, lon = NA, lat = NA) {
   stop(paste0("I currently don't know how to encode ", class(obj), " objects"))
 }
 
