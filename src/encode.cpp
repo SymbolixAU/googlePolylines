@@ -4,9 +4,9 @@ using namespace Rcpp;
 
 /*
 // [[Rcpp::depends(BH)]]
-*/
 
 #include <boost/algorithm/string.hpp>
+*/
 
 template <int RTYPE>
 Rcpp::CharacterVector sfClass(Vector<RTYPE> v) {
