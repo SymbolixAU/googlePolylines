@@ -4,7 +4,7 @@
 \alias{encode}
 \title{Encode}
 \usage{
-encode(obj, strip = NA, lon = NA, lat = NA)
+encode(obj, strip = NA, lat = NA)
 }
 \arguments{
 \item{obj}{object}
@@ -13,9 +13,9 @@ encode(obj, strip = NA, lon = NA, lat = NA)
 Useful if the object contains only one type of geometry and you want to reduce the size
 even further}
 
-\item{lon}{(optional) vector of longitudes}
-
 \item{lat}{(optional) vector of latitudes}
+
+\item{lon}{(optional) vector of longitudes}
 }
 \value{
 encoded object

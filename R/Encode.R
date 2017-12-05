@@ -66,7 +66,7 @@
 #' 
 #' 
 #' @export
-encode <- function(obj, strip = NA, lon = NA, lat = NA) UseMethod("encode")
+encode <- function(obj, strip = NA, lat = NA) UseMethod("encode")
 
 ### # @importFrom sf st_geometry
 
@@ -75,7 +75,7 @@ encode <- function(obj, strip = NA, lon = NA, lat = NA) UseMethod("encode")
 
 
 #' @export
-encode.sf <- function(obj, strip = FALSE, lon = NA, lat = NA) {
+encode.sf <- function(obj, strip = FALSE, lat = NA) {
 
   geomCol <- attr(obj, "sf_column")
   lst <- encodeSfGeometry(obj[[geomCol]], strip)
@@ -94,10 +94,10 @@ encode.sf <- function(obj, strip = FALSE, lon = NA, lat = NA) {
 }
 
 #' @export
-encode.sfc <- function(obj, strip = FALSE, lon = NA, lat = NA) encodeSfGeometry(obj, strip)
+encode.sfc <- function(obj, strip = FALSE, lat = NA) encodeSfGeometry(obj, strip)
 
 #' @export
-encode.data.frame <- function(obj, strip = FALSE, lon = NULL, lat = NULL) {
+encode.data.frame <- function(obj, strip = FALSE, lat = NULL) {
 
  if(is.null(lat)) lat <- find_lat_column(names(obj))
  if(is.null(lon)) lon <- find_lon_column(names(obj))
@@ -106,12 +106,12 @@ encode.data.frame <- function(obj, strip = FALSE, lon = NULL, lat = NULL) {
 }
 
 #' @export
-encode.numeric <- function(obj = NA, strip = NA, lon, lat) {
-  rcpp_encode_polyline(lon, lat)
+encode.numeric <- function(obj, strip = NA, lat) {
+  rcpp_encode_polyline(obj, lat)
 }
 
 #' @export
-encode.default <- function(obj, strip = NA, lon = NA, lat = NA) {
+encode.default <- function(obj, strip = NA, lat = NA) {
   stop(paste0("I currently don't know how to encode ", class(obj), " objects"))
 }
 
