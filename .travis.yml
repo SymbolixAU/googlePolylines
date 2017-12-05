@@ -1,8 +1,9 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
-language: R
-sudo: false
+language: r
 cache: packages
+sudo: required
+dist: trusty
 
 # before_install:
 #   - Rscript -e 'update.packages(ask = FALSE)'
@@ -11,6 +12,12 @@ cache: packages
 #   - Rscript -e 'install.packages("sf", repos = "http://cran.rstudio.com")'
 #   - Rscript -e 'install.packages("knitr", repos = "http://cran.rstudio.com")'
 
+before_install:
+  - sudo add-apt-repository ppa:ubuntugis/ppa --yes
+  - sudo apt-get --yes --force-yes update -qq
+  - sudo apt-get install --yes libudunits2-dev libproj-dev libgeos-dev libgdal-dev
+
+warnings_are_errors: true
 
 after_success:
   - Rscript -e 'covr::codecov()'
