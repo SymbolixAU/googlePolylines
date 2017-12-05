@@ -2,11 +2,11 @@
 using namespace Rcpp;
 #include "googlePolylines.h"
 
-/*
+
 // [[Rcpp::depends(BH)]]
 
 #include <boost/algorithm/string.hpp>
-*/
+
 
 template <int RTYPE>
 Rcpp::CharacterVector sfClass(Vector<RTYPE> v) {

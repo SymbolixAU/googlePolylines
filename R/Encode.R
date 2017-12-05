@@ -80,8 +80,9 @@ encode.sf <- function(obj, strip = FALSE, lon = NA, lat = NA) {
   geomCol <- attr(obj, "sf_column")
   lst <- encodeSfGeometry(obj[[geomCol]], strip)
   
-  sf::st_geometry(obj) <- NULL
   obj[[geomCol]] <- lst
+  obj <- structure(obj, sf_column = NULL, agr = NULL, class = setdiff(class(obj), "sf"))
+  
 
   attr(obj[[geomCol]], 'class') <- c('encoded_column', class(obj[[geomCol]]) )
   attr(obj, 'encoded_column') <- geomCol
