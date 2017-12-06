@@ -2,11 +2,11 @@
 
 S3method(encode,data.frame)
 S3method(encode,default)
-S3method(encode,numeric)
 S3method(encode,sf)
 S3method(encode,sfc)
 S3method(str,encoded_column)
 export(decodePolyline)
 export(encode)
+export(encodeCoordinates)
 importFrom(Rcpp,sourceCpp)
 useDynLib(googlePolylines)

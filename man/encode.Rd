@@ -4,21 +4,18 @@
 \alias{encode}
 \alias{encode.sf}
 \alias{encode.data.frame}
-\alias{encode.numeric}
 \title{Encode}
 \usage{
-encode(...)
+encode(obj, ...)
 
 \method{encode}{sf}(obj, strip = FALSE, ...)
 
 \method{encode}{data.frame}(obj, lon = NULL, lat = NULL, ...)
-
-\method{encode}{numeric}(lon, lat, ...)
 }
 \arguments{
-\item{...}{parameters passed to methods}
-
 \item{obj}{either an \code{sf} or \code{data.frame}}
+
+\item{...}{other parameters passed to methods}
 
 \item{strip}{logical indicating if \code{sf} attributes should be stripped. 
 Useful if the object contains only one type of geometry and you want to reduce the size

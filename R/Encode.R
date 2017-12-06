@@ -11,7 +11,8 @@
 #'   \item{latitude and longitude coordinate vectors}
 #' }
 #' 
-#' @param ... parameters passed to methods
+#' @param obj either an \code{sf} or \code{data.frame}
+#' @param ... other parameters passed to methods
 #' 
 #' @return encoded object
 #' 
@@ -40,38 +41,15 @@
 #' }
 #' 
 #' @export
-encode <- function(...) UseMethod("encode")
+encode <- function(obj, ...) UseMethod("encode")
 
 ### # @importFrom sf st_geometry
 
 ## TODO:
 ## - contributor credit for SF/C++ code
-#
-# ## Grouping by polygons and lines
-# df <- data.frame(polygonId = c(1,1,1,1,1,1,1,1,2,2,2,2),
-#   lineId = c(1,1,1,1,2,2,2,2,1,1,1,1),
-#   lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, -66.668, -70.579, 
-#   -70, -49, -51, -70),
-#   lat = c(26.774, 18.466, 32.321, 26.774, 28.745, 29.570, 27.339, 28.745, 
-#   22, 23, 22, 22))
-# 
-# 
-# ## using dplyr groups   
-# 
-# library(dplyr)
-# df %>%
-#   group_by(polygonId, lineId) %>% 
-#   summarise(polyline = encode(lon, lat))
-#   
-# ## using data.table
-# library(data.table)
-# setDT(df)
-# df[, encode(lon = lon, lat = lat), by = .(polygonId, lineId)]
 
 #' @rdname encode
-#' 
-#' @param obj either an \code{sf} or \code{data.frame}
-#' 
+#'  
 #' @param strip logical indicating if \code{sf} attributes should be stripped. 
 #' Useful if the object contains only one type of geometry and you want to reduce the size
 #' even further
@@ -109,19 +87,49 @@ encode.data.frame <- function(obj, lon = NULL, lat = NULL, ...) {
 }
 
 
-#' @rdname encode
-#' @export
-encode.numeric <- function(lon, lat, ...) {
-  print("numeric")
-  rcpp_encode_polyline(lon, lat)
-}
-
 #' @export
 encode.default <- function(obj, ...) {
   stop(paste0("I currently don't know how to encode ", paste0(class(obj), collapse = ", "), " objects"))
 }
 
 
+#' Encode coordinates
+#' 
+#' Encodes a vector of lon & lat coordinates
+#' @param lon vector of longitudes
+#' @param lat vector of latitudes
+#' 
+#' @examples 
+#' \dontrun{
+#'
+#' ## Grouping by polygons and lines
+#' df <- data.frame(polygonId = c(1,1,1,1,1,1,1,1,2,2,2,2),
+#'   lineId = c(1,1,1,1,2,2,2,2,1,1,1,1),
+#'   lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, -66.668, -70.579, 
+#'   -70, -49, -51, -70),
+#'   lat = c(26.774, 18.466, 32.321, 26.774, 28.745, 29.570, 27.339, 28.745, 
+#'   22, 23, 22, 22))
+#' 
+#' 
+#' ## using dplyr groups   
+#' 
+#' library(dplyr)
+#' df %>%
+#'   group_by(polygonId, lineId) %>% 
+#'   summarise(polyline = encodeCoordinates(lon, lat))
+#'   
+#' ## using data.table
+#' library(data.table)
+#' setDT(df)
+#' df[, encodeCoordinates(lon = lon, lat = lat), by = .(polygonId, lineId)]
+#' 
+#' 
+#' }
+#' 
+#' @export
+encodeCoordinates <- function(lon, lat) {
+  rcpp_encode_polyline(lon, lat)
+}
 
 
 ## TODO:
