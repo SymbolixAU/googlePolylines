@@ -98,8 +98,7 @@
 # linestring <- sf::st_sfc(sf::st_linestring(p3))
 # multilinestring <- sf::st_sfc(sf::st_multilinestring(list(p1, p2)))
 # multipolygon <- sf::st_sfc(sf::st_multipolygon(x = list(list(p1, p2), list(p3))))
-
-
+# 
 # sf <- rbind(
 # 	st_sf(geo = polygon),
 # 	st_sf(geo = multilinestring),
