@@ -2,12 +2,6 @@
 using namespace Rcpp;
 #include "googlePolylines.h"
 
-
-// [[Rcpp::depends(BH)]]
-
-#include <boost/algorithm/string.hpp>
-
-
 template <int RTYPE>
 Rcpp::CharacterVector sfClass(Vector<RTYPE> v) {
   return v.attr("class");
@@ -223,6 +217,21 @@ void write_data(std::ostringstream& os, SEXP sfc,
   }
 }
 
+template<typename Out>
+void split(const std::string &s, char delim, Out result) {
+  std::stringstream ss(s);
+  std::string item;
+  while (std::getline(ss, item, delim)) {
+    *(result++) = item;
+  }
+}
+
+std::vector<std::string> split(const std::string &s, char delim) {
+  std::vector<std::string> elems;
+  split(s, delim, std::back_inserter(elems));
+  return elems;
+}
+
 
 // [[Rcpp::export]]
 Rcpp::List encodeSfGeometry(Rcpp::List sfc, bool strip){
@@ -239,8 +248,8 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc, bool strip){
     write_data(os, sfc[i], cls_attr[0], 0);
     
     std::string str = os.str();
-    std::vector<std::string> strs;
-    boost::split(strs, str, boost::is_any_of("\t "));
+    std::vector<std::string> strs = split(str, ' ');;
+    //boost::split(strs, str, boost::is_any_of("\t "));
     
     strs.erase(strs.end() - 1);
     lastItem = strs.size() - 1;

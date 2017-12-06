@@ -11,8 +11,7 @@
 #'   \item{latitude and longitude coordinate vectors}
 #' }
 #' 
-#' @param obj object
-#' @param ... other parameters passed to methods
+#' @param ... parameters passed to methods
 #' 
 #' @return encoded object
 #' 
@@ -41,7 +40,7 @@
 #' }
 #' 
 #' @export
-encode <- function(obj, ...) UseMethod("encode")
+encode <- function(...) UseMethod("encode")
 
 ### # @importFrom sf st_geometry
 
@@ -70,7 +69,10 @@ encode <- function(obj, ...) UseMethod("encode")
 # df[, encode(lon = lon, lat = lat), by = .(polygonId, lineId)]
 
 #' @rdname encode
-#' @param strip (optional) logical indicating if \code{sf} attributes should be stripped. 
+#' 
+#' @param obj either an \code{sf} or \code{data.frame}
+#' 
+#' @param strip logical indicating if \code{sf} attributes should be stripped. 
 #' Useful if the object contains only one type of geometry and you want to reduce the size
 #' even further
 #' @export
@@ -81,7 +83,6 @@ encode.sf <- function(obj, strip = FALSE, ...) {
   
   obj[[geomCol]] <- lst
   obj <- structure(obj, sf_column = NULL, agr = NULL, class = setdiff(class(obj), "sf"))
-  
 
   attr(obj[[geomCol]], 'class') <- c('encoded_column', class(obj[[geomCol]]) )
   attr(obj, 'encoded_column') <- geomCol
@@ -108,14 +109,12 @@ encode.data.frame <- function(obj, lon = NULL, lat = NULL, ...) {
 }
 
 
-# #' @rdname encode
-# #' @param lon (optional) vector of longitudes
-# #' @param lat (optional) vector of latitudes
-# #' @export
-# encode.numeric <- function(lon, lat) {
-#   print("numeric")
-#   rcpp_encode_polyline(lon, lat)
-# }
+#' @rdname encode
+#' @export
+encode.numeric <- function(lon, lat, ...) {
+  print("numeric")
+  rcpp_encode_polyline(lon, lat)
+}
 
 #' @export
 encode.default <- function(obj, ...) {

@@ -1,5 +1,11 @@
 context("encode")
 
+## TOTEST
+## - sf_GEOMETRY
+## - *POLYGONS
+## - encode(lon, lat)
+
+
 # test_that("encode algorithim works", {
 #   
 #   expect_equal(
