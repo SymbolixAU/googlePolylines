@@ -12,6 +12,7 @@ dist: trusty
 #   - Rscript -e 'install.packages("sf", repos = "http://cran.rstudio.com")'
 #   - Rscript -e 'install.packages("knitr", repos = "http://cran.rstudio.com")'
 
+## see : https://github.com/r-spatial/sf/issues/142#issuecomment-272652658
 before_install:
   - sudo add-apt-repository ppa:ubuntugis/ppa --yes
   - sudo apt-get --yes --force-yes update -qq
