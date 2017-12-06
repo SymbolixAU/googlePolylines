@@ -52,7 +52,7 @@ void add_byte(std::ostringstream& os, char c) {
 
 void write_matrix_list(std::ostringstream& os, Rcpp::List lst);
 
-void make_type(const char *cls, int *tp = NULL,
+unsigned int make_type(const char *cls, int *tp = NULL,
                        int srid = 0) {
   int type = 0;
   if (strstr(cls, "sfc_") == cls)
@@ -78,7 +78,7 @@ void make_type(const char *cls, int *tp = NULL,
   if (tp != NULL)
     *tp = type;
   //	Rcpp::Rcout << "type: " << type << std::endl;
-  //return type;
+  return type;
 }
 
 void write_multipolygon(std::ostringstream& os, Rcpp::List lst) {
@@ -200,8 +200,8 @@ void write_data(std::ostringstream& os, SEXP sfc,
                 const char *cls = NULL, int srid = 0) {
   
   int tp;
-  make_type(cls, &tp, srid);
-
+  unsigned int sf_type = make_type(cls, &tp, srid);
+  
   switch(tp) {
   case SF_Point:
     encode_point(os, sfc);
