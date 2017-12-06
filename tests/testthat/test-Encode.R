@@ -2,8 +2,6 @@ context("encode")
 
 ## TODO
 ## - sf_GEOMETRY
-## - *POLYGONS
-## - encode(lon, lat)
 
 
 test_that("encode coordinates algorithim works", {
