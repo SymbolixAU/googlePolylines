@@ -47,6 +47,7 @@ encode <- function(obj, ...) UseMethod("encode")
 
 ## TODO:
 ## - contributor credit for SF/C++ code
+## - XYZ and XYM dims
 
 #' @rdname encode
 #'  

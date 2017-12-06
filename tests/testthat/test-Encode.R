@@ -1,32 +1,27 @@
 context("encode")
 
-## TOTEST
+## TODO
 ## - sf_GEOMETRY
 ## - *POLYGONS
 ## - encode(lon, lat)
 
 
-# test_that("encode algorithim works", {
-#   
-#   expect_equal(
-#     encode(lon = c(144.9731, 144.9729, 144.9731), lat = c(-37.8090, -37.8094, -37.8083)),
-#     "dqweFy`zsZnAd@yEe@"
-#   )
-# })
+test_that("encode coordinates algorithim works", {
+
+  expect_equal(
+    encodeCoordinates(lon = c(144.9731, 144.9729, 144.9731), 
+                      lat = c(-37.8090, -37.8094, -37.8083)),
+    "dqweFy`zsZnAd@yEe@"
+  )
+})
 
 
 test_that("*POINTs are encoded", {
 
-  ## sfc
-  # p <- c(144, -37)
-  # attr(p, 'class') <- c("XY", "POINT", "sfg")
-
-
-  # p <- list(p)
-  # attr(p, 'class') <- c("sfc_POINT", "sfc", class(p))
   encode14437 <- "~py`F__|mZ"
   encode14537 <- "~py`F_i_tZ"
-
+  
+  ## sfc
   point <- sf::st_sfc(sf::st_point(x = c(144, -37)))
 
   expect_true(
@@ -89,6 +84,36 @@ test_that("*LINES are encoded", {
   
 })
 
-
+test_that("*POLYGONS are encoded", {
+  
+  encodedLine <- "~py`F__|mZ~oR_pR~oR}oR_af@|`f@"
+  polygon <- sf::st_sfc(sf::st_polygon(
+    list(matrix(c(144, 144.1, 144.2, 144, -37, -37.1, -37.2, -37), ncol = 2))
+    ))
+  
+  expect_true(
+    encode(polygon)[[1]] == "~py`F__|mZ~oR_pR~oR}oR_af@|`f@"
+  )
+  
+  sf <- sf::st_sf(geo = polygon)
+  
+  expect_true(
+    encode(sf)[[1]] == "~py`F__|mZ~oR_pR~oR}oR_af@|`f@"
+  )
+  
+  m1 <- matrix(c(144, 144.1, 144.2, 144, -37, -37.1, -37.2, -37), ncol = 2)
+  m2 <- m1 + 1
+  
+  m1encoded <- "~py`F__|mZ~oR_pR~oR}oR_af@|`f@"
+  m2encoded <- encodeCoordinates(m2[1:4], m2[5:8])
+  
+  multipolygon <- sf::st_sfc(sf::st_multipolygon(
+    list(list(m1, m2))
+  ))
+  
+  expect_true(
+    all(encode(multipolygon)[[1]] %in% c(m1encoded, m2encoded))
+  )
+})
 
 
