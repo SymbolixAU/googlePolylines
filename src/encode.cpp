@@ -21,6 +21,23 @@ Rcpp::CharacterVector getSfClass(SEXP sf) {
   return "";
 }
 
+
+template<typename Out>
+void split(const std::string &s, char delim, Out result) {
+  std::stringstream ss(s);
+  std::string item;
+  while (std::getline(ss, item, delim)) {
+    *(result++) = item;
+  }
+}
+
+std::vector<std::string> split(const std::string &s, char delim) {
+  std::vector<std::string> elems;
+  split(s, delim, std::back_inserter(elems));
+  return elems;
+}
+
+
 void write_data(std::ostringstream& os, SEXP sfc,
                 const char *cls, int srid);
 
@@ -35,7 +52,7 @@ void add_byte(std::ostringstream& os, char c) {
 
 void write_matrix_list(std::ostringstream& os, Rcpp::List lst);
 
-unsigned int make_type(const char *cls, int *tp = NULL,
+void make_type(const char *cls, int *tp = NULL,
                        int srid = 0) {
   int type = 0;
   if (strstr(cls, "sfc_") == cls)
@@ -61,7 +78,7 @@ unsigned int make_type(const char *cls, int *tp = NULL,
   if (tp != NULL)
     *tp = type;
   //	Rcpp::Rcout << "type: " << type << std::endl;
-  return type;
+  //return type;
 }
 
 void write_multipolygon(std::ostringstream& os, Rcpp::List lst) {
@@ -183,7 +200,7 @@ void write_data(std::ostringstream& os, SEXP sfc,
                 const char *cls = NULL, int srid = 0) {
   
   int tp;
-  unsigned int sf_type = make_type(cls, &tp, srid);
+  make_type(cls, &tp, srid);
 
   switch(tp) {
   case SF_Point:
@@ -215,21 +232,6 @@ void write_data(std::ostringstream& os, SEXP sfc,
       Rcpp::stop("writing this sf type is currently not supported");
     }
   }
-}
-
-template<typename Out>
-void split(const std::string &s, char delim, Out result) {
-  std::stringstream ss(s);
-  std::string item;
-  while (std::getline(ss, item, delim)) {
-    *(result++) = item;
-  }
-}
-
-std::vector<std::string> split(const std::string &s, char delim) {
-  std::vector<std::string> elems;
-  split(s, delim, std::back_inserter(elems));
-  return elems;
 }
 
 
