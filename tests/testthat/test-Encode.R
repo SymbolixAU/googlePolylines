@@ -34,14 +34,12 @@ test_that("*POINTs are encoded", {
     encode(sf)[, 'point'][[1]] == encode14437
   )
 
-  ## sfc
   multipoint <- sf::st_sfc(sf::st_multipoint(x = matrix(c(144, 145, -37, -37), ncol = 2)))
 
   expect_true(
     all(encode(multipoint)[[1]] %in% c(encode14437, encode14537))
   )
 
-  ## sf
   sf <- sf::st_sf(multipoint)
 
   expect_true(
@@ -66,5 +64,25 @@ test_that("*LINES are encoded", {
     encode(sf)[[1]] == encodedLine
   )
   
-
+  multilinestring <- sf::st_sfc(
+    sf::st_multilinestring(
+      list(
+        matrix(c(144, 144.1, 144.2, -37, -37.1, -37.2), ncol =2),
+        matrix(c(144, 144.1, 144.2, -37, -37.1, -37.2), ncol =2)
+        )
+      )
+    )
+ 
+  expect_true(
+    encode(multilinestring)[[1]][1] == encodedLine
+  )
+  
+  expect_true(
+    encode(multilinestring)[[1]][2] == encodedLine
+  )
+  
 })
+
+
+
+
