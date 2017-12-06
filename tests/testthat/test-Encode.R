@@ -134,12 +134,12 @@ test_that("sf_GEOMETRYs are encoded", {
   multipolygon <- sf::st_sfc(sf::st_multipolygon(x = list(list(p1, p2), list(p3))))
   
   sf <- rbind(
-    st_sf(geo = point),
-    st_sf(geo = multipoint),
-    st_sf(geo = linestring),
-    st_sf(geo = multilinestring),
-    st_sf(geo = polygon),
-    st_sf(geo = multipolygon)
+    sf::st_sf(geo = point),
+    sf::st_sf(geo = multipoint),
+    sf::st_sf(geo = linestring),
+    sf::st_sf(geo = multilinestring),
+    sf::st_sf(geo = polygon),
+    sf::st_sf(geo = multipolygon)
   )
   
   
