@@ -169,5 +169,18 @@ test_that("sf_GEOMETRYs are encoded", {
     all(encoded$geo[[6]] %in% encode(multipolygon)[[1]])
   )
   
-  
 })
+
+
+test_that("data.frames are encoded", {
+
+  df <- data.frame(polygonId = c(1,1,1,1),
+    lineId = c(1,1,1,1),
+    lon = c(-80.190, -66.118, -64.757, -80.190),
+    lat = c(26.774, 18.466, 32.321, 26.774))
+
+  expect_true(
+    encode(df) == "ohlbDnbmhN~suq@am{tAw`qsAeyhGvkz`@fge}A"
+  )
+})
+
