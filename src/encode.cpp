@@ -250,10 +250,13 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc, bool strip){
     write_data(os, sfc[i], cls_attr[0], 0);
     
     std::string str = os.str();
+    
+    //Rcpp::Rcout << "str: " << str << std::endl;
+    
     std::vector<std::string> strs = split(str, ' ');;
     //boost::split(strs, str, boost::is_any_of("\t "));
     
-    strs.erase(strs.end() - 1);
+    //strs.erase(strs.end() - 1);
     lastItem = strs.size() - 1;
     
     if (strs[lastItem] == "-") {
