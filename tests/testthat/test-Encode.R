@@ -51,14 +51,20 @@ test_that("*POINTs are encoded", {
 })
 
 
-# test_that("*LINES are encoded", {
-# 
-#   line <- sf::st_sfc(sf::st_linestring(matrix(c(144, 144.1, 144.2, -37, -37.1, -37.2), ncol = 2)))
-# 
-#   expect_true(
-#     encode(line)[[1]] == encode(lon = c(144, 144.1, 144.2), lat = c(-37, -37.1, -37.2))
-#   )
-# 
-#   sf <- sf::st_sf(line)
-# 
-# })
+test_that("*LINES are encoded", {
+
+  encodedLine <- "~py`F__|mZ~oR_pR~oR}oR"
+  line <- sf::st_sfc(sf::st_linestring(matrix(c(144, 144.1, 144.2, -37, -37.1, -37.2), ncol = 2)))
+
+  expect_true(
+    encode(line)[[1]] == encodedLine
+  )
+
+  sf <- sf::st_sf(line)
+  
+  expect_true(
+    encode(sf)[[1]] == encodedLine
+  )
+  
+
+})
