@@ -4,7 +4,7 @@
 
 # googlePolylines
 
-The goal of googlePolylines is to encode and decode objects using [Google's polyline encoding algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
+The goal of googlePolylines is to encode and decode coordinates using [Google's polyline encoding algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
 
 > Polyline encoding is a lossy compression algorithm that allows you to store a series of coordinates as a single string. 
 
