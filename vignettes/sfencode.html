@@ -18,6 +18,44 @@
 
 
 
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
 
 
 
@@ -36,7 +74,144 @@
 
 
 
+<p>The goal of googlePolylines is to encode and decode coordinates using <a href="https://developers.google.com/maps/documentation/utilities/polylinealgorithm">Google’s polyline encoding algorithm</a></p>
+<blockquote>
+<p>Polyline encoding is a lossy compression algorithm that allows you to store a series of coordinates as a single string.</p>
+</blockquote>
+<div id="encoding" class="section level2">
+<h2>Encoding</h2>
+<p>Encoding is split across two functions</p>
+<ul>
+<li><code>encode(obj)</code> - designed for use on <code>sf</code> objects and <code>data.frames</code></li>
+<li><code>encodeCoordinates(lon, lat)</code> - designed to encode vectors of coordinates</li>
+</ul>
+<div id="vectors" class="section level3">
+<h3>vectors</h3>
+<p>Given two vectors of longitude and latitude coordinates</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googlePolylines)
 
+lon &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">144.9709</span>, <span class="fl">144.9713</span>, <span class="fl">144.9715</span>, <span class="fl">144.9719</span>, <span class="fl">144.9728</span>, <span class="fl">144.9732</span>, 
+<span class="fl">144.973</span>, <span class="fl">144.9727</span>, <span class="fl">144.9731</span>, <span class="fl">144.9749</span>, <span class="fl">144.9742</span>)
+
+lat &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="fl">37.8075</span>, <span class="op">-</span><span class="fl">37.8076</span>, <span class="op">-</span><span class="fl">37.8076</span>, <span class="op">-</span><span class="fl">37.8078</span>, <span class="op">-</span><span class="fl">37.8079</span>, <span class="op">-</span><span class="fl">37.8079</span>, 
+<span class="op">-</span><span class="fl">37.8091</span>, <span class="op">-</span><span class="fl">37.8107</span>, <span class="op">-</span><span class="fl">37.8115</span>, <span class="op">-</span><span class="fl">37.8153</span>, <span class="op">-</span><span class="fl">37.8155</span>)
+
+<span class="kw">encodeCoordinates</span>(lon, lat)</code></pre></div>
+<pre><code>## [1] &quot;xgweFcsysZToA?g@f@oAPsD?oApFf@|Hz@`DmAvViJf@jC&quot;</code></pre>
+</div>
+<div id="data.frame" class="section level3">
+<h3>data.frame</h3>
+<p>The <code>encode()</code> function will attempt to find the lon &amp; lat columns inside a data.frame using regex matching. However, you can also specify the columns of coordinates</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
+  <span class="dt">lon =</span><span class="op">-</span><span class="st"> </span><span class="kw">c</span>(<span class="fl">144.9709</span>, <span class="fl">144.9713</span>, <span class="fl">144.9715</span>, <span class="fl">144.9719</span>, <span class="fl">144.9728</span>, <span class="fl">144.9732</span>, <span class="fl">144.973</span>, <span class="fl">144.9727</span>, <span class="fl">144.9731</span>, <span class="fl">144.9749</span>, <span class="fl">144.9742</span>),
+  <span class="dt">lat =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">37.8075</span>, <span class="op">-</span><span class="fl">37.8076</span>, <span class="op">-</span><span class="fl">37.8076</span>, <span class="op">-</span><span class="fl">37.8078</span>, <span class="op">-</span><span class="fl">37.8079</span>, <span class="op">-</span><span class="fl">37.8079</span>, <span class="op">-</span><span class="fl">37.8091</span>, <span class="op">-</span><span class="fl">37.8107</span>, <span class="op">-</span><span class="fl">37.8115</span>, <span class="op">-</span><span class="fl">37.8153</span>, <span class="op">-</span><span class="fl">37.8155</span>)
+  )
+
+<span class="kw">encode</span>(df)</code></pre></div>
+<pre><code>## [1] &quot;xgweFbsysZTnA?f@f@nAPrD?nApFg@|H{@`DlAvVhJf@kC&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## or specify the columns to use
+<span class="co"># encode(df, lon = &quot;lon&quot;, lat = &quot;lat&quot;)</span></code></pre></div>
+</div>
+<div id="sf" class="section level3">
+<h3>sf</h3>
+<p><code>encode()</code> will currently work on <code>sf</code> objects with geometry types</p>
+<ul>
+<li>POINT</li>
+<li>MULTIPOINT</li>
+<li>LINESTRING</li>
+<li>MULTILINESTRING</li>
+<li>POLYGON</li>
+<li>MULTIPOLYGON</li>
+<li>GEOMETRY</li>
+</ul>
+<p>It does not currenlty support GEOMETRYCOLLECTION.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sf)</code></pre></div>
+<pre><code>## Linking to GEOS 3.5.1, GDAL 2.2.2, proj.4 4.9.2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## data set of North Carolina states
+nc &lt;-<span class="st"> </span>sf<span class="op">::</span><span class="kw">st_read</span>(<span class="kw">system.file</span>(<span class="st">&quot;shape/nc.shp&quot;</span>, <span class="dt">package=</span><span class="st">&quot;sf&quot;</span>))</code></pre></div>
+<pre><code>## Reading layer `nc' from data source `/home/dave/R/x86_64-pc-linux-gnu-library/3.4/sf/shape/nc.shp' using driver `ESRI Shapefile'
+## Simple feature collection with 100 features and 14 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
+## epsg (SRID):    4267
+## proj4string:    +proj=longlat +datum=NAD27 +no_defs</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nc[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,]</code></pre></div>
+<pre><code>## Simple feature collection with 5 features and 14 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: -81.74107 ymin: 36.07282 xmax: -75.77316 ymax: 36.58965
+## epsg (SRID):    4267
+## proj4string:    +proj=longlat +datum=NAD27 +no_defs
+##    AREA PERIMETER CNTY_ CNTY_ID        NAME  FIPS FIPSNO CRESS_ID BIR74
+## 1 0.114     1.442  1825    1825        Ashe 37009  37009        5  1091
+## 2 0.061     1.231  1827    1827   Alleghany 37005  37005        3   487
+## 3 0.143     1.630  1828    1828       Surry 37171  37171       86  3188
+## 4 0.070     2.968  1831    1831   Currituck 37053  37053       27   508
+## 5 0.153     2.206  1832    1832 Northampton 37131  37131       66  1421
+##   SID74 NWBIR74 BIR79 SID79 NWBIR79                       geometry
+## 1     1      10  1364     0      19 MULTIPOLYGON (((-81.4727554...
+## 2     0      10   542     3      12 MULTIPOLYGON (((-81.2398910...
+## 3     5     208  3616     6     260 MULTIPOLYGON (((-80.4563446...
+## 4     1     123   830     2     145 MULTIPOLYGON (((-76.0089721...
+## 5     9    1066  1606     3    1197 MULTIPOLYGON (((-77.2176666...</code></pre>
+<p>When used on an <code>sf</code> object, a <code>sfencoded</code> object is returned</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">enc &lt;-<span class="st"> </span><span class="kw">encode</span>(nc)
+<span class="kw">str</span>(enc)</code></pre></div>
+<pre><code>## Classes 'sfencoded' and 'data.frame':    100 obs. of  15 variables:
+##  $ AREA     : num  0.114 0.061 0.143 0.07 0.153 0.097 0.062 0.091 0.118 0.124 ...
+##  $ PERIMETER: num  1.44 1.23 1.63 2.97 2.21 ...
+##  $ CNTY_    : num  1825 1827 1828 1831 1832 ...
+##  $ CNTY_ID  : num  1825 1827 1828 1831 1832 ...
+##  $ NAME     : Factor w/ 100 levels &quot;Alamance&quot;,&quot;Alexander&quot;,..: 5 3 86 27 66 46 15 37 93 85 ...
+##  $ FIPS     : Factor w/ 100 levels &quot;37001&quot;,&quot;37003&quot;,..: 5 3 86 27 66 46 15 37 93 85 ...
+##  $ FIPSNO   : num  37009 37005 37171 37053 37131 ...
+##  $ CRESS_ID : int  5 3 86 27 66 46 15 37 93 85 ...
+##  $ BIR74    : num  1091 487 3188 508 1421 ...
+##  $ SID74    : num  1 0 5 1 9 7 0 0 4 1 ...
+##  $ NWBIR74  : num  10 10 208 123 1066 ...
+##  $ BIR79    : num  1364 542 3616 830 1606 ...
+##  $ SID79    : num  0 3 6 2 3 5 2 2 2 5 ...
+##  $ NWBIR79  : num  19 12 260 145 1197 ...
+##  $ geometry :encoded_column of length 100; first list element:  atomic  u_d|EtsgpNmmFphLyEbcCibLf{Lk~H`bT}rNmjGihHd[kvL_lEzgBkl~@lyE`MnvCimCbmEqfAxnGieH~gEeTd_DmiCxvA_D|oAdwCidAtsKr_Aji| __truncated__
+##   ..- attr(*, &quot;sfc&quot;)= chr  &quot;XY&quot; &quot;MULTIPOLYGON&quot; &quot;sfg&quot;
+##  - attr(*, &quot;encoded_column&quot;)= chr &quot;geometry&quot;
+##  - attr(*, &quot;sfAttributes&quot;)=List of 5
+##   ..$ type: chr &quot;MULTIPOLYGON&quot;
+##   ..$ dim : chr &quot;XY&quot;
+##   ..$ bbox:Class 'bbox'  Named num [1:4] -84.3 33.9 -75.5 36.6
+##   .. .. ..- attr(*, &quot;names&quot;)= chr [1:4] &quot;xmin&quot; &quot;ymin&quot; &quot;xmax&quot; &quot;ymax&quot;
+##   ..$ epsg: int 4267
+##   ..$ proj: chr &quot;+proj=longlat +datum=NAD27 +no_defs&quot;</code></pre>
+<p>The geometry attributes are kept on the encoded object. However, you can remove them by specifying <code>strip = TRUE</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">encLite &lt;-<span class="st"> </span><span class="kw">encode</span>(nc, <span class="dt">strip =</span> T)
+<span class="kw">str</span>(encLite)</code></pre></div>
+<pre><code>## Classes 'sfencoded' and 'data.frame':    100 obs. of  15 variables:
+##  $ AREA     : num  0.114 0.061 0.143 0.07 0.153 0.097 0.062 0.091 0.118 0.124 ...
+##  $ PERIMETER: num  1.44 1.23 1.63 2.97 2.21 ...
+##  $ CNTY_    : num  1825 1827 1828 1831 1832 ...
+##  $ CNTY_ID  : num  1825 1827 1828 1831 1832 ...
+##  $ NAME     : Factor w/ 100 levels &quot;Alamance&quot;,&quot;Alexander&quot;,..: 5 3 86 27 66 46 15 37 93 85 ...
+##  $ FIPS     : Factor w/ 100 levels &quot;37001&quot;,&quot;37003&quot;,..: 5 3 86 27 66 46 15 37 93 85 ...
+##  $ FIPSNO   : num  37009 37005 37171 37053 37131 ...
+##  $ CRESS_ID : int  5 3 86 27 66 46 15 37 93 85 ...
+##  $ BIR74    : num  1091 487 3188 508 1421 ...
+##  $ SID74    : num  1 0 5 1 9 7 0 0 4 1 ...
+##  $ NWBIR74  : num  10 10 208 123 1066 ...
+##  $ BIR79    : num  1364 542 3616 830 1606 ...
+##  $ SID79    : num  0 3 6 2 3 5 2 2 2 5 ...
+##  $ NWBIR79  : num  19 12 260 145 1197 ...
+##  $ geometry :encoded_column of length 100; first list element:  chr &quot;u_d|EtsgpNmmFphLyEbcCibLf{Lk~H`bT}rNmjGihHd[kvL_lEzgBkl~@lyE`MnvCimCbmEqfAxnGieH~gEeTd_DmiCxvA_D|oAdwCidAtsKr_A&quot;| __truncated__
+##  - attr(*, &quot;encoded_column&quot;)= chr &quot;geometry&quot;</code></pre>
+<p>The benefit of stripping the attributes is to reduce the size of the object, which can be useful for web plotting if bandwidth/data transfer speeds are an issue.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vapply</span>(<span class="kw">mget</span>(<span class="kw">c</span>(<span class="st">'nc'</span>, <span class="st">'enc'</span>, <span class="st">'encLite'</span>) ), <span class="cf">function</span>(x) { <span class="kw">format</span>(<span class="kw">object.size</span>(x), <span class="dt">units =</span> <span class="st">&quot;Kb&quot;</span>) }, <span class="st">''</span>)</code></pre></div>
+<pre><code>##         nc        enc    encLite 
+## &quot;132.2 Kb&quot;    &quot;85 Kb&quot;  &quot;50.5 Kb&quot;</code></pre>
+</div>
+</div>
+<div id="decoding" class="section level2">
+<h2>Decoding</h2>
+</div>
 
 
 

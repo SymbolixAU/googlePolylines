@@ -1,9 +1,10 @@
 
-## TODO:
-## - geometry collection
-## - multiple geometry columns
+## TODO(release):
+## - decoding
 ## - print method for encoded geo columns
 
+## TODO(updates):
+## - geometry collection
 
 
 
@@ -16,10 +17,12 @@
 # )
 # 
 # decodePolyline(polylines)
-#  
+# 
 # dt <- data.table(polyline = polylines)
 # 
-# dt[, c("lon", "lat") := decodePolyline(polyline)]
+# dt[, c("lon", "lat") := googleway::decode_pl(polyline)]
+# 
+
 
 ### GEOMETRYCOLLECTION
 # p <- rbind(c(3.2,4), c(3,4.6), c(3.8,4.4), c(3.5,3.8), c(3.4,3.6), c(3.9,4.5))

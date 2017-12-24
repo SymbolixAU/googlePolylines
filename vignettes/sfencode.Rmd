@@ -42,7 +42,7 @@ encodeCoordinates(lon, lat)
 
 ### data.frame
 
-The `encode()` function will attempt to find the lon & lat columns inside a data.frame
+The `encode()` function will attempt to find the lon & lat columns inside a data.frame using regex matching. However, you can also specify the columns of coordinates
 
 ```{r}
 
@@ -53,6 +53,8 @@ df <- data.frame(
 
 encode(df)
 
+## or specify the columns to use
+# encode(df, lon = "lon", lat = "lat")
 
 ```
 
@@ -69,8 +71,7 @@ encode(df)
 - MULTIPOLYGON
 - GEOMETRY
 
-It does not currenlty support GEOMETRYCOLLECTION types.
-
+It does not currenlty support GEOMETRYCOLLECTION.
 
 ```{r}
 
@@ -105,6 +106,11 @@ The benefit of stripping the attributes is to reduce the size of the object, whi
 vapply(mget(c('nc', 'enc', 'encLite') ), function(x) { format(object.size(x), units = "Kb") }, '')
 
 ```
+
+
+## Decoding
+
+
 
 
 
