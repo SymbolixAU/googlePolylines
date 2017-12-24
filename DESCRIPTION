@@ -4,7 +4,8 @@ Title: Google Polylines
 Version: 0.0.1
 Date: 2017-11-30
 Authors@R: c(
-    person("David", "Cooley", ,"dcooley@symbolix.com.au", role = c("aut", "cre"))
+    person("David", "Cooley", ,"dcooley@symbolix.com.au", role = c("aut", "cre")),
+    person("Paulo", "Barcelos", role = "ctb", comment = "Author of c++ decode_pl")
     )
 Description: Encode and decode coordinates using Google's polyline encoding algorithm.
 License: GPL-3

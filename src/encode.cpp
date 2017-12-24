@@ -220,7 +220,7 @@ void write_data(std::ostringstream& os, SEXP sfc,
 //    break;
   default: {
 //      Rcpp::Rcout << "type is " << sf_type << "\n";
-      Rcpp::stop("writing this sf type is currently not supported");
+      Rcpp::stop("encoding this sf type is currently not supported");
     }
   }
 }

@@ -1,4 +1,12 @@
 
+## TODO:
+## - geometry collection
+## - keep CRS, BBOX, dim, epsg, proj4string
+## - multiple geometry columns
+## - print method for encoded geo columns
+
+
+
 ### DECODE
 ## data.table
 # library(data.table)
@@ -37,6 +45,14 @@
 # sf <- sf::st_sf(geo = sf::st_sfc(gc))
 
 # encode(sf)
+
+
+## Encoding a geometry collection:
+## - one row per collection of geometries
+## - 
+
+
+
 
 
 ## MultipPoints
@@ -107,6 +123,11 @@
 # 	)
 # 
 # encode(sf)
+# 
+# enc <- encode(sf)
+
+
+
 
 ### SELECTING SPECIFIC TYPES
 # library(googleway)

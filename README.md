@@ -20,6 +20,7 @@ devtools::install_github("SymbolixAU/googlePolylines")
 
 ## Examples
 
+
 ```
 df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
 				lineId = c(1,1,1,1,2,2,2,2,1,1,1,2),

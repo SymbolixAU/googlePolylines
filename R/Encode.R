@@ -58,7 +58,7 @@ encode <- function(obj, ...) UseMethod("encode")
 #' @export
 encode.sf <- function(obj, strip = FALSE, ...) {
 
-  geomCol <- attr(obj, "sf_column")
+  geomCol <- getGeometryColumn(obj)
   lst <- encodeSfGeometry(obj[[geomCol]], strip)
   
   obj[[geomCol]] <- lst
@@ -132,6 +132,10 @@ encode.default <- function(obj, ...) {
 encodeCoordinates <- function(lon, lat) {
   rcpp_encode_polyline(lon, lat)
 }
+
+
+
+
 
 
 ## TODO:
