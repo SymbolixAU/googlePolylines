@@ -18,8 +18,7 @@ encode(obj, ...)
 \item{...}{other parameters passed to methods}
 
 \item{strip}{logical indicating if \code{sf} attributes should be stripped. 
-Useful if the object contains only one type of geometry and you want to reduce the size
-even further}
+Useful if you want to reduce the size even further.}
 
 \item{lon}{vector of longitudes}
 

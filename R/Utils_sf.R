@@ -2,73 +2,73 @@
 sfGeometryAttributes <- function(sf) UseMethod("sfGeometryAttributes")
 
 #' @export
-sfGeometryAttributes.sf <- function(sf) sfGeometryAttributes(sf[[getGeometryColumn(sf)]])
+sfGeometryAttributes.sf <- function(sf) sfGeometryAttributes(sf[[sfGeometryColumn(sf)]])
 
 #' @export
 sfGeometryAttributes.sfc <- function(sfc) {
   
   list(
-    type = getGeometryType(sfc),
-    dim = getDimension(sfc),
-    bbox = getBbox(sfc),
-    epsg = getEpsg(sfc),
-    proj = getProj(sfc)
+    type = sfGeometryType(sfc),
+    dim = sfDimension(sfc),
+    bbox = sfBbox(sfc),
+    epsg = sfEpsg(sfc),
+    proj = sfProj(sfc)
   )
   
 }
 
 
 ### GEOMETRY COLUMN
-getGeometryColumn <- function(sf) UseMethod("getGeometryColumn")
+sfGeometryColumn <- function(sf) UseMethod("sfGeometryColumn")
 
 #' @export
-getGeometryColumn.sf <- function(sf) attr(sf, "sf_column")
+sfGeometryColumn.sf <- function(sf) attr(sf, "sf_column")
 
 
 ### GEOMETRY TYPE
-getGeometryType <- function(sf) UseMethod("getGeometryType")
+sfGeometryType <- function(sf) UseMethod("sfGeometryType")
 
 #' @export
-getGeometryType.sf <- function(sf) getGeometryType(sf[[getGeometryColumn(sf)]])
+sfGeometryType.sf <- function(sf) sfGeometryType(sf[[sfGeometryColumn(sf)]])
 
 #' @export
-getGeometryType.sfc <- function(sfc) substr(class(sfc)[1], 5, nchar(class(sfc)[1]))
+sfGeometryType.sfc <- function(sfc) substr(class(sfc)[1], 5, nchar(class(sfc)[1]))
 
 ### DIMENSION
-getDimension <- function(sf) UseMethod("getDimension")
+sfDimension <- function(sf) UseMethod("sfDimension")
 
 #' @export
-getDimension.sf <- function(sf) getDimension(sf[[getGeometryColumn(sf)]])
+sfDimension.sf <- function(sf) sfDimension(sf[[sfGeometryColumn(sf)]])
 
 #' @export
-getDimension.sfc <- function(sfc) class(sfc[[1]])[1]
+sfDimension.sfc <- function(sfc) class(sfc[[1]])[1]
 
 
 ### BBOX
-getBbox <- function(sf) UseMethod("getBbox")
+sfBbox <- function(sf) UseMethod("sfBbox")
 
 #' @export
-getBbox.sf <- function(sf) getBbox(sf[[getGeometryColumn(sf)]])
+sfBbox.sf <- function(sf) sfBbox(sf[[sfGeometryColumn(sf)]])
 
-getBbox.sfc <- function(sfc) attr(sfc, "bbox")
+sfBbox.sfc <- function(sfc) attr(sfc, "bbox")
 
 
 ### EPSG
-getEpsg <- function(sf) UseMethod("getEpsg") 
+sfEpsg <- function(sf) UseMethod("sfEpsg") 
 
 #' @export
-getEpsg.sf <- function(sf) getEpsg(sf[[getGeometryColumn(sf)]])
+sfEpsg.sf <- function(sf) sfEpsg(sf[[sfGeometryColumn(sf)]])
 
 #' @export
-getEpsg.sfc <- function(sfc) attr(sfc, "crs")$epsg
+sfEpsg.sfc <- function(sfc) attr(sfc, "crs")$epsg
 
 
 ### PROJ4STRINg
-getProj <- function(sf) UseMethod("getProj")
+sfProj <- function(sf) UseMethod("sfProj")
 
 #' @export
-getProj.sf <- function(sf) getProj(sf[[getGeometryColumn(sf)]])
+sfProj.sf <- function(sf) sfProj(sf[[sfGeometryColumn(sf)]])
 
 #' @export
-getProj.sfc <- function(sfc) attr(sfc, "crs")$proj4string
+sfProj.sfc <- function(sfc) attr(sfc, "crs")$proj4string
 

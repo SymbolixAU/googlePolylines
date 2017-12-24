@@ -53,21 +53,26 @@ encode <- function(obj, ...) UseMethod("encode")
 #' @rdname encode
 #'  
 #' @param strip logical indicating if \code{sf} attributes should be stripped. 
-#' Useful if the object contains only one type of geometry and you want to reduce the size
-#' even further
+#' Useful if you want to reduce the size even further. 
 #' @export
 encode.sf <- function(obj, strip = FALSE, ...) {
 
-  geomCol <- getGeometryColumn(obj)
+  geomCol <- sfGeometryColumn(obj)
   lst <- encodeSfGeometry(obj[[geomCol]], strip)
   
+  if(!strip) sfAttrs <- sfGeometryAttributes(obj)
+  
   obj[[geomCol]] <- lst
+  
+  ## strip attributes
   obj <- structure(obj, sf_column = NULL, agr = NULL, class = setdiff(class(obj), "sf"))
 
   attr(obj[[geomCol]], 'class') <- c('encoded_column', class(obj[[geomCol]]) )
   attr(obj, 'encoded_column') <- geomCol
+  
+  if(!strip) attr(obj, "sfAttributes") <- sfAttrs
 
-  if (! inherits(obj, 'sfencoded'))
+  if (!inherits(obj, 'sfencoded'))
     attr(obj, 'class') <- c("sfencoded", attr(obj, 'class'))
   
   return(obj)
@@ -134,23 +139,33 @@ encodeCoordinates <- function(lon, lat) {
 }
 
 
+#' sf Attributes
+#' 
+#' Retrieves the sf attributes stored on the \code{sfencoded} object
+#' 
+#' @param x \code{sfencoded} object
+#' 
+#' @return \code{list} of \code{sf} attributes
+#' 
+#' @export
+sfAttributes <- function(x) UseMethod("sfAttributes")
 
+#' @export
+sfAttributes.sfencoded <- function(x) attr(x, "sfAttributes")
 
 
 
 ## TODO:
 ##- extract specific rows of sfencoded depending on the 'type' you want
 
-getPoints <- function(encoded) getColumnType(encoded, "*POINT")
+sfPoints <- function(encoded) sfColumnType(encoded, "*POINT")
 
-getPolylines <- function(encoded) getColumnType(encoded, "*LINESTRING")
+sfPolylines <- function(encoded) sfColumnType(encoded, "*LINESTRING")
 
-getPolygons <- function(encoded) getColumnType(encoded, "*POLYGON")
+sfPolygons <- function(encoded) sfColumnType(encoded, "*POLYGON")
 
-getColumnType <- function(encoded, type) which(grepl(type, encodedColumnTypes(encoded)))
+sfColumnType <- function(encoded, type) which(grepl(type, encodedColumnTypes(encoded)))
 
 encodedColumn <- function(encoded) encoded[[attr(encoded, 'encoded_column')]]
 
-encodedColumnTypes <- function(encoded) {
-  vapply(encodedColumn(encoded), function(x) { attr(x, 'sfc')[2] }, '' )
-}
+encodedColumnTypes <- function(encoded) vapply(encodedColumn(encoded), function(x) { attr(x, 'sfc')[2] }, '' )
