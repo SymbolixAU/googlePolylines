@@ -18,7 +18,24 @@ You can install googlePolylines from github with:
 devtools::install_github("SymbolixAU/googlePolylines")
 ```
 
+
+
 ## Examples
+
+Supported `sf` types
+
+- POINT
+- MULTIPOINT
+- LINESTRING
+- MULTILINESTRING
+- POLYGON
+- MULTIPOLYGON
+- GEOMETRY
+
+Unsupported `sf` types
+
+- GEOMETRYCOLLECTION
+
 
 
 ```

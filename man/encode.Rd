@@ -18,7 +18,8 @@ encode(obj, ...)
 \item{...}{other parameters passed to methods}
 
 \item{strip}{logical indicating if \code{sf} attributes should be stripped. 
-Useful if you want to reduce the size even further.}
+Useful if you want to reduce the size even further, but you will lose the 
+spatial attributes associated with the \code{sf} object}
 
 \item{lon}{vector of longitudes}
 
@@ -59,8 +60,14 @@ df <- data.frame(polygonId = c(1,1,1,1),
   
 ## on a data.frame, it will attemp to find the lon & lat columns
 encode(df)
-  
+
+
+## Vector of lon/lat coordinates
+
   
 }
 
+}
+\seealso{
+encodeCoordinates
 }

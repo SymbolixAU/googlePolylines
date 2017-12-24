@@ -1,9 +1,9 @@
 
 ## TODO:
 ## - geometry collection
-## - keep CRS, BBOX, dim, epsg, proj4string
 ## - multiple geometry columns
 ## - print method for encoded geo columns
+
 
 
 

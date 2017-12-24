@@ -36,9 +36,14 @@
 #'   
 #' ## on a data.frame, it will attemp to find the lon & lat columns
 #' encode(df)
-#'   
+#'
+#'
+#' ## Vector of lon/lat coordinates
+#' 
 #'   
 #' }
+#' 
+#' @seealso encodeCoordinates
 #' 
 #' @export
 encode <- function(obj, ...) UseMethod("encode")
@@ -53,7 +58,8 @@ encode <- function(obj, ...) UseMethod("encode")
 #' @rdname encode
 #'  
 #' @param strip logical indicating if \code{sf} attributes should be stripped. 
-#' Useful if you want to reduce the size even further. 
+#' Useful if you want to reduce the size even further, but you will lose the 
+#' spatial attributes associated with the \code{sf} object 
 #' @export
 encode.sf <- function(obj, strip = FALSE, ...) {
 
@@ -92,6 +98,7 @@ encode.data.frame <- function(obj, lon = NULL, lat = NULL, ...) {
 
   rcpp_encode_polyline(obj[[lon]], obj[[lat]])
 }
+
 
 
 #' @export
@@ -134,38 +141,5 @@ encode.default <- function(obj, ...) {
 #' }
 #' 
 #' @export
-encodeCoordinates <- function(lon, lat) {
-  rcpp_encode_polyline(lon, lat)
-}
+encodeCoordinates <- function(lon, lat) rcpp_encode_polyline(lon, lat)
 
-
-#' sf Attributes
-#' 
-#' Retrieves the sf attributes stored on the \code{sfencoded} object
-#' 
-#' @param x \code{sfencoded} object
-#' 
-#' @return \code{list} of \code{sf} attributes
-#' 
-#' @export
-sfAttributes <- function(x) UseMethod("sfAttributes")
-
-#' @export
-sfAttributes.sfencoded <- function(x) attr(x, "sfAttributes")
-
-
-
-## TODO:
-##- extract specific rows of sfencoded depending on the 'type' you want
-
-sfPoints <- function(encoded) sfColumnType(encoded, "*POINT")
-
-sfPolylines <- function(encoded) sfColumnType(encoded, "*LINESTRING")
-
-sfPolygons <- function(encoded) sfColumnType(encoded, "*POLYGON")
-
-sfColumnType <- function(encoded, type) which(grepl(type, encodedColumnTypes(encoded)))
-
-encodedColumn <- function(encoded) encoded[[attr(encoded, 'encoded_column')]]
-
-encodedColumnTypes <- function(encoded) vapply(encodedColumn(encoded), function(x) { attr(x, 'sfc')[2] }, '' )

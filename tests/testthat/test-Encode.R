@@ -184,3 +184,16 @@ test_that("data.frames are encoded", {
   )
 })
 
+test_that("default encoding method errors", {
+  
+  expect_error(
+    encode(list()),
+    "I currently don't know how to encode list objects"
+  )
+  
+  expect_error(
+    encode(NULL),
+    "I currently don't know how to encode NULL objects"
+  )
+  
+})
