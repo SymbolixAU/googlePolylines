@@ -103,12 +103,10 @@ sfProj.sfc <- function(sfc) attr(sfc, "crs")$proj4string
 #' @examples 
 #' \dontrun{
 #' 
-#' # df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
-#' 								 lineId = c(1,1,1,1,2,2,2,2,1,1,1,2),
-#' 								 lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, 
-#' 								 -66.668, -70.579, -70, -49, -51, -70),
-#' 								 lat = c(26.774, 18.466, 32.321, 26.774, 28.745, 29.570, 27.339, 
-#' 								 28.745, 22, 23, 22, 22))
+#'df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
+#' 	lineId = c(1,1,1,1,2,2,2,2,1,1,1,2),
+#' 	lon = c(-80.190,-66.118,-64.757,-80.190,-70.579,-67.514,-66.668,-70.579,-70,-49,-51,-70),
+#' 	lat = c(26.774, 18.466, 32.321, 26.774, 28.745, 29.570, 27.339, 28.745, 22, 23, 22, 22))
 #' 
 #' p1 <- as.matrix(df[1:4, c("lon", "lat")])
 #' p2 <- as.matrix(df[5:8, c("lon", "lat")])
@@ -139,17 +137,17 @@ sfProj.sfc <- function(sfc) attr(sfc, "crs")$proj4string
 #' 
 #' @export
 geometryRow <- function(x, geometry = c("POINT", "LINESTRING", "POLYGON")){
+  geometry <- match.arg(geometry)
   UseMethod("geometryRow")
 }
 
 #' @export
-geometryRow.sfencoded <- function(obj, geometry) {
-  geometry = match.arg(geometry)
-  encodedColumnType(obj, paste0("*", geometry))
+geometryRow.sfencoded <- function(x, geometry) {
+  encodedColumnType(x, paste0("*", geometry))
 }
 
 #' @export
-geometryRow.default <- function(obj, ... ){
+geometryRow.default <- function(x, ... ){
   stop("This function should be called on an sfencoded object")
 }
 
