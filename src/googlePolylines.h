@@ -28,8 +28,11 @@ using namespace Rcpp;
 
 #endif
 
+Rcpp::CharacterVector getSfClass(SEXP sf);
 
-Rcpp::List decode_polyline(std::string encoded);
+
+
+Rcpp::NumericMatrix decode_polyline(std::string encoded);
 
 Rcpp::String EncodeNumber(int num);
 

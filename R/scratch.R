@@ -3,13 +3,22 @@
 ## - decoding
 ## - print method for encoded geo columns
 
+
 ## TODO(updates):
 ## - geometry collection
 
 
+## TODO(thoughts):
+## - WKT (decode polyline, then set as WKT)? what's the benefit? do I need boost.geometry?
+## -- this will need to work on sfencoded objects? (or, could it just be decoded back to sf, then use sf:::CPL_write_wkb?)
+## -- and, from WKT, encode into polylines
 
-### DECODE
-## data.table
+
+
+
+
+# ### DECODE
+# # data.table
 # library(data.table)
 # polylines <- c(
 #   "ohlbDnbmhN~suq@am{tAw`qsAeyhGvkz`@fge}A",
@@ -19,9 +28,10 @@
 # decodePolyline(polylines)
 # 
 # dt <- data.table(polyline = polylines)
-# 
-# dt[, c("lon", "lat") := googleway::decode_pl(polyline)]
-# 
+# #
+# dt[, c("lon", "lat") := decodePolyline(polyline)]
+# # dt[, c("lon", "lat") := googleway::decode_pl(polyline)]
+# # 
 
 
 ### GEOMETRYCOLLECTION

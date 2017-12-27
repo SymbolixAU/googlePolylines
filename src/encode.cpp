@@ -84,6 +84,7 @@ void addToStream(std::ostringstream& os, Rcpp::String encodedString ) {
   os << strng << ' ';
 }
 
+
 void encode_point( std::ostringstream& os, Rcpp::NumericVector point) {
   
 //  Rcpp::Rcout << point << std::endl;
