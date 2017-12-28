@@ -4,7 +4,7 @@
 
 #' Polyline WKT
 #' 
-#' Converts encoded polylines into Well-known text
+#' Converts encoded polylines into well-known text
 #' 
 #' @param obj \code{sfencoded} object or \code{encoded_column} of encoded polylines
 #' 
