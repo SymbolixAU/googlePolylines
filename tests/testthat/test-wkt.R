@@ -62,6 +62,10 @@ test_that("wkt generated for all geometries", {
     wkt[6, 'geo']
   )
   
+  expect_error(
+    polyline_wkt(sf),
+    "I was expecting an sfencoded object or an encoded_column"
+  )
 })
 
 

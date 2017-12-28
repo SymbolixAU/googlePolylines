@@ -17,6 +17,9 @@
 ## TODO:
 ## - sfencoded without attributes on each row
 
+## TODO:
+## - test each of my WKTs can be used in boost. 
+
 ## WKT
 # nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
 # nce <- encode(nc)

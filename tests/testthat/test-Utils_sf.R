@@ -53,10 +53,20 @@ test_that("sf attributes extracted", {
   
   nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
   
+  ## from sf obj
   sfAttrs <- googlePolylines:::sfGeometryAttributes(nc)
+  
+  ## from sfc column
+  sfcAttrs <- googlePolylines:::sfGeometryAttributes(nc[, 'geometry'])
+  
   
   expect_equal(
     sfAttrs$type,
+    "MULTIPOLYGON"
+  )
+  
+  expect_equal(
+    sfcAttrs$type,
     "MULTIPOLYGON"
   )
   
@@ -66,7 +76,17 @@ test_that("sf attributes extracted", {
   )
   
   expect_equal(
+    sfcAttrs$dim,
+    "XY"
+  )
+  
+  expect_equal(
     round(sfAttrs$bbox[[1]],3),
+    -84.324
+  )
+  
+  expect_equal(
+    round(sfcAttrs$bbox[[1]],3),
     -84.324
   )
   
@@ -76,12 +96,28 @@ test_that("sf attributes extracted", {
   )
   
   expect_equal(
+    round(sfcAttrs$bbox[[2]], 3),
+    33.882
+  )
+  
+  expect_equal(
     round(sfAttrs$bbox[[3]],3),
     -75.457
   )
   
   expect_equal(
+    round(sfcAttrs$bbox[[3]],3),
+    -75.457
+  )
+  
+  
+  expect_equal(
     round(sfAttrs$bbox[[4]],3),
+    36.59
+  )
+  
+  expect_equal(
+    round(sfcAttrs$bbox[[4]],3),
     36.59
   )
   
@@ -91,7 +127,17 @@ test_that("sf attributes extracted", {
   )
   
   expect_equal(
+    sfcAttrs$epsg,
+    4267
+  )
+  
+  expect_equal(
     sfAttrs$proj,
+    "+proj=longlat +datum=NAD27 +no_defs"
+  )
+  
+  expect_equal(
+    sfcAttrs$proj,
     "+proj=longlat +datum=NAD27 +no_defs"
   )
   
@@ -140,6 +186,11 @@ test_that("geometry rows extracted", {
   expect_equal(
     geometryRow(enc, "POLYGON"),
     1
+  )
+  
+  expect_error(
+    geometryRow(sf),
+    "This function should be called on an sfencoded object"
   )
   
   
