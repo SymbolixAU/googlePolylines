@@ -5,10 +5,6 @@ encodeSfGeometry <- function(sfc, strip) {
     .Call('_googlePolylines_encodeSfGeometry', PACKAGE = 'googlePolylines', sfc, strip)
 }
 
-rcpp_decode_polyline <- function(encodedStrings) {
-    .Call('_googlePolylines_rcpp_decode_polyline', PACKAGE = 'googlePolylines', encodedStrings)
-}
-
 rcpp_encode_polyline <- function(longitude, latitude) {
     .Call('_googlePolylines_rcpp_encode_polyline', PACKAGE = 'googlePolylines', longitude, latitude)
 }

@@ -3,6 +3,7 @@
 
 using namespace Rcpp;
 
+/*
 // [[Rcpp::export]]
 Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings) {
   
@@ -79,6 +80,7 @@ Rcpp::NumericMatrix decode_polyline(std::string encoded){
 //    _["lon"] = pointsLon,
 //    _["lat"] = pointsLat);
 }
+*/
 
 Rcpp::String EncodeNumber(int num){
   
