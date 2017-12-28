@@ -36,22 +36,22 @@ void beginWKT(std::ostringstream& os, Rcpp::CharacterVector cls) {
   
   switch( tp ) {
   case POINT:
-    os << "POINT";
+    os << "POINT ";
     break;
   case MULTIPOINT:
-    os << "MULTIPOINT(";
+    os << "MULTIPOINT (";
     break;
   case LINESTRING:
-    os << "LINESTRING";
+    os << "LINESTRING ";
     break;
   case MULTILINESTRING:
-    os << "MULTILINESTRING(";
+    os << "MULTILINESTRING (";
     break;
   case POLYGON:
-    os << "POLYGON(";
+    os << "POLYGON (";
     break;
   case MULTIPOLYGON:
-    os << "MULTIPOLYGON((";
+    os << "MULTIPOLYGON ((";
     break;
   default: {
       Rcpp::stop("Unknown geometry type");

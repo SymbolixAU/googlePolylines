@@ -14,6 +14,8 @@
 ## -- this will need to work on sfencoded objects? (or, could it just be decoded back to sf, then use sf:::CPL_write_wkb?)
 ## -- and, from WKT, encode into polylines
 
+## TODO:
+## - sfencoded without attributes on each row
 
 ## WKT
 # nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))

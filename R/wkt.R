@@ -1,7 +1,3 @@
-
-## TODO:
-## - sfencoded without attributes on each row
-
 #' Polyline WKT
 #' 
 #' Converts encoded polylines into well-known text
