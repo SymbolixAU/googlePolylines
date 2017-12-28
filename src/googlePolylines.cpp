@@ -82,7 +82,7 @@ Rcpp::NumericMatrix decode_polyline(std::string encoded){
 }
 */
 
-Rcpp::String EncodeNumber(int num){
+void EncodeNumber(std::ostringstream& os, int num){
   
   std::string out_str;
   
@@ -92,10 +92,10 @@ Rcpp::String EncodeNumber(int num){
   }
   
   out_str += char(num + 63);
-  return out_str;
+  os << out_str;
 }
 
-Rcpp::String EncodeSignedNumber(int num){
+void EncodeSignedNumber(std::ostringstream& os, int num){
   
   int sgn_num = num << 1;
   
@@ -103,7 +103,7 @@ Rcpp::String EncodeSignedNumber(int num){
     sgn_num = ~sgn_num;
   }
   
-  return EncodeNumber(sgn_num);
+  EncodeNumber(os, sgn_num);
 }
 
 Rcpp::String encode_polyline(Rcpp::NumericVector longitude,
@@ -113,6 +113,7 @@ Rcpp::String encode_polyline(Rcpp::NumericVector longitude,
   int plon = 0;
   int num_coords = latitude.size();
   
+  std::ostringstream os;
   Rcpp::String output_str;
   
   for(int i = 0; i < num_coords; i++){
@@ -120,12 +121,14 @@ Rcpp::String encode_polyline(Rcpp::NumericVector longitude,
     int late5 = latitude[i] * 1e5;
     int lone5 = longitude[i] * 1e5;
     
-    output_str += EncodeSignedNumber(late5 - plat);
-    output_str += EncodeSignedNumber(lone5 - plon);
-    
+    EncodeSignedNumber(os, late5 - plat);
+    EncodeSignedNumber(os, lone5 - plon);
+
     plat = late5;
     plon = lone5;
   }
+  
+  output_str = os.str();
   return output_str;
 }
 

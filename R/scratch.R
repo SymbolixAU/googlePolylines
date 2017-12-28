@@ -3,6 +3,8 @@
 ## - decoding
 ## - print method for encoded geo columns
 ## - polygons are closed correctly
+## - attr(*, 'wkt_column')
+## - WKT to encoded polyline
 
 
 ## TODO(updates):
@@ -19,6 +21,25 @@
 
 ## TODO:
 ## - test each of my WKTs can be used in boost. 
+
+
+## encoding using osstringstream:
+
+# set.seed(1)
+# lons <- rnorm(1e7)
+# lats <- rnorm(1e7)
+# 
+# library(googleway)
+# library(microbenchmark)
+# 
+# microbenchmark(
+#   gway = { googleway::encode_pl(lat = lats, lon = lons) },
+#   gpol = { googlePolylines::encodeCoordinates(lon = lons, lat = lats) },
+#   times = 2
+# )
+
+
+
 
 ## WKT
 # nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))

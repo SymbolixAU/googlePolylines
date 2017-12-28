@@ -14,6 +14,8 @@ polyline_wkt.sfencoded <- function(obj){
  
   geomCol <- attr(obj, "encoded_column")
   obj[[geomCol]] <- polyline_wkt(obj[[geomCol]])
+  attr(obj, "encoded_column") <- NULL
+  attr(obj, "wkt_column") <- geomCol
   return(obj)
 }
 
