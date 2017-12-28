@@ -14,15 +14,15 @@
 polyline_wkt <- function(obj) UseMethod("polyline_wkt")
 
 #' @export
-polyline_wkt.sfencoded <- function(sfencoded){
+polyline_wkt.sfencoded <- function(obj){
  
-  geomCol <- attr(sfencoded, "encoded_column")
-  sfencoded[[geomCol]] <- polyline_wkt(sfencoded[[geomCol]])
-  return(sfencoded)
+  geomCol <- attr(obj, "encoded_column")
+  obj[[geomCol]] <- polyline_wkt(obj[[geomCol]])
+  return(obj)
 }
 
 #' @export
-polyline_wkt.encoded_column <- function(encodedCol) polyline_to_wkt(encodedCol)
+polyline_wkt.encoded_column <- function(obj) polyline_to_wkt(obj)
 
 #' @export
 polyline_wkt.default <- function(obj) stop(paste0("I was expecting an sfencoded object or an encoded_column"))

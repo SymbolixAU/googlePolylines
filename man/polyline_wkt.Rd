@@ -13,5 +13,5 @@ polyline_wkt(obj)
 well-known text representation of the encoded polylines
 }
 \description{
-Converts encoded polylines into Well-known text
+Converts encoded polylines into well-known text
 }
