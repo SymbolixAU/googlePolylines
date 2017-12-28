@@ -41,7 +41,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // polyline_to_wkt
-Rcpp::String polyline_to_wkt(Rcpp::List sfencoded);
+Rcpp::StringVector polyline_to_wkt(Rcpp::List sfencoded);
 RcppExport SEXP _googlePolylines_polyline_to_wkt(SEXP sfencodedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

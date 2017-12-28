@@ -13,13 +13,8 @@ using namespace Rcpp;
 // - get TYPE
 // - add to stream
 // - decode coordinates (to numeric matrix?) (or, create a 'decode' methdo that goes to WKT point?)
-void addLonLatToWKTStream(std::ostringstream& os, Rcpp::String lon, Rcpp::String lat ) {
-  
-  // add coordinates, separated by a space
-  std::string slon = lon;
-  std::string slat = lat;
-  os << slon << " " << slat;
-  
+void addLonLatToWKTStream(std::ostringstream& os, float lon, float lat ) {
+  os << lon << " " << lat;
 }
 
 void geom_type(const char *cls, int *tp = NULL) {
@@ -50,22 +45,22 @@ void beginWKT(std::ostringstream& os, Rcpp::CharacterVector cls) {
   
   switch( tp ) {
   case POINT:
-    os << "POINT(";
+    os << "POINT";
     break;
   case MULTIPOINT:
-    os << "MULTIPOINT((";
+    os << "MULTIPOINT(";
     break;
   case LINESTRING:
-    os << "LINESTRING(";
+    os << "LINESTRING";
     break;
   case MULTILINESTRING:
-    os << "MULTILINESTRING((";
+    os << "MULTILINESTRING(";
     break;
   case POLYGON:
-    os << "POLYGON((";
+    os << "POLYGON(";
     break;
   case MULTIPOLYGON:
-    os << "MULTIPOLYGON(((";
+    os << "MULTIPOLYGON((";
     break;
   default: {
       Rcpp::stop("Unknown geometry type");
@@ -80,22 +75,22 @@ void endWKT(std::ostringstream& os, Rcpp::CharacterVector cls) {
   
   switch( tp ) {
   case POINT:
-    os << ")";
+    os << "";
     break;
   case MULTIPOINT:
-    os << "))";
-    break;
-  case LINESTRING:
     os << ")";
     break;
+  case LINESTRING:
+    os << "";
+    break;
   case MULTILINESTRING:
-    os << "))";
+    os << ")";
     break;
   case POLYGON:
-    os << "))";
+    os << ")";
     break;
   case MULTIPOLYGON:
-    os << ")))";
+    os << "))";
     break;
   default: {
       Rcpp::stop("Unknown geometry type");
@@ -116,40 +111,50 @@ void coordSeparateWKT(std::ostringstream& os) {
 // - SPLIT_CHAR -> the beginning of a new polygon (in a MULTIPOLYGON)
 
 // [[Rcpp::export]]
-Rcpp::String polyline_to_wkt(Rcpp::List sfencoded) {
+Rcpp::StringVector polyline_to_wkt(Rcpp::List sfencoded) {
   
-  Rcpp::Rcout << sfencoded.size() << std::endl;
-  std::ostringstream os;
-  Rcpp::String wkt;
+//  Rcpp::Rcout << "length: " << sfencoded.size() << std::endl;
+  int nrow = sfencoded.size();
+  Rcpp::StringVector res(nrow);
   
-  Rcpp::StringVector pl = sfencoded[0];
-  Rcpp::CharacterVector cls = pl.attr("sfc");
-  
-  beginWKT(os, cls);
-  int n =  pl.size();
-
-  for(size_t i = 0; i < n; i ++ ) {
+  for (size_t i = 0; i < nrow; i++ ){
     
-    // for each set of coordiantes, they need to be split by "),(",
-    // unless it's a new polygon, where it needs ")), ((" 
-    // which is denoted by the SPLIT_CHAR
-    Rcpp::String spl = pl[i];
+    std::ostringstream os;
+    Rcpp::String wkt;
+    std::string stdspl;
+      
+    Rcpp::StringVector pl = sfencoded[i];
+    Rcpp::CharacterVector cls = pl.attr("sfc");
     
-    if(spl == SPLIT_CHAR){
-      os << ")),((";
-    }else{
-      std::string stdspl = spl;
-      polylineToWKT(os, stdspl);
-      if (i < (n-1)){
+    beginWKT(os, cls);
+    int n =  pl.size();
+  
+    for(size_t j = 0; j < n; j ++ ) {
+  
+      Rcpp::String spl = pl[j];
+      
+      if(spl == SPLIT_CHAR){
         os << "),(";
+      }else{
+        stdspl = spl;
+        os << "(";
+        polylineToWKT(os, stdspl);
+        os << ")";
+        if(n > 1 && j < (n - 1)){
+          if(pl[j+1] != SPLIT_CHAR){
+            os << ",";
+          }
+        }
       }
+      
     }
+    endWKT(os, cls);
     
+    res[i] = os.str();
+//    return wkt;
   }
-  endWKT(os, cls);
   
-  wkt = os.str();
-  return wkt;
+  return res;
   
 }
 
@@ -182,12 +187,11 @@ void polylineToWKT(std::ostringstream& os, std::string encoded){
     } while (b >= 0x20);
     float dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
     lng += dlng;
+
+    addLonLatToWKTStream(os, lng* (float)1e-5, lat* (float)1e-5);
     
-    addLonLatToWKTStream(os, lng, lat);
     if(index < len) {
       coordSeparateWKT(os);
-//    }else{
-//      endWKT(os, cls);
     }
   }
 }

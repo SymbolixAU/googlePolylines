@@ -2,6 +2,7 @@
 ## TODO(release):
 ## - decoding
 ## - print method for encoded geo columns
+## - polygons are closed correctly
 
 
 ## TODO(updates):
@@ -14,7 +15,12 @@
 ## -- and, from WKT, encode into polylines
 
 
+## WKT
+# nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+# nce <- encode(nc)
 
+## create the sf::rinbd... one
+#googlePolylines:::polyline_to_wkt(enc[1, 'geo'])
 
 
 # ### DECODE
