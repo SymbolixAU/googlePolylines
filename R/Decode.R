@@ -19,7 +19,6 @@
 #' 
 #' decodePolyline(polylines)
 #' 
-#' @export
 decodePolyline <- function(polylines) {
   rcpp_decode_polyline(polylines)
 }

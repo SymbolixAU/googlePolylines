@@ -2,14 +2,29 @@
 ## TODO(release):
 ## - decoding
 ## - print method for encoded geo columns
+## - polygons are closed correctly
+
 
 ## TODO(updates):
 ## - geometry collection
 
 
+## TODO(thoughts):
+## - WKT (decode polyline, then set as WKT)? what's the benefit? do I need boost.geometry?
+## -- this will need to work on sfencoded objects? (or, could it just be decoded back to sf, then use sf:::CPL_write_wkb?)
+## -- and, from WKT, encode into polylines
 
-### DECODE
-## data.table
+
+## WKT
+# nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+# nce <- encode(nc)
+
+## create the sf::rinbd... one
+#googlePolylines:::polyline_to_wkt(enc[1, 'geo'])
+
+
+# ### DECODE
+# # data.table
 # library(data.table)
 # polylines <- c(
 #   "ohlbDnbmhN~suq@am{tAw`qsAeyhGvkz`@fge}A",
@@ -19,9 +34,10 @@
 # decodePolyline(polylines)
 # 
 # dt <- data.table(polyline = polylines)
-# 
-# dt[, c("lon", "lat") := googleway::decode_pl(polyline)]
-# 
+# #
+# dt[, c("lon", "lat") := decodePolyline(polyline)]
+# # dt[, c("lon", "lat") := googleway::decode_pl(polyline)]
+# # 
 
 
 ### GEOMETRYCOLLECTION
@@ -102,6 +118,7 @@
 ### MULTI*
 ### nested list of lists
 
+# library(sf)
 # df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
 # 								 lineId = c(1,1,1,1,2,2,2,2,1,1,1,2),
 # 								 lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, -66.668, -70.579, -70, -49, -51, -70),
