@@ -57,7 +57,7 @@ test_that("sf attributes extracted", {
   sfAttrs <- googlePolylines:::sfGeometryAttributes(nc)
   
   ## from sfc column
-  sfcAttrs <- googlePolylines:::sfGeometryAttributes(nc[, 'geometry'])
+  sfcAttrs <- googlePolylines:::sfGeometryAttributes(nc[['geometry']])
   
   
   expect_equal(
