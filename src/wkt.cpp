@@ -1,18 +1,9 @@
 #include <Rcpp.h>
-#include "googleWKT.h"
+#include "wkt.h"
 #include "googlePolylines.h"
 
 using namespace Rcpp;
 
-// POINT (x y)
-// MULTIPOINT ((x y), (a b))
-// LINESTRING (a b, x y, j k)
-// MULTILINESTRING ((a b, x y, j k), (a b, x y, j k))
-
-// DECODE -> WKT
-// - get TYPE
-// - add to stream
-// - decode coordinates (to numeric matrix?) (or, create a 'decode' methdo that goes to WKT point?)
 void addLonLatToWKTStream(std::ostringstream& os, float lon, float lat ) {
   os << lon << " " << lat;
 }
@@ -122,10 +113,16 @@ Rcpp::StringVector polyline_to_wkt(Rcpp::List sfencoded) {
     std::ostringstream os;
     Rcpp::String wkt;
     std::string stdspl;
+    Rcpp::CharacterVector cls;
       
     Rcpp::StringVector pl = sfencoded[i];
-    Rcpp::CharacterVector cls = pl.attr("sfc");
-    
+
+    if(!Rf_isNull(pl.attr("sfc"))){
+      cls = pl.attr("sfc"); 
+    }else{
+      Rcpp::stop("No geometry attribute found");
+    }
+
     beginWKT(os, cls);
     int n =  pl.size();
   
@@ -149,9 +146,7 @@ Rcpp::StringVector polyline_to_wkt(Rcpp::List sfencoded) {
       
     }
     endWKT(os, cls);
-    
     res[i] = os.str();
-//    return wkt;
   }
   
   return res;

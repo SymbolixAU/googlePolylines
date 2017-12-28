@@ -60,9 +60,7 @@ Rcpp::NumericMatrix decode_polyline(std::string encoded){
     } while (b >= 0x20);
     float dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
     lng += dlng;
-    
-    // if (WKT) { addToWKTStream(lon, lat)}
-    
+
     pointsLat.push_back(lat * (float)1e-5);
     pointsLon.push_back(lng * (float)1e-5);
   }
