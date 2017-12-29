@@ -2,7 +2,16 @@
 #include "wkt.h"
 #include "googlePolylines.h"
 
+// [[Rcpp::depends(BH)]]
+
+//#include <boost/geometry.hpp>
+//#include <boost/geometry/io/wkt/read.hpp>
+//#include <boost/geometry/geometries/point_xy.hpp>
+//#include <boost/geometry/geometries/polygon.hpp>
+//#include <boost/geometry/geometries/multi_polygon.hpp>
+
 using namespace Rcpp;
+//namespace bg = boost::geometry;
 
 void addLonLatToWKTStream(std::ostringstream& os, float lon, float lat ) {
   os << lon << " " << lat;
@@ -134,9 +143,9 @@ Rcpp::StringVector polyline_to_wkt(Rcpp::List sfencoded) {
         os << "),(";
       }else{
         stdspl = spl;
-        os << "(";
+        os << "( ";
         polylineToWKT(os, stdspl);
-        os << ")";
+        os << " )";
         if(n > 1 && j < (n - 1)){
           if(pl[j+1] != SPLIT_CHAR){
             os << ",";
@@ -192,7 +201,68 @@ void polylineToWKT(std::ostringstream& os, std::string encoded){
 }
 
 
+// WKT to encoded polyline
+// every brace is an encoded line. 
+// a double-brache is a SPLIT_CHAR
+void ReplaceStringInPlace(std::string& subject, const std::string& search,
+                          const std::string& replace) {
+  size_t pos = 0;
+  while ((pos = subject.find(search, pos)) != std::string::npos) {
+    subject.replace(pos, search.length(), replace);
+    pos += replace.length();
+  }
+}
 
+/**
+ * Finds the 'GEOMETRY' text
+ */
+std::string geomFromWKT(std::string& pl) {
+  size_t s = pl.find_first_of(" ");
+  std::string geom = pl.substr(0, s);
+  
+//  pl.replace(0, s, "");
+  
+  return geom;
+}
+
+// [[Rcpp::export]]
+void wkt_polyline(Rcpp::StringVector polylines) {
+  
+  // count ')),((' occurances == SPLIT_CHAR
+  // count '),(' occurances == new polyline
+  // count ',' occurances == new coordinates
+  //typedef boost::geometry::model::d2::point_xy<double> point_type;
+  
+  Rcpp::String pls = polylines[0];
+  std::string pl = pls;
+  std::string geom = geomFromWKT(pl);
+
+  Rcpp::Rcout << "geom : " << geom << std::endl;
+  Rcpp::Rcout << pl << std::endl;
+  
+  //typedef boost::geometry::model::d2::point_xy<double> point_type;
+  //point_type pt;
+  //bg::model::multi_polygon<point_type> mp;
+  
+//  ReplaceStringInPlace(pl, ")),((", SPLIT_CHAR);
+
+  /*
+  std::stringstream ss(pl);
+  std::string temp;
+  float found;
+  
+  while( !ss.eof()) {
+    
+    ss >> temp;
+    
+    if (std::stringstream(temp) >> found) {
+      Rcpp::Rcout << found << " ";
+    }
+    
+    temp = "";
+  }
+  */
+}
 
 
 

@@ -11,7 +11,7 @@ Description: Encode and decode coordinates using Google's polyline encoding algo
 License: GPL-3
 Imports:
   Rcpp (>= 0.12.13)
-LinkingTo: Rcpp
+LinkingTo: Rcpp, BH
 RoxygenNote: 6.0.1
 Suggests:
     covr,

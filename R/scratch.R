@@ -44,6 +44,9 @@
 ## WKT
 # nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
 # nce <- encode(nc)
+# wnce <- googlePolylines:::polyline_wkt(nce)
+
+
 
 ## create the sf::rinbd... one
 #googlePolylines:::polyline_to_wkt(enc[1, 'geo'])

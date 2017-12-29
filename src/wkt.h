@@ -12,8 +12,10 @@ using namespace Rcpp;
 #define POLYGON           5
 #define MULTIPOLYGON      6
 
-
-
 #endif
 
 void polylineToWKT(std::ostringstream& os, std::string encoded);
+
+std::string geomFromWKT(std::string& pl);
+
+
