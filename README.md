@@ -20,7 +20,7 @@ devtools::install_github("SymbolixAU/googlePolylines")
 
 ## Scope
 
-`googlePolylines` supports and `data.frame` objects (with coordinates listed as lat/long) and Simple Feature Collections (as listed below).
+`googlePolylines` supports `data.frame` objects (with coordinates listed as lon/lat) and Simple Feature Collections (as listed below).
 
 Supported `sf` types 
 
@@ -38,7 +38,7 @@ Unsupported `sf` types
 
 ## Examples
 
-`googlePolylines` contains functions to encode objects (`encode`) and also to decode into well-known text format (`polyline_wkt`).
+`googlePolylines` contains functions to encode coordinates into polylines, and also to decode polylines into well-known text format (`polyline_wkt`).
 
 ### `encode` example
 
@@ -111,7 +111,7 @@ encode(df)
 
 ```
 
-### Decode to well-known text example
+### Polyline to well-known text example
 
 ```
 
