@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <boost/algorithm/string.hpp>
 #include "wkt.h"
 #include "googlePolylines.h"
 
@@ -217,9 +218,9 @@ void ReplaceStringInPlace(std::string& subject, const std::string& search,
  * Finds the 'GEOMETRY' text
  */
 std::string geomFromWKT(std::string& pl) {
-  size_t s = pl.find_first_of(" ");
+  size_t s = pl.find_first_of("(");
   std::string geom = pl.substr(0, s);
-  
+  boost::trim(geom);
 //  pl.replace(0, s, "");
   
   return geom;
