@@ -18,11 +18,11 @@ You can install googlePolylines from github with:
 devtools::install_github("SymbolixAU/googlePolylines")
 ```
 
+## Scope
 
+`googlePolylines` supports and `data.frame` objects (with coordinates listed as lat/long) and Simple Feature Collections (as listed below).
 
-## Examples
-
-Supported `sf` types
+Supported `sf` types 
 
 - POINT
 - MULTIPOINT
@@ -36,9 +36,18 @@ Unsupported `sf` types
 
 - GEOMETRYCOLLECTION
 
+## Examples
 
+`googlePolylines` contains functions to encode objects (`encode`) and also to decode into well-known text format (`polyline_wkt`).
+
+### `encode` example
 
 ```
+library(googlePolylines)
+library(sf)
+
+# create data
+
 df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
 				lineId = c(1,1,1,1,2,2,2,2,1,1,1,2),
 				lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, -66.668, -70.579, -70, -49, -51, -70),
@@ -48,6 +57,8 @@ p1 <- as.matrix(df[1:4, c("lon", "lat")])
 p2 <- as.matrix(df[5:8, c("lon", "lat")])
 p3 <- as.matrix(df[9:12, c("lon", "lat")])
 
+# create `sf` collections
+
 point <- sf::st_sfc(sf::st_point(x = c(df[1,"lon"], df[1,"lat"])))
 multipoint <- sf::st_sfc(sf::st_multipoint(x = as.matrix(df[1:2, c("lon", "lat")])))
 polygon <- sf::st_sfc(sf::st_polygon(x = list(p1, p2)))
@@ -55,16 +66,18 @@ linestring <- sf::st_sfc(sf::st_linestring(p3))
 multilinestring <- sf::st_sfc(sf::st_multilinestring(list(p1, p2)))
 multipolygon <- sf::st_sfc(sf::st_multipolygon(x = list(list(p1, p2), list(p3))))
 
+# combine all types into one collection
 
 sf <- rbind(
-	st_sf(geo = polygon),
-	st_sf(geo = multilinestring),
-	st_sf(geo = linestring),
-	st_sf(geo = point),
-	st_sf(geo = multipoint)
+	sf::st_sf(geo = polygon),
+	sf::st_sf(geo = multilinestring),
+	sf::st_sf(geo = linestring),
+	sf::st_sf(geo = point),
+	sf::st_sf(geo = multipoint)
 	)
 
 sf
+
 # Simple feature collection with 5 features and 0 fields
 # geometry type:  GEOMETRY
 # dimension:      XY
@@ -78,7 +91,10 @@ sf
 # 4          POINT (-80.19 26.774)
 # 5 MULTIPOINT (-80.19 26.774, ...
 
+# encode sf objects
+
 encode(sf)
+
 #                                                                           geo
 # 1 ohlbDnbmhN~suq@am{tAw`qsAeyhGvkz`@fge}A, ggmnDt}wmLgc`DesuQvvrLofdDorqGtzzV
 # 2 ohlbDnbmhN~suq@am{tAw`qsAeyhGvkz`@fge}A, ggmnDt}wmLgc`DesuQvvrLofdDorqGtzzV
@@ -86,7 +102,30 @@ encode(sf)
 # 4                                                                  ohlbDnbmhN
 # 5                                                      ohlbDnbmhN, osuoBltprK
 
+
+# encode data frame as a list of points
+
+encode(df)
+# [1] "ohlbDnbmhN~suq@am{tAw`qsAeyhGvkz`@fge}Aw}_Kycty@gc`DesuQvvrLofdDorqGtzzVfkdh@uapB_ibE_qd_C~hbE~reK?~|}rB"
+
+
 ```
+
+### Decode to well-known text example
+
+```
+
+enc <- encode(sf)
+wkt <- polyline_wkt(enc)
+
+                                                                                                                                               geo
+# 1         POLYGON ((-80.19 26.774, -66.118 18.466, -64.757 32.321, -80.19 26.774),(-70.579 28.745, -67.514 29.57, -66.668 27.339, -70.579 28.745))
+# 2 MULTILINESTRING ((-80.19 26.774, -66.118 18.466, -64.757 32.321, -80.19 26.774),(-70.579 28.745, -67.514 29.57, -66.668 27.339, -70.579 28.745))
+# 3                                                                                                      LINESTRING (-70 22, -49 23, -51 22, -70 22)
+# 4                                                                                                                            POINT (-80.19 26.774)
+# 5                                                                                   MULTIPOINT ((-80.19 26.774),(-66.118 18.466),(-64.757 32.321))
+```
+
 
 
 ## Motivation
