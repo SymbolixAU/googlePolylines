@@ -174,8 +174,8 @@
 # encode(sf)
 # 
 # enc <- encode(sf)
-
-
+# w <- googlePolylines:::polyline_wkt(enc)
+# googlePolylines:::polyline_distance(w$geo)
 
 
 ### SELECTING SPECIFIC TYPES

@@ -5,14 +5,26 @@
 
 using namespace Rcpp;
 
-// polyline_distance
-void polyline_distance(Rcpp::StringVector wkt);
-RcppExport SEXP _googlePolylines_polyline_distance(SEXP wktSEXP) {
+// polyline_length
+Rcpp::NumericVector polyline_length(Rcpp::StringVector wkt);
+RcppExport SEXP _googlePolylines_polyline_length(SEXP wktSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type wkt(wktSEXP);
-    polyline_distance(wkt);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(polyline_length(wkt));
+    return rcpp_result_gen;
+END_RCPP
+}
+// polyline_area
+Rcpp::NumericVector polyline_area(Rcpp::StringVector wkt);
+RcppExport SEXP _googlePolylines_polyline_area(SEXP wktSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type wkt(wktSEXP);
+    rcpp_result_gen = Rcpp::wrap(polyline_area(wkt));
+    return rcpp_result_gen;
 END_RCPP
 }
 // encodeSfGeometry
@@ -62,7 +74,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_googlePolylines_polyline_distance", (DL_FUNC) &_googlePolylines_polyline_distance, 1},
+    {"_googlePolylines_polyline_length", (DL_FUNC) &_googlePolylines_polyline_length, 1},
+    {"_googlePolylines_polyline_area", (DL_FUNC) &_googlePolylines_polyline_area, 1},
     {"_googlePolylines_encodeSfGeometry", (DL_FUNC) &_googlePolylines_encodeSfGeometry, 2},
     {"_googlePolylines_rcpp_encode_polyline", (DL_FUNC) &_googlePolylines_rcpp_encode_polyline, 2},
     {"_googlePolylines_polyline_to_wkt", (DL_FUNC) &_googlePolylines_polyline_to_wkt, 1},
