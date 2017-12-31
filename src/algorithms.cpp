@@ -7,7 +7,8 @@ using namespace Rcpp;
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/linestring.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
-//#include <boost/variant/variant.hpp>
+#include <boost/variant/variant.hpp>
+#include <boost/variant.hpp>
 //#include <boost/geometry/io/wkt/read.hpp>
 #include "wkt.h"
 
@@ -24,7 +25,7 @@ typedef geom::model::multi_linestring<linestring_type> multi_linestring_type;
 typedef geom::model::polygon<point_type> polygon_type;
 typedef geom::model::multi_polygon<polygon_type> multi_polygon_type;
 
-/*
+
 typedef boost::variant
   <
     point_type,
@@ -35,7 +36,27 @@ typedef boost::variant
     multi_polygon_type
   > 
   geometryVariant;
- */
+
+struct variantLength : public boost::static_visitor<>{
+  void operator() (linestring_type ls) const { geom::length(ls); }
+};
+
+/*
+int main() {
+  std::string wkt = "LINESTRING(0 0, 1 1, 2, 2)";
+  geometryVariant gv;
+  geom::read_wkt(wkt, gv);
+}
+*/
+
+void functionTest() {
+  std::string wkt = "LINESTRING(0 0, 1 1, 2, 2)";
+  linestring_type ls;
+  geom::read_wkt(wkt, ls);
+
+}
+
+
 
 // TODO:
 // - distance
@@ -50,8 +71,9 @@ typedef boost::variant
 //https://stackoverflow.com/questions/9410/how-do-you-pass-a-function-as-a-parameter-in-c
 
 template <typename T, typename F>
-T myFunction(T geom, F geomFunc) {
-  return geomFunc(geom);
+void myFunction(T geom,  F geomFunc) {
+  Rcpp::NumericVector vec;
+  std::cout << "length is: " <<  geomFunc(geom) << std::endl;
 }
 
 
@@ -73,6 +95,9 @@ Rcpp::NumericVector polyline_length(Rcpp::StringVector wkt) {
       
       geom::model::linestring<point_type> g;
       geom::read_wkt(s_wkt, g);
+
+      myFunction(g, boost::geometry::length<geometryVariant>);
+      
       resultLength[i] = geom::length(g);
       
     }else if( geometry == "MULTILINESTRING") {
@@ -106,13 +131,13 @@ Rcpp::NumericVector polyline_area(Rcpp::StringVector wkt) {
       
       geom::model::polygon<point_type> g;
       geom::read_wkt(s_wkt, g);
-      resultArea[i] = geom::length(g);
+      resultArea[i] = geom::area(g);
       
     }else if( geometry == "MULTIPOLYGON") {
       
       geom::model::multi_polygon<polygon_type> g;
       geom::read_wkt(s_wkt, g);
-      resultArea[i] = geom::length(g);
+      resultArea[i] = geom::area(g);
       
     }else{
       resultArea[i] = NA_REAL;
