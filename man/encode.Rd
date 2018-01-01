@@ -29,9 +29,13 @@ spatial attributes associated with the \code{sf} object}
 encoded object
 }
 \description{
-Encodes coordinates into an encoded polyline
+Encodes coordinates into an encoded polyline.
 }
 \details{
+The function assumes Google Web Mercator projection (WSG 84 / EPSG:3857 / EPSG:900913)
+for inputs and outputs.
+
+
 Will work with
 \itemize{
   \item{\code{sf} and \code{sfc} objects}

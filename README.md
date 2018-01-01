@@ -20,6 +20,8 @@ devtools::install_github("SymbolixAU/googlePolylines")
 
 ## Scope
 
+Because `googlePolylines` uses Google's polyline encoding algorithm, all functions assume Google Web Mercator projection (WSG 84 / EPSG:3857 / EPSG:900913) for inputs and outputs. Objects that use other projections should be re-projected into EPSG:3857 before using these functions.
+
 `googlePolylines` supports `data.frame` objects (with coordinates listed as lon/lat) and Simple Feature Collections (as listed below).
 
 Supported `sf` types 
@@ -35,6 +37,7 @@ Supported `sf` types
 Unsupported `sf` types
 
 - GEOMETRYCOLLECTION
+
 
 ## Examples
 
