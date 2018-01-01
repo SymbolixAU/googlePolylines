@@ -10,6 +10,7 @@ using namespace Rcpp;
 #include <boost/variant/variant.hpp>
 #include <boost/variant.hpp>
 #include <boost/bind.hpp>
+#include <boost/foreach.hpp>
 //#include <boost/geometry/io/wkt/read.hpp>
 #include "wkt.h"
 
@@ -17,6 +18,17 @@ using namespace Rcpp;
 
 namespace bg = boost::geometry;
 namespace bgm = bg::model;
+
+// TODO:
+// - other algorithms: http://www.boost.org/doc/libs/1_66_0/libs/geometry/doc/html/geometry/reference/algorithms.html
+//
+// - correct for polygon ring direction? (outer == clockwise, holes == counter-clockwise)
+// -- we could leave this up to the user for now, and assume the rings are oriented correctly
+// -- or should the user conform from the outset? (and use http://www.boost.org/doc/libs/1_47_0/libs/geometry/doc/html/geometry/reference/algorithms/correct.html)
+//
+// - specify units / CRS ? 
+
+
 
 typedef bg::model::d2::point_xy<double> point_type;
 //typedef bg::model::point <double , 2, bg::cs::geographic<bg::degree> > point_type;
@@ -39,6 +51,16 @@ typedef boost::variant
   > 
   geometryVariant;
 
+typedef boost::variant
+  <
+    linestring_type,
+    multi_linestring_type,
+    polygon_type,
+    multi_polygon_type
+  >
+  geometryIntersection;
+
+// https://stackoverflow.com/a/48045800/4002530
 struct {
   using result_type = bool;
   
@@ -69,6 +91,16 @@ geometryVariant read_any_wkt(std::string const& wkt) {
   throw bg::read_wkt_exception("read_any_wkt failed", wkt);
 }
 
+geometryIntersection read_intersection_wkt(std::string const& wkt) {
+//  { point_type            tmp; if (read_wkt(wkt, tmp)) return tmp; }
+//  { multi_point_type      tmp; if (read_wkt(wkt, tmp)) return tmp; }
+  { linestring_type       tmp; if (read_wkt(wkt, tmp)) return tmp; }
+  { multi_linestring_type tmp; if (read_wkt(wkt, tmp)) return tmp; }
+  { polygon_type          tmp; if (read_wkt(wkt, tmp)) return tmp; }
+  { multi_polygon_type    tmp; if (read_wkt(wkt, tmp)) return tmp; }
+  throw bg::read_wkt_exception("read_any_wkt failed", wkt);
+}
+
 template <typename T, typename F>
 double geometryFunction(T geom,  F geomFunc) {
   return geomFunc(geom);
@@ -76,114 +108,50 @@ double geometryFunction(T geom,  F geomFunc) {
 
 
 template <typename T, typename F>
-double geometryFunction(T geom1, T geom2,  F geomFunc) {
+geometryVariant geometryFunction(T geom1, T geom2,  F geomFunc) {
   return geomFunc(geom1, geom2);
 }
 
-/*
-void geometryType(const char *geom, int *geomType = NULL) {
-  
-  int type = 0;
-  
-  if(strcmp(geom, "POINT") == 0) {
-    type = POINT;
-  }else if(strcmp(geom, "MULTIPOINT") == 0) {
-    type = MULTIPOINT;
-  }else if(strcmp(geom, "LINESTRING") == 0) {
-    type = LINESTRING;
-  }else if(strcmp(geom, "MULTILINESTRING") == 0) {
-    type = MULTILINESTRING;
-  }else if(strcmp(geom, "POLYGON") == 0) {
-    type = POLYGON;
-  }else if(strcmp(geom, "MULTIPOLYGON") == 0) {
-    type = MULTIPOLYGON;
-  }else{
-    type = UNKNOWN;
-  }
-  *geomType = type;
-}
-*/
 
-template <typename T, typename F>
-geometryVariant getGeometry(T wkt, F geomFunc) {
-  
-  //int geomType;
-  
-  //geometryVariant gv;
-  
-  //std::string geometry = geomFromWKT(wkt);
-  
-  //geometryType(geometry.c_str(), &geomType);
-  
-  //Rcpp::Rcout << "geom: " << geometry << std::endl;
-  //Rcpp::Rcout << "geomType: " << geomType << std::endl;
-  
-  //auto any = read_any_wkt(wkt);
-  //return any;
-  //std::cout << "read_any_wkt: " << bg::wkt(any) << "\n";
-  
-  //std::cout << "any length: " << geomFunc(any) << "\n";
-  
-  /*
-  switch(geomType) {
-  case POINT:
-    
-  }
-
-  if (geometry == "POINT") {
-    
-    //geometryVariant g;
-    bgm::d2::point_xy<double> pt;
-    bg::read_wkt(wkt, pt);
-    
-  }else if (geometry == "MULTIPOINT" ) {
-    //geometryVariant g;
-    bgm::multi_point<point_type> mpt;
-    bg::read_wkt(wkt, mpt);
-    
-  }else if (geometry == "LINESTRING" ) {
-    //geometryVariant g;
-    Rcpp::Rcout << wkt << std::endl;
-
-    bgm::linestring<point_type> ls;
-    bg::read_wkt(wkt, ls);
-    
-    std::cout << "linestring: " << geomFunc(ls) << std::endl;
-    
-  }else if (geometry == "MULTILINESTRING" ) {
-    //geometryVariant g;
-    bgm::multi_linestring<linestring_type> mls;
-    bg::read_wkt(wkt, mls);
-    
-  }else if (geometry == "POLYGON" ) {
-    //geometryVariant g;
-    bgm::polygon<point_type> p;
-    bg::read_wkt(wkt, p)
-      ;
-  }else if (geometry == "MULTIPOLYGON" ) {
-    //geometryVariant g;
-    bgm::multi_polygon<polygon_type> mp;
-    bg::read_wkt(wkt, mp);
-    
-  }else{
-    Rcpp::stop("unknown geometry type");
-  }
-  return gv;
-  */
-}
-
-/*
-void lineTest() {
-  std::string wkt = "LINESTRING(0 0, 1 1, 2 2, 3 3)";
-  geometryVariant g = getGeometry(wkt);
-  
-}
-*/
 // [[Rcpp::export]]
-Rcpp::NumericVector polyline_length(Rcpp::StringVector wkt) {
+void intersectionTest() { 
+  
+  std::string wkt1 = "POLYGON((2 1.3,2.4 1.7,2.8 1.8,3.4 1.2,3.7 1.6,3.4 2,4.1 3,5.3 2.6,5.4 1.2,4.9 0.8,2.9 0.7,2 1.3)"
+  "(4.0 2.0, 4.2 1.4, 4.8 1.9, 4.4 2.2, 4.0 2.0))";
+  std::string wkt2 = "POLYGON((4.0 -0.5 , 3.5 1.0 , 2.0 1.5 , 3.5 2.0 , 4.0 3.5 , 4.5 2.0 , 6.0 1.5 , 4.5 1.0 , 4.0 -0.5))";
+  
+  std::string wkt3 = "LINESTRING(4.0 -0.5 , 3.5 1.0 , 2.0 1.5 , 3.5 2.0 , 4.0 3.5 , 4.5 2.0 , 6.0 1.5 , 4.5 1.0 , 4.0 -0.5)";
+  
+  std::string wkt4 = "MULTIPOLYGON(((4.0 -0.5 , 3.5 1.0 , 2.0 1.5 , 3.5 2.0 , 4.0 3.5 , 4.5 2.0 , 6.0 1.5 , 4.5 1.0 , 4.0 -0.5)))";
+  
+  geometryIntersection gv1;
+  gv1 = read_intersection_wkt(wkt1);
 
-  Rcpp::NumericVector resultLength(wkt.length());
-  std::string geometry;
+  geometryIntersection gv2;
+  gv2 = read_intersection_wkt(wkt2);
+  
+  geometryIntersection gv3;
+  gv3 = read_intersection_wkt(wkt3);
+  
+  geometryIntersection gv4;
+  gv4 = read_intersection_wkt(wkt4);
+  
+  multi_linestring_type output;
+  //multi_polygon_type output;
+  //geometryFunction(gv1, gv2, bg::intersection<geometryVariant>);
+  bg::intersection(gv1, gv4, output);
+  
+  BOOST_FOREACH(geometryIntersection const& p, output) {
+    std::cout << bg::wkt(p) << std::endl;
+  }
+
+  
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector polyline_algorithm(Rcpp::StringVector wkt, Rcpp::String algorithm) {
+
+  Rcpp::NumericVector result(wkt.length());
   std::string s_wkt;
   Rcpp::String i_wkt;
   geometryVariant gv;
@@ -193,66 +161,11 @@ Rcpp::NumericVector polyline_length(Rcpp::StringVector wkt) {
     s_wkt = i_wkt;
     
     gv = read_any_wkt(s_wkt);
-//    gv = getGeometry(s_wkt, bg::length<geometryVariant>);
-    resultLength[i] = geometryFunction(gv, bg::length<geometryVariant>);
-    /*
-
-    geometry = geomFromWKT(s_wkt);
-
-    if (geometry == "LINESTRING") {
-      
-      bg::model::linestring<point_type> g;
-      bg::read_wkt(s_wkt, g);
-
-      resultLength[i] = geometryFunction(g, boost::geometry::length<geometryVariant>);
-      
-    }else if( geometry == "MULTILINESTRING") {
-      
-      bg::model::multi_linestring<linestring_type> g;
-      bg::read_wkt(s_wkt, g);
-      
-      resultLength[i] = geometryFunction(g, boost::geometry::length<geometryVariant>);
-
-    }else{
-      resultLength[i] = NA_REAL;
-    }
-     
-     */
-  }
-  return resultLength;
-}
-
-// [[Rcpp::export]]
-Rcpp::NumericVector polyline_area(Rcpp::StringVector wkt) {
-  
-  Rcpp::NumericVector resultArea(wkt.length());
-  std::string geometry;
-  std::string s_wkt;
-  Rcpp::String i_wkt;
-  
-  for (size_t i = 0; i < wkt.size(); i++ ) {
-    i_wkt = wkt[i];
-    s_wkt = i_wkt;
-    
-    geometry = geomFromWKT(s_wkt);
-    
-    if (geometry == "POLYGON") {
-      
-      bgm::polygon<point_type> g;
-      bg::read_wkt(s_wkt, g);
-      resultArea[i] = bg::area(g);
-      
-    }else if( geometry == "MULTIPOLYGON") {
-      
-      bgm::multi_polygon<polygon_type> g;
-      bg::read_wkt(s_wkt, g);
-      resultArea[i] = bg::area(g);
-      
-    }else{
-      resultArea[i] = NA_REAL;
+    if(algorithm == "length") { 
+      result[i] = geometryFunction(gv, bg::length<geometryVariant>);
+    }else if(algorithm == "area") {
+      result[i] = geometryFunction(gv, bg::area<geometryVariant>);
     }
   }
-  return resultArea;
+  return result;
 }
-
-

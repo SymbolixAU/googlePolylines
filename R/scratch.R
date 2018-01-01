@@ -45,8 +45,17 @@
 # nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
 # nce <- encode(nc)
 # wnce <- googlePolylines:::polyline_wkt(nce)
-
-
+# 
+# microbenchmark(
+#   gp = { googlePolylines:::polyline_algorithm(wnce$geometry, "area") },
+#   sf = { sf::st_area(nc) },
+#   times = 5
+# )
+# 
+# # Unit: milliseconds
+# # expr      min       lq      mean   median        uq       max neval
+# # gp 15.94249 18.75372  18.36996 18.76448  19.10473  19.28437     5
+# # sf 38.28648 39.45862 207.25411 43.30715 333.59892 581.61940     5
 
 ## create the sf::rinbd... one
 #googlePolylines:::polyline_to_wkt(enc[1, 'geo'])
@@ -153,8 +162,8 @@
 # 								 lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, -66.668, -70.579, -70, -49, -51, -70),
 # 								 lat = c(26.774, 18.466, 32.321, 26.774, 28.745, 29.570, 27.339, 28.745, 22, 23, 22, 22))
 # 
-# p1 <- as.matrix(df[1:4, c("lon", "lat")])
-# p2 <- as.matrix(df[5:8, c("lon", "lat")])
+# p1 <- as.matrix(df[4:1, c("lon", "lat")])
+# p2 <- as.matrix(df[8:5, c("lon", "lat")])
 # p3 <- as.matrix(df[9:12, c("lon", "lat")])
 # 
 # point <- sf::st_sfc(sf::st_point(x = c(df[1,"lon"], df[1,"lat"])))
