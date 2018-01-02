@@ -37,6 +37,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// parseWkt
+Rcpp::List parseWkt(Rcpp::StringVector wkt);
+RcppExport SEXP _googlePolylines_parseWkt(SEXP wktSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type wkt(wktSEXP);
+    rcpp_result_gen = Rcpp::wrap(parseWkt(wkt));
+    return rcpp_result_gen;
+END_RCPP
+}
 // encodeSfGeometry
 Rcpp::List encodeSfGeometry(Rcpp::List sfc, bool strip);
 RcppExport SEXP _googlePolylines_encodeSfGeometry(SEXP sfcSEXP, SEXP stripSEXP) {
@@ -87,6 +98,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_googlePolylines_intersectionTest", (DL_FUNC) &_googlePolylines_intersectionTest, 0},
     {"_googlePolylines_centroidTest", (DL_FUNC) &_googlePolylines_centroidTest, 1},
     {"_googlePolylines_polyline_algorithm", (DL_FUNC) &_googlePolylines_polyline_algorithm, 2},
+    {"_googlePolylines_parseWkt", (DL_FUNC) &_googlePolylines_parseWkt, 1},
     {"_googlePolylines_encodeSfGeometry", (DL_FUNC) &_googlePolylines_encodeSfGeometry, 2},
     {"_googlePolylines_rcpp_encode_polyline", (DL_FUNC) &_googlePolylines_rcpp_encode_polyline, 2},
     {"_googlePolylines_polyline_to_wkt", (DL_FUNC) &_googlePolylines_polyline_to_wkt, 1},

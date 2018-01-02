@@ -14,7 +14,7 @@ using namespace Rcpp;
 //#include <boost/geometry/io/wkt/read.hpp>
 #include "wkt.h"
 #include "variants.h"
-
+#include "googlePolylines.h"
 
 //#include <boost/foreach.hpp>
 
@@ -211,3 +211,124 @@ Rcpp::NumericVector polyline_algorithm(Rcpp::StringVector wkt, Rcpp::String algo
   }
   return result;
 }
+
+template <typename Point>
+void encode_wkt_point(Point const& p, Rcpp::List& resultPolylines, size_t i) {
+  
+  using boost::geometry::get;
+
+  Rcpp::NumericVector lon(1);
+  Rcpp::NumericVector lat(1);
+    
+  lon[0] = get<0>(p);
+  lat[0] = get<1>(p);
+  
+  Rcpp::String polyline;
+  
+//  polylines.attr("sfc") = cls;
+  
+  polyline = encode_polyline(lon, lat);
+  resultPolylines[i] = polyline;
+  //Rcpp::Rcout << "polyline: " << polyline << std::endl;
+  //return polyline;
+}
+
+template <typename MultiPoint>
+void encode_wkt_multipoint(MultiPoint const& mp, Rcpp::List& resultPolylines, size_t i) {
+  
+  using boost::geometry::get;
+  
+  //std::cout << "num points: " << bg::num_points(mp) << std::endl;
+  size_t n = bg::num_points(mp);
+  Rcpp::CharacterVector polylines(1);
+
+  //bg::for_each_point(
+  //  mp,
+  //  //bg::wkt(point_type);
+  //  // TODO: make into pointer stuff
+  //  encode_wkt_point<point_type, resultPolylines, i>
+  //  //list_coordinates<point_type>
+  //);
+
+  //point_type pt;
+  
+  //for (int i = 0; i < n; i ++ ) {
+    //pt = get<point_type, i>(mp);
+    //polylines[i] = encode_wkt_point(pt, cls);
+  //}
+
+  //return polylines;
+  
+}
+
+// [[Rcpp::export]]
+Rcpp::List parseWkt(Rcpp::StringVector wkt) {
+  
+  size_t n = wkt.length();
+  Rcpp::String r_wkt;
+  std::string str_wkt;
+  std::string geomType;
+  
+  Rcpp::CharacterVector cls(3);
+  
+  Rcpp::List resultPolylines(n);
+  
+  for (int i = 0; i < n; i++ ) {
+    
+    r_wkt = wkt[i];
+    str_wkt = r_wkt;
+    geomType = geomFromWKT(str_wkt);
+    
+    cls[0] = "XY";
+    cls[1] = geomType;
+    cls[2] = "sfg";
+    
+    if (geomType == "POINT" ) {
+      
+      point_type pt;
+      bg::read_wkt(str_wkt, pt);
+      //resultPolylines[i] = encode_wkt_point(pt);
+      encode_wkt_point(pt, resultPolylines, i);
+      
+    }else if (geomType == "MULTIPOINT" ) {
+      
+      multi_point_type mp;
+      bg::read_wkt(str_wkt, mp);
+      //resultPolylines[i] = encode_wkt_multipoint(mp);
+      //resultPolylines[i] = encode_wkt_multipoint(mp, cls);
+      encode_wkt_multipoint(mp, resultPolylines, i);
+    }
+//    std::cout << geomType << std::endl;
+  // create Rcpp::StringVector polylines; inside each encode_wkt_*** function
+    
+    
+  }
+  
+  /*
+  // IF POINT: encode lon & lat
+  point_type g;
+  bg::read_wkt("POINT(1 1)", g);
+  
+  using boost::geometry::get;
+  std::cout << "x: " << get<0>(g) << std::endl;
+  
+  // IF MULTIPOINT: encode multiple lon & lats
+  multi_point_type mp;
+  bg::read_wkt("MULTIPOINT((0 0),(1 1),(2 2))", mp);
+  bg::for_each_point(
+    g,
+    encode_wkt_point<point_type>
+    //list_coordinates<point_type>
+  );
+  */
+  
+  return resultPolylines;
+  
+}
+
+
+
+
+
+
+

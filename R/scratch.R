@@ -177,7 +177,8 @@
 # 	st_sf(geo = polygon),
 # 	st_sf(geo = multilinestring),
 # 	st_sf(geo = linestring),
-# 	st_sf(geo = point)
+# 	st_sf(geo = point),
+#   st_sf(geo = multipoint)
 # 	)
 # 
 # encode(sf)

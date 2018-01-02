@@ -26,11 +26,7 @@ using namespace Rcpp;
 
 #define SPLIT_CHAR "-"
 
-#endif
-
 Rcpp::CharacterVector getSfClass(SEXP sf);
-
-
 
 Rcpp::NumericMatrix decode_polyline(std::string encoded);
 
@@ -40,3 +36,5 @@ Rcpp::String EncodeSignedNumber(int num);
 
 Rcpp::String encode_polyline(Rcpp::NumericVector latitude,
                              Rcpp::NumericVector longitude);
+
+#endif

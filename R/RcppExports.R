@@ -13,6 +13,10 @@ polyline_algorithm <- function(wkt, algorithm) {
     .Call('_googlePolylines_polyline_algorithm', PACKAGE = 'googlePolylines', wkt, algorithm)
 }
 
+parseWkt <- function(wkt) {
+    .Call('_googlePolylines_parseWkt', PACKAGE = 'googlePolylines', wkt)
+}
+
 encodeSfGeometry <- function(sfc, strip) {
     .Call('_googlePolylines_encodeSfGeometry', PACKAGE = 'googlePolylines', sfc, strip)
 }
