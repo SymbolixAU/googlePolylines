@@ -184,7 +184,8 @@
 # 
 # enc <- encode(sf)
 # w <- googlePolylines:::polyline_wkt(enc)
-# googlePolylines:::polyline_length(w$geo)
+# googlePolylines:::polyline_algorithm(w$geo, "area")
+# googlePolylines:::polyline_algorithm(w$geo, "length")
 
 
 ### SELECTING SPECIFIC TYPES

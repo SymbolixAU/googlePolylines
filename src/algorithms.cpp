@@ -4,18 +4,21 @@
 using namespace Rcpp;
 
 #include <boost/geometry.hpp>
-#include <boost/geometry/geometries/point_xy.hpp>
-#include <boost/geometry/geometries/linestring.hpp>
-#include <boost/geometry/geometries/polygon.hpp>
-#include <boost/variant/variant.hpp>
-#include <boost/variant.hpp>
-#include <boost/bind.hpp>
-#include <boost/foreach.hpp>
+//#include <boost/geometry/geometries/point_xy.hpp>
+//#include <boost/geometry/geometries/linestring.hpp>
+//#include <boost/geometry/geometries/polygon.hpp>
+//#include <boost/variant/variant.hpp>
+//#include <boost/variant.hpp>
+//#include <boost/bind.hpp>
+
 //#include <boost/geometry/io/wkt/read.hpp>
 #include "wkt.h"
 #include "variants.h"
 
-#include <boost/function.hpp>
+
+//#include <boost/foreach.hpp>
+
+//#include <boost/function.hpp>
 
 namespace bg = boost::geometry;
 namespace bgm = bg::model;
@@ -141,16 +144,46 @@ void intersectionTest() {
   GeoIntersection gv4;
   gv4 = read_intersection_wkt(wkt4);
   
+  //std::vector<multi_linestring_type> output;
+  //std::deque<linestring_type> output;
+  //GeoIntersectionOutput output;
   multi_linestring_type output;
   //multi_polygon_type output;
   //geometryFunction(gv1, gv2, bg::intersection<geometryVariant>);
   bg::intersection(gv1, gv4, output);
   
-  BOOST_FOREACH(AnyGeo const& p, output) {
-    std::cout << bg::wkt(p) << std::endl;
-  }
+  std::cout << bg::wkt(output) << std::endl;
+  
+//  BOOST_FOREACH(AnyGeo const& p, output) {
+//    std::cout << bg::wkt(p) << std::endl;
+//  }
 
   
+}
+
+// [[Rcpp::export]]
+Rcpp::StringVector centroidTest(Rcpp::StringVector wkt ) {
+  
+  Rcpp::StringVector result(wkt.length());
+  
+  std::string s_wkt;
+  Rcpp::String i_wkt;
+
+  AnyGeo g;
+  point_type p;
+  
+  for (size_t i = 0; i < wkt.size(); i++ ) {
+    i_wkt = wkt[i];
+    s_wkt = i_wkt;
+    std::stringstream ss;
+    
+    g = read_any_wkt(s_wkt);
+    bg::centroid(g, p);
+    ss << bg::wkt(p);
+    result[i] = ss.str();
+
+  }
+  return result;
 }
 
 // [[Rcpp::export]]

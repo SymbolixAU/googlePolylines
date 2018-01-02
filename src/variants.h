@@ -7,6 +7,7 @@ using namespace Rcpp;
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/linestring.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
+#include <boost/geometry/geometries/multi_point.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
 #include <boost/geometry/geometries/multi_linestring.hpp>
 #include <boost/geometry/geometries/multi_polygon.hpp>
@@ -98,6 +99,11 @@ typedef boost::variant<
   polygon_type,
   multi_polygon_type
 > GeoIntersection;
+
+typedef boost::variant<
+//  linestring_type,
+  multi_linestring_type
+> GeoIntersectionOutput;
   
 
 template <typename Variant = AnyGeo>

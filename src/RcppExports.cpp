@@ -14,6 +14,17 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// centroidTest
+Rcpp::StringVector centroidTest(Rcpp::StringVector wkt);
+RcppExport SEXP _googlePolylines_centroidTest(SEXP wktSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type wkt(wktSEXP);
+    rcpp_result_gen = Rcpp::wrap(centroidTest(wkt));
+    return rcpp_result_gen;
+END_RCPP
+}
 // polyline_algorithm
 Rcpp::NumericVector polyline_algorithm(Rcpp::StringVector wkt, Rcpp::String algorithm);
 RcppExport SEXP _googlePolylines_polyline_algorithm(SEXP wktSEXP, SEXP algorithmSEXP) {
@@ -74,6 +85,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_googlePolylines_intersectionTest", (DL_FUNC) &_googlePolylines_intersectionTest, 0},
+    {"_googlePolylines_centroidTest", (DL_FUNC) &_googlePolylines_centroidTest, 1},
     {"_googlePolylines_polyline_algorithm", (DL_FUNC) &_googlePolylines_polyline_algorithm, 2},
     {"_googlePolylines_encodeSfGeometry", (DL_FUNC) &_googlePolylines_encodeSfGeometry, 2},
     {"_googlePolylines_rcpp_encode_polyline", (DL_FUNC) &_googlePolylines_rcpp_encode_polyline, 2},

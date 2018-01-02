@@ -5,6 +5,10 @@ intersectionTest <- function() {
     invisible(.Call('_googlePolylines_intersectionTest', PACKAGE = 'googlePolylines'))
 }
 
+centroidTest <- function(wkt) {
+    .Call('_googlePolylines_centroidTest', PACKAGE = 'googlePolylines', wkt)
+}
+
 polyline_algorithm <- function(wkt, algorithm) {
     .Call('_googlePolylines_polyline_algorithm', PACKAGE = 'googlePolylines', wkt, algorithm)
 }
