@@ -13,6 +13,7 @@ using namespace Rcpp;
 #include <boost/foreach.hpp>
 //#include <boost/geometry/io/wkt/read.hpp>
 #include "wkt.h"
+#include "variants.h"
 
 #include <boost/function.hpp>
 
@@ -28,7 +29,7 @@ namespace bgm = bg::model;
 //
 // - specify units / CRS ? 
 
-
+/*
 
 typedef bg::model::d2::point_xy<double> point_type;
 //typedef bg::model::point <double , 2, bg::cs::geographic<bg::degree> > point_type;
@@ -59,6 +60,7 @@ typedef boost::variant
     multi_polygon_type
   >
   geometryIntersection;
+
 
 // https://stackoverflow.com/a/48045800/4002530
 struct {
@@ -101,17 +103,19 @@ geometryIntersection read_intersection_wkt(std::string const& wkt) {
   throw bg::read_wkt_exception("read_any_wkt failed", wkt);
 }
 
+*/
+  
 template <typename T, typename F>
 double geometryFunction(T geom,  F geomFunc) {
   return geomFunc(geom);
 }
 
-
+/*
 template <typename T, typename F>
 geometryVariant geometryFunction(T geom1, T geom2,  F geomFunc) {
   return geomFunc(geom1, geom2);
 }
-
+*/
 
 // [[Rcpp::export]]
 void intersectionTest() { 
@@ -124,16 +128,17 @@ void intersectionTest() {
   
   std::string wkt4 = "MULTIPOLYGON(((4.0 -0.5 , 3.5 1.0 , 2.0 1.5 , 3.5 2.0 , 4.0 3.5 , 4.5 2.0 , 6.0 1.5 , 4.5 1.0 , 4.0 -0.5)))";
   
-  geometryIntersection gv1;
+  
+  GeoIntersection gv1;
   gv1 = read_intersection_wkt(wkt1);
 
-  geometryIntersection gv2;
+  GeoIntersection gv2;
   gv2 = read_intersection_wkt(wkt2);
   
-  geometryIntersection gv3;
+  GeoIntersection gv3;
   gv3 = read_intersection_wkt(wkt3);
   
-  geometryIntersection gv4;
+  GeoIntersection gv4;
   gv4 = read_intersection_wkt(wkt4);
   
   multi_linestring_type output;
@@ -141,7 +146,7 @@ void intersectionTest() {
   //geometryFunction(gv1, gv2, bg::intersection<geometryVariant>);
   bg::intersection(gv1, gv4, output);
   
-  BOOST_FOREACH(geometryIntersection const& p, output) {
+  BOOST_FOREACH(AnyGeo const& p, output) {
     std::cout << bg::wkt(p) << std::endl;
   }
 
@@ -154,17 +159,21 @@ Rcpp::NumericVector polyline_algorithm(Rcpp::StringVector wkt, Rcpp::String algo
   Rcpp::NumericVector result(wkt.length());
   std::string s_wkt;
   Rcpp::String i_wkt;
-  geometryVariant gv;
+  //geometryVariant gv;
 
+  AnyGeo g;
+  
   for (size_t i = 0; i < wkt.size(); i++ ) {
     i_wkt = wkt[i];
     s_wkt = i_wkt;
     
-    gv = read_any_wkt(s_wkt);
+    g = read_any_wkt(s_wkt);
+    
+    //gv = read_any_wkt(s_wkt);
     if(algorithm == "length") { 
-      result[i] = geometryFunction(gv, bg::length<geometryVariant>);
+      result[i] = geometryFunction(g, bg::length<AnyGeo>);
     }else if(algorithm == "area") {
-      result[i] = geometryFunction(gv, bg::area<geometryVariant>);
+      result[i] = geometryFunction(g, bg::area<AnyGeo>);
     }
   }
   return result;
