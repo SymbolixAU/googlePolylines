@@ -9,6 +9,8 @@ Authors@R: c(
     )
 Description: Encode and decode coordinates using Google's polyline encoding algorithm.
 License: GPL-3
+SystemRequirements: C++14
+Depends: R (>= 3.4.0)
 Imports:
   Rcpp (>= 0.12.13)
 LinkingTo: Rcpp, BH

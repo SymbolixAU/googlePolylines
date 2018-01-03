@@ -263,19 +263,13 @@ void encode_wkt_linestring(LineString const& ls, std::ostringstream& os) {
     lon[i] = bg::get<0>(*it);
     lat[i] = bg::get<1>(*it);
     i++;
-    //std::cout << boost::geometry::get<0>(*it) << " " << boost::geometry::get<1>(*it) << std::endl;
   }
-  
   addToStream(os, encode_polyline(lon, lat));
-  
 }
 
 template <typename MultiLinestring>
 void encode_wkt_multi_linestring(MultiLinestring const& mls, std::ostringstream& os) {
-  
-  size_t n = bg::num_geometries(mls);
-  std::cout << n << std::endl;
-  
+
   typedef typename boost::range_iterator
     <
       multi_linestring_type const
@@ -285,12 +279,28 @@ void encode_wkt_multi_linestring(MultiLinestring const& mls, std::ostringstream&
        it != boost::end(mls);
        ++it)
   {
-    //std::cout << bg::wkt(*it) << std::endl;
     encode_wkt_linestring(*it, os);
   }
-  
 }
 
+template <typename Polygon>
+void encode_wkt_polygon(Polygon const& pl, std::ostringstream& os) {
+  
+  /*
+  typedef typename boost::range_iterator
+  <
+    polygon_type const
+  >::type iterator_type;
+  
+  for (iterator_type it = boost::begin(pl);
+       it != boost::end(pl);
+       ++it)
+  {
+    encode_wkt_linestring(*it, os);
+  }
+  */
+  
+}
 
 // [[Rcpp::export]]
 Rcpp::List parseWkt(Rcpp::StringVector wkt) {
@@ -299,9 +309,7 @@ Rcpp::List parseWkt(Rcpp::StringVector wkt) {
   Rcpp::String r_wkt;
   std::string str_wkt;
   std::string geomType;
-  
-  Rcpp::CharacterVector cls(3);
-  
+
   Rcpp::List resultPolylines(n);
   int lastItem;
   
@@ -313,6 +321,9 @@ Rcpp::List parseWkt(Rcpp::StringVector wkt) {
     str_wkt = r_wkt;
     geomType = geomFromWKT(str_wkt);
     
+    //Rcpp::Rcout << "geomType: " << geomType << std::endl;
+    
+    Rcpp::CharacterVector cls(3);
     cls[0] = "XY";
     cls[1] = geomType;
     cls[2] = "sfg";
@@ -341,6 +352,12 @@ Rcpp::List parseWkt(Rcpp::StringVector wkt) {
       bg::read_wkt(str_wkt, mls);
       encode_wkt_multi_linestring(mls, os);
       
+    }else if (geomType == "POLYGON" ) { 
+      
+      polygon_type pl;
+      bg::read_wkt(str_wkt, pl);
+      encode_wkt_polygon(pl, os);
+      
     }
 //    std::cout << geomType << std::endl;
   // create Rcpp::StringVector polylines; inside each encode_wkt_*** function
@@ -359,6 +376,7 @@ Rcpp::List parseWkt(Rcpp::StringVector wkt) {
     }
     
     Rcpp::CharacterVector sv = wrap(strs);
+    sv.attr("sfc") = cls;
     resultPolylines[i] = sv;
   }
   
