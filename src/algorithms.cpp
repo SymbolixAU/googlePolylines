@@ -212,23 +212,22 @@ Rcpp::NumericVector polyline_algorithm(Rcpp::StringVector wkt, Rcpp::String algo
   return result;
 }
 
-
+/*
 template <typename Point>
 struct myEncode {
-
   void operator()(Point& point, std::ostringstream& os){
     std::cout << bg::get<0>(point) << std::endl;
   }
-  
-  
 };
+*/
 
-/*
+
 template <typename Point>
 void encode_wkt_point(Point const& p, std::ostringstream& os) {
   
   using boost::geometry::get;
 
+  //std::ostringstream os;
   Rcpp::NumericVector lon(1);
   Rcpp::NumericVector lat(1);
     
@@ -241,10 +240,44 @@ void encode_wkt_point(Point const& p, std::ostringstream& os) {
   
   polyline = encode_polyline(lon, lat);
   addToStream(os, polyline);
-  //Rcpp::Rcout << "polyline: " << polyline << std::endl;
-  //return polyline;
 }
 
+
+template <typename Point>
+struct enc
+{
+private:
+//  void addToStream(std::ostringstream& os, Rcpp::String encodedString ) 
+//  {
+//    std::string strng = encodedString;
+//    os << strng << ' ';
+//  }
+public:
+  
+  Rcpp::String operator()(Point& p)
+  {
+
+    std::ostringstream os;
+    Rcpp::NumericVector lon(1);
+    Rcpp::NumericVector lat(1);
+    
+    lon[0] = bg::get<0>(p);
+    lat[0] = bg::get<1>(p);
+    
+    Rcpp::String polyline;
+    
+    //  polylines.attr("sfc") = cls;
+    
+    polyline = encode_polyline(lon, lat);
+    //Rcpp::StringVector st(1);
+    //st[0] = polyline;
+    //Rcpp::Rcout << st << std::endl;
+    //std::cout << "x: " << bg::get<0>(p) << ", y: " << bg::get<1>(p) << std::endl;
+    return polyline;
+  }
+};
+
+/*
 template <typename MultiPoint>
 void encode_wkt_multipoint(MultiPoint const& mp, std::ostringstream& os) {
   
@@ -278,6 +311,8 @@ void encode_wkt_multipoint(MultiPoint const& mp, std::ostringstream& os) {
 // - or use boost function: https://stackoverflow.com/questions/356950/c-functors-and-their-uses
 // - or here https://stackoverflow.com/questions/30175368/c-boost-loop-through-dimensions-of-modelpoint
 
+
+
 // [[Rcpp::export]]
 Rcpp::List parseWkt(Rcpp::StringVector wkt) {
   
@@ -307,16 +342,36 @@ Rcpp::List parseWkt(Rcpp::StringVector wkt) {
       
       point_type pt;
       bg::read_wkt(str_wkt, pt);
+      //list_coordinates(pt);
       //resultPolylines[i] = encode_wkt_point(pt);
-      //encode_wkt_point(pt, os);
-      //encode_wkt_point(pt, os);
-      myEncode<point_type> me;
-      me(pt, os);
+      encode_wkt_point(pt, os);
+      //myEncode<point_type> me;
+      //me(pt, os);
       
     }else if (geomType == "MULTIPOINT" ) {
       
       multi_point_type mp;
+      point_type pt;
+      
+      typedef typename boost::range_iterator
+        <
+          multi_point_type const
+        >::type iterator_type;
+      
       bg::read_wkt(str_wkt, mp);
+      for (iterator_type it = boost::begin(mp); 
+           it != boost::end(mp);
+           ++it) 
+      {
+        //std::cout << "x: " << bg::get<0>(*it) << std::endl;
+        encode_wkt_point(*it, os);
+      }
+      //std::cout << bg::get<0>(mp) << std::endl;
+      //bg::for_each_point(
+      //  mp,
+      //  //encode_wkt_point<point_type>
+      //  enc<point_type>()
+      //);
       //resultPolylines[i] = encode_wkt_multipoint(mp);
       //resultPolylines[i] = encode_wkt_multipoint(mp, cls);
       //encode_wkt_multipoint(mp, os);
@@ -325,10 +380,12 @@ Rcpp::List parseWkt(Rcpp::StringVector wkt) {
 //    std::cout << geomType << std::endl;
   // create Rcpp::StringVector polylines; inside each encode_wkt_*** function
     
+    
     std::string str = os.str();
+    std::cout << str << std::endl;
+    //std::vector<std::string> strs = split(str, ' ');;
     
-    std::vector<std::string> strs = split(str, ' ');;
-    
+    /*
     lastItem = strs.size() - 1;
     
     if (strs[lastItem] == "-") {
@@ -337,6 +394,7 @@ Rcpp::List parseWkt(Rcpp::StringVector wkt) {
     
     Rcpp::CharacterVector sv = wrap(strs);
     resultPolylines[i] = sv;
+    */
   }
   
   /*
