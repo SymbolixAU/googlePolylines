@@ -100,11 +100,7 @@ typedef boost::variant<
   multi_polygon_type
 > GeoIntersection;
 
-typedef boost::variant<
-//  linestring_type,
-  multi_linestring_type
-> GeoIntersectionOutput;
-  
+
 
 template <typename Variant = AnyGeo>
 Variant read_any_wkt(std::string const& wkt) {

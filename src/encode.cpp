@@ -242,13 +242,9 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc, bool strip){
     write_data(os, sfc[i], cls_attr[0], 0);
     
     std::string str = os.str();
-    
-    //Rcpp::Rcout << "str: " << str << std::endl;
-    
+
     std::vector<std::string> strs = split(str, ' ');;
-    //boost::split(strs, str, boost::is_any_of("\t "));
-    
-    //strs.erase(strs.end() - 1);
+
     lastItem = strs.size() - 1;
     
     if (strs[lastItem] == "-") {
@@ -256,15 +252,7 @@ Rcpp::List encodeSfGeometry(Rcpp::List sfc, bool strip){
     }
   
     Rcpp::CharacterVector sv = wrap(strs);
-//    Rcpp::Rcout << "sv: " << sv << std::endl;
-//    for (int j = 0; j < sv.size(); j++ ) {
-//      Rcpp::Rcout << "sv size - j : " << j << std::endl;
-//      if (sv[j].size() == 1 && sv[j] == "-") {
-//        Rcpp::Rcout << "splitter" << std::endl;
-//      }
-//    }
-    
-    
+
     if(strip == FALSE){
       sv.attr("sfc") = getSfClass(sfc[i]);
     }
