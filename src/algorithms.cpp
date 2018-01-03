@@ -244,13 +244,50 @@ void encode_wkt_multipoint(MultiPoint const& mp, std::ostringstream& os) {
 
 template <typename LineString>
 void encode_wkt_linestring(LineString const& ls, std::ostringstream& os) {
-  std::cout << "num points: " << bg::num_points(ls) << std::endl;
+  //std::cout << "num points: " << bg::num_points(ls) << std::endl;
   
   size_t n = bg::num_points(ls);
   Rcpp::NumericVector lon(n);
   Rcpp::NumericVector lat(n);
   
+  typedef typename boost::range_iterator
+    <
+      linestring_type const
+    >::type iterator_type;
   
+  int i = 0;
+  for (iterator_type it = boost::begin(ls);
+       it != boost::end(ls);
+       ++it)
+  {
+    lon[i] = bg::get<0>(*it);
+    lat[i] = bg::get<1>(*it);
+    i++;
+    //std::cout << boost::geometry::get<0>(*it) << " " << boost::geometry::get<1>(*it) << std::endl;
+  }
+  
+  addToStream(os, encode_polyline(lon, lat));
+  
+}
+
+template <typename MultiLinestring>
+void encode_wkt_multi_linestring(MultiLinestring const& mls, std::ostringstream& os) {
+  
+  size_t n = bg::num_geometries(mls);
+  std::cout << n << std::endl;
+  
+  typedef typename boost::range_iterator
+    <
+      multi_linestring_type const
+    >::type iterator_type;
+  
+  for (iterator_type it = boost::begin(mls);
+       it != boost::end(mls);
+       ++it)
+  {
+    //std::cout << bg::wkt(*it) << std::endl;
+    encode_wkt_linestring(*it, os);
+  }
   
 }
 
@@ -297,6 +334,12 @@ Rcpp::List parseWkt(Rcpp::StringVector wkt) {
       linestring_type ls;
       bg::read_wkt(str_wkt, ls);
       encode_wkt_linestring(ls, os);
+      
+    }else if (geomType == "MULTILINESTRING" ) {
+      
+      multi_linestring_type mls;
+      bg::read_wkt(str_wkt, mls);
+      encode_wkt_multi_linestring(mls, os);
       
     }
 //    std::cout << geomType << std::endl;
