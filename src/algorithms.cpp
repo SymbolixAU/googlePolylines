@@ -246,6 +246,8 @@ template <typename LineString>
 void encode_wkt_linestring(LineString const& ls, std::ostringstream& os) {
   //std::cout << "num points: " << bg::num_points(ls) << std::endl;
   
+  // works for RINGS (because it's templated)
+  
   size_t n = bg::num_points(ls);
   Rcpp::NumericVector lon(n);
   Rcpp::NumericVector lat(n);
@@ -285,21 +287,16 @@ void encode_wkt_multi_linestring(MultiLinestring const& mls, std::ostringstream&
 
 template <typename Polygon>
 void encode_wkt_polygon(Polygon const& pl, std::ostringstream& os) {
-  
-  /*
-  typedef typename boost::range_iterator
-  <
-    polygon_type const
-  >::type iterator_type;
-  
-  for (iterator_type it = boost::begin(pl);
-       it != boost::end(pl);
-       ++it)
-  {
-    encode_wkt_linestring(*it, os);
+
+  encode_wkt_linestring(pl.outer(), os);
+
+  // perhaps use
+  // https://stackoverflow.com/questions/7722087/getting-the-coordinates-of-points-from-a-boost-geometry-polygon/7748091#7748091
+  // https://stackoverflow.com/questions/37071031/how-to-get-a-polygon-from-boostgeometrymodelpolygon
+  for (auto& i: pl.inners() ) {
+    encode_wkt_linestring(i, os);
   }
-  */
-  
+ 
 }
 
 // [[Rcpp::export]]
