@@ -183,6 +183,16 @@ test_that("wkt converted back to encoded_column", {
     )
   )
   
+  ## test errors
+  expect_error(
+    wkt_polyline(enc),
+    "Can not find the wkt_column"
+  )
+  
+  expect_error(
+    polyline_wkt(wkt),
+    "Can not find the encoded_column"
+  )
   
 })
 

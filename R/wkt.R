@@ -25,6 +25,8 @@ polyline_wkt <- function(obj) UseMethod("polyline_wkt")
 
 #' @export
 polyline_wkt.sfencoded <- function(obj) {
+  
+  if(is.null(attr(obj, "encoded_column"))) stop("Can not find the encoded_column")
  
   geomCol <- attr(obj, "encoded_column")
 
@@ -71,6 +73,8 @@ wkt_polyline <- function(obj) UseMethod("wkt_polyline")
 
 #' @export
 wkt_polyline.sfencoded <- function(obj) {
+  
+  if(is.null(attr(obj, "wkt_column"))) stop("Can not find the wkt_column")
   
   geomCol <- attr(obj, "wkt_column")
   

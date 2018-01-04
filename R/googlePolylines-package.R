@@ -13,3 +13,5 @@ str.encoded_column <- function(object, ...) {
 }
 
 
+## TODO:
+## - handle XYZ / XYM geometries
