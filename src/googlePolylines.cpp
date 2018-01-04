@@ -135,8 +135,7 @@ Rcpp::String encode_polyline(Rcpp::NumericVector longitude,
 // [[Rcpp::export]]
 Rcpp::String rcpp_encode_polyline(Rcpp::NumericVector longitude,
                                   Rcpp::NumericVector latitude){
-  
-  Rcpp::String output = encode_polyline(longitude,latitude);
-  return output;
+
+  return encode_polyline(longitude,latitude);
 }
 

@@ -13,3 +13,7 @@ polyline_to_wkt <- function(sfencoded) {
     .Call('_googlePolylines_polyline_to_wkt', PACKAGE = 'googlePolylines', sfencoded)
 }
 
+wkt_to_polyline <- function(wkt) {
+    .Call('_googlePolylines_wkt_to_polyline', PACKAGE = 'googlePolylines', wkt)
+}
+

@@ -26,11 +26,14 @@ using namespace Rcpp;
 
 #define SPLIT_CHAR "-"
 
-#endif
+void addToStream(std::ostringstream& os, Rcpp::String encodedString ) ; 
+
+template<typename Out>
+void split(const std::string &s, char delim, Out result);
+
+std::vector<std::string> split(const std::string &s, char delim);
 
 Rcpp::CharacterVector getSfClass(SEXP sf);
-
-
 
 Rcpp::NumericMatrix decode_polyline(std::string encoded);
 
@@ -40,3 +43,5 @@ Rcpp::String EncodeSignedNumber(int num);
 
 Rcpp::String encode_polyline(Rcpp::NumericVector latitude,
                              Rcpp::NumericVector longitude);
+
+#endif
