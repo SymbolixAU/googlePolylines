@@ -16,12 +16,17 @@ using namespace Rcpp;
 namespace bg = boost::geometry;
 namespace bgm = bg::model;
 
+
+/*
 #include <boost/fusion/include/for_each.hpp>
 #include <boost/fusion/include/vector.hpp>
 #include <boost/bind.hpp>
 #include <boost/variant.hpp>
 #include <boost/spirit/home/x3.hpp>
+*/
 
+
+/*
 // https://stackoverflow.com/a/48045800/4002530
 namespace detail {
   template <typename Variant> struct read_any_helper {
@@ -72,8 +77,9 @@ namespace detail {
   };
 }
 
-using point_type = bgm::d2::point_xy<double>;
+*/
 
+//using point_type = bgm::d2::point_xy<double>;
 
 typedef bg::model::d2::point_xy<double> point_type;
 //typedef bg::model::point <double , 2, bg::cs::geographic<bg::degree> > point_type;
@@ -85,6 +91,7 @@ typedef bgm::polygon<point_type> polygon_type;
 typedef bgm::ring<polygon_type> ring_type;
 typedef bgm::multi_polygon<polygon_type> multi_polygon_type;
 
+/*
 typedef boost::variant<
   point_type,
   multi_point_type,
@@ -100,9 +107,9 @@ typedef boost::variant<
   polygon_type,
   multi_polygon_type
 > GeoIntersection;
+*/
 
-
-
+/*
 template <typename Variant = AnyGeo>
 Variant read_any_wkt(std::string const& wkt) {
   return detail::read_any_helper<Variant>::call(wkt);
@@ -112,6 +119,6 @@ template <typename Variant = GeoIntersection>
 Variant read_intersection_wkt(std::string const& wkt) {
   return detail::read_any_helper<Variant>::call(wkt);
 }
-
+*/
 
 #endif
