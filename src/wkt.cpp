@@ -205,6 +205,7 @@ void polylineToWKT(std::ostringstream& os, std::string encoded){
 // WKT to encoded polyline
 // every brace is an encoded line. 
 // a double-brache is a SPLIT_CHAR
+/*
 void ReplaceStringInPlace(std::string& subject, const std::string& search,
                           const std::string& replace) {
   size_t pos = 0;
@@ -213,6 +214,7 @@ void ReplaceStringInPlace(std::string& subject, const std::string& search,
     pos += replace.length();
   }
 }
+*/
 
 /**
  * Finds the 'GEOMETRY' text
@@ -226,7 +228,7 @@ std::string geomFromWKT(std::string& pl) {
   return geom;
 }
 
-// [[Rcpp::export]]
+/*
 void wkt_polyline(Rcpp::StringVector polylines) {
   
   // count ')),((' occurances == SPLIT_CHAR
@@ -247,24 +249,24 @@ void wkt_polyline(Rcpp::StringVector polylines) {
   
 //  ReplaceStringInPlace(pl, ")),((", SPLIT_CHAR);
 
-  /*
-  std::stringstream ss(pl);
-  std::string temp;
-  float found;
-  
-  while( !ss.eof()) {
-    
-    ss >> temp;
-    
-    if (std::stringstream(temp) >> found) {
-      Rcpp::Rcout << found << " ";
-    }
-    
-    temp = "";
-  }
-  */
-}
 
+//  std::stringstream ss(pl);
+//  std::string temp;
+//  float found;
+  
+//  while( !ss.eof()) {
+    
+//    ss >> temp;
+    
+//    if (std::stringstream(temp) >> found) {
+//      Rcpp::Rcout << found << " ";
+//    }
+    
+//    temp = "";
+//  }
+
+}
+*/
 
 
 

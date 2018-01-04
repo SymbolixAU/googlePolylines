@@ -13,8 +13,8 @@ polyline_algorithm <- function(wkt, algorithm) {
     .Call('_googlePolylines_polyline_algorithm', PACKAGE = 'googlePolylines', wkt, algorithm)
 }
 
-parseWkt <- function(wkt) {
-    .Call('_googlePolylines_parseWkt', PACKAGE = 'googlePolylines', wkt)
+wkt_to_polyline <- function(wkt) {
+    .Call('_googlePolylines_wkt_to_polyline', PACKAGE = 'googlePolylines', wkt)
 }
 
 encodeSfGeometry <- function(sfc, strip) {
@@ -27,9 +27,5 @@ rcpp_encode_polyline <- function(longitude, latitude) {
 
 polyline_to_wkt <- function(sfencoded) {
     .Call('_googlePolylines_polyline_to_wkt', PACKAGE = 'googlePolylines', sfencoded)
-}
-
-wkt_polyline <- function(polylines) {
-    invisible(.Call('_googlePolylines_wkt_polyline', PACKAGE = 'googlePolylines', polylines))
 }
 

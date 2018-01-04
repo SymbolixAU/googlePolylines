@@ -296,11 +296,27 @@ void encode_wkt_polygon(Polygon const& pl, std::ostringstream& os) {
   for (auto& i: pl.inners() ) {
     encode_wkt_linestring(i, os);
   }
- 
+}
+
+template <typename MultiPolygon>
+void encode_wkt_multi_polygon(MultiPolygon const& mpl, std::ostringstream& os) {
+  
+  typedef typename boost::range_iterator
+  <
+    multi_polygon_type const
+  >::type iterator_type;
+  
+  for (iterator_type it = boost::begin(mpl);
+       it != boost::end(mpl);
+       ++it)
+  {
+    encode_wkt_polygon(*it, os);
+    addToStream(os, SPLIT_CHAR);
+  }
 }
 
 // [[Rcpp::export]]
-Rcpp::List parseWkt(Rcpp::StringVector wkt) {
+Rcpp::List wkt_to_polyline(Rcpp::StringVector wkt) {
   
   size_t n = wkt.length();
   Rcpp::String r_wkt;
@@ -355,13 +371,14 @@ Rcpp::List parseWkt(Rcpp::StringVector wkt) {
       bg::read_wkt(str_wkt, pl);
       encode_wkt_polygon(pl, os);
       
+    }else if (geomType == "MULTIPOLYGON" ) {
+      
+      multi_polygon_type mpl;
+      bg::read_wkt(str_wkt, mpl);
+      encode_wkt_multi_polygon(mpl, os);
     }
-//    std::cout << geomType << std::endl;
-  // create Rcpp::StringVector polylines; inside each encode_wkt_*** function
-    
-    
+   
     std::string str = os.str();
-    //std::cout << str << std::endl;
     std::vector<std::string> strs = split(str, ' ');;
     
     if(strs.size() > 1) {
@@ -377,26 +394,7 @@ Rcpp::List parseWkt(Rcpp::StringVector wkt) {
     resultPolylines[i] = sv;
   }
   
-  /*
-  // IF POINT: encode lon & lat
-  point_type g;
-  bg::read_wkt("POINT(1 1)", g);
-  
-  using boost::geometry::get;
-  std::cout << "x: " << get<0>(g) << std::endl;
-  
-  // IF MULTIPOINT: encode multiple lon & lats
-  multi_point_type mp;
-  bg::read_wkt("MULTIPOINT((0 0),(1 1),(2 2))", mp);
-  bg::for_each_point(
-    g,
-    encode_wkt_point<point_type>
-    //list_coordinates<point_type>
-  );
-  */
-  
   return resultPolylines;
-  
 }
 
 
