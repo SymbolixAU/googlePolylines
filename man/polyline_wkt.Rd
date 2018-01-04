@@ -15,3 +15,18 @@ well-known text representation of the encoded polylines
 \description{
 Converts encoded polylines into well-known text
 }
+\examples{
+\dontrun{
+
+library(sf)
+nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+
+## encode to polylines
+enc <- encode(nc)
+
+## convert encoded lines to well-known text
+wkt <- polyline_wkt(enc)
+
+}
+
+}

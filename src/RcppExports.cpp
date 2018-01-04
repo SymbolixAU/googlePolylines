@@ -5,35 +5,26 @@
 
 using namespace Rcpp;
 
-// intersectionTest
-void intersectionTest();
-RcppExport SEXP _googlePolylines_intersectionTest() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    intersectionTest();
-    return R_NilValue;
-END_RCPP
-}
-// centroidTest
-Rcpp::StringVector centroidTest(Rcpp::StringVector wkt);
-RcppExport SEXP _googlePolylines_centroidTest(SEXP wktSEXP) {
+// rcpp_polyline_centroid
+Rcpp::StringVector rcpp_polyline_centroid(Rcpp::StringVector wkt);
+RcppExport SEXP _googlePolylines_rcpp_polyline_centroid(SEXP wktSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type wkt(wktSEXP);
-    rcpp_result_gen = Rcpp::wrap(centroidTest(wkt));
+    rcpp_result_gen = Rcpp::wrap(rcpp_polyline_centroid(wkt));
     return rcpp_result_gen;
 END_RCPP
 }
-// polyline_algorithm
-Rcpp::NumericVector polyline_algorithm(Rcpp::StringVector wkt, Rcpp::String algorithm);
-RcppExport SEXP _googlePolylines_polyline_algorithm(SEXP wktSEXP, SEXP algorithmSEXP) {
+// rcpp_polyline_algorithm
+Rcpp::NumericVector rcpp_polyline_algorithm(Rcpp::StringVector wkt, Rcpp::String algorithm);
+RcppExport SEXP _googlePolylines_rcpp_polyline_algorithm(SEXP wktSEXP, SEXP algorithmSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type wkt(wktSEXP);
     Rcpp::traits::input_parameter< Rcpp::String >::type algorithm(algorithmSEXP);
-    rcpp_result_gen = Rcpp::wrap(polyline_algorithm(wkt, algorithm));
+    rcpp_result_gen = Rcpp::wrap(rcpp_polyline_algorithm(wkt, algorithm));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -85,9 +76,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_googlePolylines_intersectionTest", (DL_FUNC) &_googlePolylines_intersectionTest, 0},
-    {"_googlePolylines_centroidTest", (DL_FUNC) &_googlePolylines_centroidTest, 1},
-    {"_googlePolylines_polyline_algorithm", (DL_FUNC) &_googlePolylines_polyline_algorithm, 2},
+    {"_googlePolylines_rcpp_polyline_centroid", (DL_FUNC) &_googlePolylines_rcpp_polyline_centroid, 1},
+    {"_googlePolylines_rcpp_polyline_algorithm", (DL_FUNC) &_googlePolylines_rcpp_polyline_algorithm, 2},
     {"_googlePolylines_wkt_to_polyline", (DL_FUNC) &_googlePolylines_wkt_to_polyline, 1},
     {"_googlePolylines_encodeSfGeometry", (DL_FUNC) &_googlePolylines_encodeSfGeometry, 2},
     {"_googlePolylines_rcpp_encode_polyline", (DL_FUNC) &_googlePolylines_rcpp_encode_polyline, 2},

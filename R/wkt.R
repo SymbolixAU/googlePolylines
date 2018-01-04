@@ -6,6 +6,20 @@
 #' 
 #' @return well-known text representation of the encoded polylines
 #' 
+#' @examples 
+#' \dontrun{
+#' 
+#' library(sf)
+#' nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+#' 
+#' ## encode to polylines
+#' enc <- encode(nc)
+#' 
+#' ## convert encoded lines to well-known text
+#' wkt <- polyline_wkt(enc)
+#' 
+#' }
+#' 
 #' @export
 polyline_wkt <- function(obj) UseMethod("polyline_wkt")
 
@@ -36,6 +50,22 @@ polyline_wkt.default <- function(obj) stop(paste0("I was expecting an sfencoded 
 #' 
 #' @return encoded polyline representation of geometries
 #' 
+#' @examples 
+#' \dontrun{
+#' 
+#' library(sf)
+#' nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+#' 
+#' ## encode to polylines
+#' enc <- encode(nc)
+#' 
+#' ## convert encoded lines to well-known text
+#' wkt <- polyline_wkt(enc)
+#' 
+#' ## convert well-known text back to polylines
+#' enc2 <- wkt_polyline(wkt)
+#' 
+#' }
 #' @export
 wkt_polyline <- function(obj) UseMethod("wkt_polyline")
 

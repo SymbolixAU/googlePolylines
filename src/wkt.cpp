@@ -5,14 +5,7 @@
 
 // [[Rcpp::depends(BH)]]
 
-//#include <boost/geometry.hpp>
-//#include <boost/geometry/io/wkt/read.hpp>
-//#include <boost/geometry/geometries/point_xy.hpp>
-//#include <boost/geometry/geometries/polygon.hpp>
-//#include <boost/geometry/geometries/multi_polygon.hpp>
-
 using namespace Rcpp;
-//namespace bg = boost::geometry;
 
 void addLonLatToWKTStream(std::ostringstream& os, float lon, float lat ) {
   os << lon << " " << lat;

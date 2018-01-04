@@ -99,9 +99,16 @@ test_that("wkt converted back to encoded_column", {
   
   enc <- encode(sf)
   wkt <- polyline_wkt(enc)
-
   e <- wkt_polyline(wkt)
   
+  expect_true(
+    paste0("sfc_", attr(enc, "sfAttributes")$type ) == class(sf$geo)[1]
+  )
+  
+  expect_true(
+    paste0("sfc_", attr(e, "sfAttributes")$type ) == class(sf$geo)[1]
+  )
+    
   expect_true(
     all.equal(class(enc), class(e))
   ) 

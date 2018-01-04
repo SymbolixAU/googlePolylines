@@ -45,6 +45,7 @@
 # nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
 # nce <- encode(nc)
 # wnce <- googlePolylines:::polyline_wkt(nce)
+# ewnce <- googlePolylines::wkt_polyline(wnce)
 # 
 # microbenchmark(
 #   gp = { googlePolylines:::polyline_algorithm(wnce$geometry, "area") },

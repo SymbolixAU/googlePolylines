@@ -15,3 +15,20 @@ encoded polyline representation of geometries
 \description{
 WKT Polyline
 }
+\examples{
+\dontrun{
+
+library(sf)
+nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+
+## encode to polylines
+enc <- encode(nc)
+
+## convert encoded lines to well-known text
+wkt <- polyline_wkt(enc)
+
+## convert well-known text back to polylines
+enc2 <- wkt_polyline(wkt)
+
+}
+}

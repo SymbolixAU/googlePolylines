@@ -1,1 +1,2 @@
+CXX = g++-6
 CXX_STD = CXX14
