@@ -14,16 +14,16 @@ The goal of **googlePolylines** is to encode and decode coordinates using [Googl
 > Polyline encoding is a lossy compression algorithm that allows you to store a series of coordinates as a single string. 
 
 
-Encoded polylines are used by Google Maps to draw lines and polygons, and are therefore supported in the [googleway](https://cran.r-project.org/web/packages/googleway/index.html) package. 
+Encoded polylines are used by Google Maps to draw lines and polygons, and are therefore supported in the [googleway](https://CRAN.R-project.org/package=googleway) package. 
 
-I am intending to update `googleway` to support plotting `sf` objects using encoded polylines.
+I am intending to update `googleway` to support plotting `sf` objects using these encoded polylines.
 
 
 ## Caution
 
-The word **lossy** is important to keep in mind, as the encoding process could reduce precision of your data. If you are after highly-accurate coordiantes this process probably isn't for you. 
+The word **lossy** is important to keep in mind, as the encoding process could reduce precision of your data. If you are after highly accurate coordiantes this process probably isn't for you. 
 
-However, if you need to reduce the size of objects/data, and want quicker plots (see the **Benchmarking** section), then this could help.
+However, if you need to reduce the size of spatial objects/data, and want quicker plots (see the **Benchmarking** section), then this could help.
 
 
 ## Encoding
@@ -145,7 +145,7 @@ enc2[1, ]
 
 ```
 
-I've provided these functions to enable the conversion of encoded polylines into other geometry foramts, shoudl they be required by other packages.  
+I've provided these functions to enable the conversion of encoded polylines into other geometry foramts, should they be required by other packages.  
 
 ## Bencmarking
 

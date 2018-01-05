@@ -83,7 +83,7 @@ test_that("*LINES are encoded", {
 })
 
 test_that("*POLYGONS are encoded", {
-  
+
   encodedLine <- "~py`F__|mZ~oR_pR~oR}oR_af@|`f@"
   polygon <- sf::st_sfc(sf::st_polygon(
     list(matrix(c(144, 144.1, 144.2, 144, -37, -37.1, -37.2, -37), ncol = 2))
@@ -173,7 +173,7 @@ test_that("sf_GEOMETRYs are encoded", {
 
 
 test_that("data.frames are encoded", {
-
+  
   df <- data.frame(polygonId = c(1,1,1,1),
     lineId = c(1,1,1,1),
     lon = c(-80.190, -66.118, -64.757, -80.190),
