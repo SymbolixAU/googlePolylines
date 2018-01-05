@@ -9,9 +9,21 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The goal of googlePolylines is to encode and decode coordinates using [Google's polyline encoding algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
+The goal of **googlePolylines** is to encode and decode coordinates using [Google's polyline encoding algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
 
 > Polyline encoding is a lossy compression algorithm that allows you to store a series of coordinates as a single string. 
+
+
+Encoded polylines are used by Google Maps to draw lines and polygons, and are therefore supported in the [googleway](https://cran.r-project.org/web/packages/googleway/index.html) package. 
+
+I am intending to update `googleway` to support plotting `sf` objects using encoded polylines.
+
+
+## Caution
+
+The word **lossy** is important to keep in mind, as the encoding process could reduce precision of your data. If you are after highly-accurate coordiantes this process probably isn't for you. 
+
+However, if you need to reduce the size of objects/data, and want quicker plots (see the **Benchmarking** section), then this could help.
 
 
 ## Encoding
@@ -47,7 +59,7 @@ The `encode()` function will attempt to find the lon & lat columns inside a data
 ```{r}
 
 df <- data.frame(
-  lon =- c(144.9709, 144.9713, 144.9715, 144.9719, 144.9728, 144.9732, 144.973, 144.9727, 144.9731, 144.9749, 144.9742),
+  lon = c(144.9709, 144.9713, 144.9715, 144.9719, 144.9728, 144.9732, 144.973, 144.9727, 144.9731, 144.9749, 144.9742),
   lat = c(-37.8075, -37.8076, -37.8076, -37.8078, -37.8079, -37.8079, -37.8091, -37.8107, -37.8115, -37.8153, -37.8155)
   )
 
@@ -69,9 +81,9 @@ encode(df)
 - MULTILINESTRING
 - POLYGON
 - MULTIPOLYGON
-- GEOMETRY
 
-It does not currenlty support GEOMETRYCOLLECTION.
+It will not work on GEOMETRYCOLLECTION objects.
+
 
 ```{r}
 
@@ -84,18 +96,25 @@ nc[1:5,]
 
 ```
 
-When used on an `sf` object, a `sfencoded` object is returned
+When used on an `sf` object, an `sfencoded` object is returned, with the encoded polylines replacing the `sf::st_geometry` column. 
 
 ```{r}
 enc <- encode(nc)
 str(enc)
+
+attr(enc, "encoded_column")
+
+enc[1, attr(enc, "encoded_column")]
+
 ```
 
-The geometry attributes are kept on the encoded object. However, you can remove them by specifying `strip = TRUE`
+As you can see, the geometry attributes are kept on the encoded object. However, you can remove them by specifying `strip = TRUE`
 
 ```{r}
 encLite <- encode(nc, strip = T)
 str(encLite)
+
+encLite[1, attr(encLite, "encoded_column")]
 
 ```
 
@@ -108,16 +127,82 @@ vapply(mget(c('nc', 'enc', 'encLite') ), function(x) { format(object.size(x), un
 ```
 
 
-## Decoding
+## Well-known Text
+
+The two functions `polyline_wkt` and `wkt_polylne` can be used to convert `sfencoded` ojbects to and from well-known text.
+
+```{r}
+
+wkt <- polyline_wkt(enc)
+wkt[1, ]
+
+```
 
 
+```{r}
+enc2 <- wkt_polyline(wkt)
+enc2[1, ]
+
+```
+
+I've provided these functions to enable the conversion of encoded polylines into other geometry foramts, shoudl they be required by other packages.  
+
+## Bencmarking
+
+You will note that the encoded strings are different between the two objects. For example
+
+```{r}
+enc[1, 'geometry'][[1]] == enc2[1, 'geometry'][[1]]
+```
+
+This is manifested through the **lossy**-ness of the encoding. However, the general shape of the information is preserved. These two maps are plots of the `enc` and `enc2` objects respectively
+
+```
+library(googleway)
+
+## You'll need a Google Map API key to run this code
+mapKey <- "your_api_key"
+
+google_map(key = mapKey) %>%
+  add_polygons(data = enc, polyline = "geometry", fill_colour = "#00FF00", fill_opacity = 0.2)
+
+```
+![map_enc](./img/map_enc.png)
+
+```
+google_map(key = mapKey) %>%
+  add_polygons(data = enc2, polyline = "geometry", fill_colour = "#FF00FF", fill_opacity = 0.2)
+```
+![map_enc2](./img/map_enc2.png)
 
 
+### Plotting
 
+This benchmark compares plotting an `sf` object through **leaflet** vs plotting the encoded object through **googleway**
 
+```
 
+library(microbenchmark)
+library(leaflet)
 
+microbenchmark(
+  goog = { 
+    google_map(key = mapKey) %>%
+      add_polygons(data = enc, polyline = "polyline")
+      },
+  leaf = { 
+    leaflet() %>%
+      addTiles() %>%
+      addPolygons(data = nc)
+    }
+)
 
+Unit: milliseconds
+ expr       min        lq      mean    median        uq        max neval
+ goog  5.457699  5.972203  6.379053  6.162676  6.467225   8.876789   100
+ leaf 29.915151 32.093100 34.251388 33.088324 34.629769 106.124047   100
+ 
+```
 
 
 

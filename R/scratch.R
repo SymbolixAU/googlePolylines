@@ -1,26 +1,5 @@
 
-## TODO(release):
-## - decoding
-## - print method for encoded geo columns
-## - polygons are closed correctly
-## - attr(*, 'wkt_column')
-## - WKT to encoded polyline
 
-
-## TODO(updates):
-## - geometry collection
-
-
-## TODO(thoughts):
-## - WKT (decode polyline, then set as WKT)? what's the benefit? do I need boost.geometry?
-## -- this will need to work on sfencoded objects? (or, could it just be decoded back to sf, then use sf:::CPL_write_wkb?)
-## -- and, from WKT, encode into polylines
-
-## TODO:
-## - sfencoded without attributes on each row
-
-## TODO:
-## - test each of my WKTs can be used in boost. 
 
 
 ## encoding using osstringstream:

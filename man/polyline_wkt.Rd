@@ -15,6 +15,9 @@ well-known text representation of the encoded polylines
 \description{
 Converts encoded polylines into well-known text
 }
+\note{
+This will not work if you have specified \code{strip = TRUE} for \code{encode()}
+}
 \examples{
 \dontrun{
 

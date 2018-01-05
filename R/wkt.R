@@ -20,6 +20,8 @@
 #' 
 #' }
 #' 
+#' @note This will not work if you have specified \code{strip = TRUE} for \code{encode()}
+#' 
 #' @export
 polyline_wkt <- function(obj) UseMethod("polyline_wkt")
 

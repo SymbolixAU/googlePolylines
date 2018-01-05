@@ -48,13 +48,6 @@
 #' @export
 encode <- function(obj, ...) UseMethod("encode")
 
-### # @importFrom sf st_geometry
-
-## TODO:
-## - contributor credit for SF/C++ code
-## - XYZ and XYM dims
-## - sfg
-
 #' @rdname encode
 #'  
 #' @param strip logical indicating if \code{sf} attributes should be stripped. 
@@ -64,7 +57,7 @@ encode <- function(obj, ...) UseMethod("encode")
 encode.sf <- function(obj, strip = FALSE, ...) {
 
   geomCol <- sfGeometryColumn(obj)
-  lst <- encodeSfGeometry(obj[[geomCol]], strip)
+  lst <- rcpp_encodeSfGeometry(obj[[geomCol]], strip)
   
   if(!strip) sfAttrs <- sfGeometryAttributes(obj)
   
@@ -85,7 +78,7 @@ encode.sf <- function(obj, strip = FALSE, ...) {
 }
 
 #' @export
-encode.sfc <- function(obj, strip = FALSE, ...) encodeSfGeometry(obj, strip)
+encode.sfc <- function(obj, strip = FALSE, ...) rcpp_encodeSfGeometry(obj, strip)
 
 #' @rdname encode
 #' @param lon vector of longitudes

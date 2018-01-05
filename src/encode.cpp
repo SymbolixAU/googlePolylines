@@ -228,7 +228,7 @@ void write_data(std::ostringstream& os, SEXP sfc,
 
 
 // [[Rcpp::export]]
-Rcpp::List encodeSfGeometry(Rcpp::List sfc, bool strip){
+Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
   
   Rcpp::CharacterVector cls_attr = sfc.attr("class");
   Rcpp::List output(sfc.size());

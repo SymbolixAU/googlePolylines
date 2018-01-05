@@ -193,6 +193,11 @@ test_that("geometry rows extracted", {
     "This function should be called on an sfencoded object"
   )
   
+  enc <- encode(nc, strip = TRUE)
+  expect_error(
+    polyline_wkt(enc),
+    "No geometry attribute found"
+  )
   
 })
 
