@@ -1,11 +1,6 @@
 #' Polyline WKT
 #' 
 #' Converts encoded polylines into well-known text. 
-#' Note that 'polylines' refers to encoded strings here.
-#' Valid inputs include any `sf` object with an encoded column.
-#' 
-#' The function also assumes Google Web Mercator projection (WSG 84 / EPSG:3857 / EPSG:900913)
-#' for inputs and outputs.
 #' 
 #' @param obj \code{sfencoded} object or \code{encoded_column} of encoded polylines
 #' 
@@ -26,6 +21,13 @@
 #' }
 #' 
 #' @note This will not work if you have specified \code{strip = TRUE} for \code{encode()}
+#' 
+#' @details
+#' 'Polylines' refers to lat/lon coordinates encoded into strings using Google's 
+#' polyline encoding algorithm.
+#' 
+#' The function assumes Google Web Mercator projection (WSG 84 / EPSG:3857 / EPSG:900913)
+#' for inputs and outputs.
 #' 
 #' @export
 polyline_wkt <- function(obj) UseMethod("polyline_wkt")
@@ -55,6 +57,8 @@ polyline_wkt.default <- function(obj) stop(paste0("I was expecting an sfencoded 
 
 #' WKT Polyline
 #' 
+#' Converts well-known text into encoded polylines.
+#' 
 #' @param obj \code{sfencoded} object or \code{wkt_column} of well-known text
 #' 
 #' @return encoded polyline representation of geometries
@@ -75,6 +79,11 @@ polyline_wkt.default <- function(obj) stop(paste0("I was expecting an sfencoded 
 #' enc2 <- wkt_polyline(wkt)
 #' 
 #' }
+#' 
+#' @details
+#' 'Polylines' refers to lat/lon coordinates encoded into strings using Google's 
+#' polyline encoding algorithm.
+#' 
 #' @export
 wkt_polyline <- function(obj) UseMethod("wkt_polyline")
 

@@ -3,6 +3,8 @@ context("utils")
 
 test_that("lat and lon columns found", {
   
+  testthat::skip_on_cran()
+  
   df <- data.frame(lats = 1:3, long = 1:3)
   
   expect_true(

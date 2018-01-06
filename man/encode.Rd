@@ -13,7 +13,7 @@ encode(obj, ...)
 \method{encode}{data.frame}(obj, lon = NULL, lat = NULL, ...)
 }
 \arguments{
-\item{obj}{either an \code{sf} or \code{data.frame}}
+\item{obj}{either an \code{sf} object or \code{data.frame}}
 
 \item{...}{other parameters passed to methods}
 
@@ -35,13 +35,11 @@ Encodes coordinates into an encoded polyline.
 The function assumes Google Web Mercator projection (WSG 84 / EPSG:3857 / EPSG:900913)
 for inputs and outputs.
 
-
 Will work with
 \itemize{
-  \item{\code{sf} and \code{sfc} objects}
+  \item{\code{sf} and \code{sfc} objects} directly
   \item{\code{data.frames}} - It will attempt to find lat & lon coordinates, 
   or you can explicitely define them using the \code{lat} and \code{lon} arguments
-  \item{latitude and longitude coordinate vectors}
 }
 }
 \note{
@@ -68,10 +66,6 @@ df <- data.frame(polygonId = c(1,1,1,1),
   
 ## on a data.frame, it will attemp to find the lon & lat columns
 encode(df)
-
-
-## Vector of lon/lat coordinates
-
   
 }
 

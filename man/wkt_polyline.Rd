@@ -13,7 +13,11 @@ wkt_polyline(obj)
 encoded polyline representation of geometries
 }
 \description{
-WKT Polyline
+Converts well-known text into encoded polylines.
+}
+\details{
+'Polylines' refers to lat/lon coordinates encoded into strings using Google's 
+polyline encoding algorithm.
 }
 \examples{
 \dontrun{
@@ -31,4 +35,5 @@ wkt <- polyline_wkt(enc)
 enc2 <- wkt_polyline(wkt)
 
 }
+
 }

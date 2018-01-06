@@ -136,9 +136,9 @@ Rcpp::StringVector polyline_to_wkt(Rcpp::List sfencoded) {
         os << "),(";
       }else{
         stdspl = spl;
-        os << "( ";
+        os << "(";
         polylineToWKT(os, stdspl);
-        os << " )";
+        os << ")";
         if(n > 1 && j < (n - 1)){
           if(pl[j+1] != SPLIT_CHAR){
             os << ",";

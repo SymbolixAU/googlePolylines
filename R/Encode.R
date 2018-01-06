@@ -2,19 +2,19 @@
 #' 
 #' Encodes coordinates into an encoded polyline. 
 #' 
+#' @details 
+#' 
 #' The function assumes Google Web Mercator projection (WSG 84 / EPSG:3857 / EPSG:900913)
 #' for inputs and outputs.
 #' 
-#' @details 
 #' Will work with
 #' \itemize{
-#'   \item{\code{sf} and \code{sfc} objects}
+#'   \item{\code{sf} and \code{sfc} objects} directly
 #'   \item{\code{data.frames}} - It will attempt to find lat & lon coordinates, 
 #'   or you can explicitely define them using the \code{lat} and \code{lon} arguments
-#'   \item{latitude and longitude coordinate vectors}
 #' }
 #' 
-#' @param obj either an \code{sf} or \code{data.frame}
+#' @param obj either an \code{sf} object or \code{data.frame}
 #' @param ... other parameters passed to methods
 #' 
 #' @return encoded object
@@ -39,10 +39,6 @@
 #'   
 #' ## on a data.frame, it will attemp to find the lon & lat columns
 #' encode(df)
-#'
-#'
-#' ## Vector of lon/lat coordinates
-#' 
 #'   
 #' }
 #' 
@@ -109,6 +105,7 @@ encode.default <- function(obj, ...) {
 #' Encode coordinates
 #' 
 #' Encodes a vector of lon & lat coordinates
+#' 
 #' @param lon vector of longitudes
 #' @param lat vector of latitudes
 #' 

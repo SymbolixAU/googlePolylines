@@ -5,6 +5,8 @@ context("encode")
 
 
 test_that("encode coordinates algorithim works", {
+  
+  testthat::skip_on_cran()
 
   expect_equal(
     encodeCoordinates(lon = c(144.9731, 144.9729, 144.9731), 
@@ -16,6 +18,8 @@ test_that("encode coordinates algorithim works", {
 
 test_that("*POINTs are encoded", {
 
+  testthat::skip_on_cran()
+  
   encode14437 <- "~py`F__|mZ"
   encode14537 <- "~py`F_i_tZ"
   
@@ -50,6 +54,8 @@ test_that("*POINTs are encoded", {
 
 test_that("*LINES are encoded", {
 
+  testthat::skip_on_cran()
+  
   encodedLine <- "~py`F__|mZ~oR_pR~oR}oR"
   line <- sf::st_sfc(sf::st_linestring(matrix(c(144, 144.1, 144.2, -37, -37.1, -37.2), ncol = 2)))
 
@@ -84,6 +90,8 @@ test_that("*LINES are encoded", {
 
 test_that("*POLYGONS are encoded", {
 
+  testthat::skip_on_cran()
+  
   encodedLine <- "~py`F__|mZ~oR_pR~oR}oR_af@|`f@"
   polygon <- sf::st_sfc(sf::st_polygon(
     list(matrix(c(144, 144.1, 144.2, 144, -37, -37.1, -37.2, -37), ncol = 2))
@@ -116,6 +124,8 @@ test_that("*POLYGONS are encoded", {
 
 
 test_that("sf_GEOMETRYs are encoded", {
+  
+  testthat::skip_on_cran()
   
   df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
                    lineId = c(1,1,1,1,2,2,2,2,1,1,1,2),
@@ -174,6 +184,8 @@ test_that("sf_GEOMETRYs are encoded", {
 
 test_that("data.frames are encoded", {
   
+  testthat::skip_on_cran()
+  
   df <- data.frame(polygonId = c(1,1,1,1),
     lineId = c(1,1,1,1),
     lon = c(-80.190, -66.118, -64.757, -80.190),
@@ -185,6 +197,8 @@ test_that("data.frames are encoded", {
 })
 
 test_that("default encoding method errors", {
+  
+  testthat::skip_on_cran()
   
   expect_error(
     encode(list()),
@@ -199,6 +213,8 @@ test_that("default encoding method errors", {
 })
 
 test_that("GEOMETRYCOLLECTIONS error", {
+  
+  testthat::skip_on_cran()
   
   df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
                    lineId = c(1,1,1,1,2,2,2,2,1,1,1,2),

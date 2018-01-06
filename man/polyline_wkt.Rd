@@ -13,12 +13,13 @@ polyline_wkt(obj)
 well-known text representation of the encoded polylines
 }
 \description{
-Converts encoded polylines into well-known text. 
-Note that 'polylines' refers to encoded strings here.
-Valid inputs include any `sf` object with an encoded column.
+Converts encoded polylines into well-known text.
 }
 \details{
-The function also assumes Google Web Mercator projection (WSG 84 / EPSG:3857 / EPSG:900913)
+'Polylines' refers to lat/lon coordinates encoded into strings using Google's 
+polyline encoding algorithm.
+
+The function assumes Google Web Mercator projection (WSG 84 / EPSG:3857 / EPSG:900913)
 for inputs and outputs.
 }
 \note{

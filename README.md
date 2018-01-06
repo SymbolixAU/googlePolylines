@@ -10,8 +10,13 @@ The goal of googlePolylines is to encode and decode coordinates using [Google's 
 
 ## Installation
 
-You can install googlePolylines from github with:
+Version 0.2.0 will be on CRAN and can be installed through
 
+```
+install.packages("googlePolylines")
+```
+
+The development version can be installed from github with:
 
 ```
 # install.packages("devtools")
@@ -22,7 +27,7 @@ devtools::install_github("SymbolixAU/googlePolylines")
 
 Because `googlePolylines` uses Google's polyline encoding algorithm, all functions assume Google Web Mercator projection (WSG 84 / EPSG:3857 / EPSG:900913) for inputs and outputs. Objects that use other projections should be re-projected into EPSG:3857 before using these functions.
 
-`googlePolylines` supports `data.frame` objects (with coordinates listed as lon/lat) and Simple Feature Collections (as listed below).
+`googlePolylines` supports Simple Feature objects (from `library(sf)`), `data.frame`s, and vectors of lon/lat coordinates.
 
 Supported `sf` types 
 
@@ -34,16 +39,11 @@ Supported `sf` types
 - MULTIPOLYGON
 - GEOMETRY
 
-Unsupported `sf` types
-
-- GEOMETRYCOLLECTION
-
-
 ## Examples
 
-`googlePolylines` contains functions to encode coordinates into polylines, and also to decode polylines into well-known text format (`polyline_wkt`).
+`googlePolylines` contains functions to encode coordinates into polylines, and also to parse polylines to and from well-known text format.
 
-### `encode` example
+### `encode`
 
 ```
 library(googlePolylines)
@@ -114,7 +114,7 @@ encode(df)
 
 ```
 
-### Polyline to well-known text example
+### Polyline to well-known text
 
 ```
 
@@ -129,6 +129,11 @@ wkt <- polyline_wkt(enc)
 # 5                                                                                   MULTIPOINT ((-80.19 26.774),(-66.118 18.466),(-64.757 32.321))
 ```
 
+### Well-known text to polyline
+
+```
+enc2 <- wkt_polyline(wkt)
+```
 
 
 ## Motivation
@@ -161,6 +166,7 @@ microbenchmark(
   google = {
     df <- encode(nc)
 
+    ## you need a Google Map API key to use this function
     google_map(key = mapKey) %>%
       add_polygons(data = df, polyline = "geometry")
   },

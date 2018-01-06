@@ -2,6 +2,8 @@ context("sfattributes")
 
 test_that("sf attributes are extracted", {
   
+  testthat::skip_on_cran()
+  
   nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
   enc <- encode(nc)
   
@@ -50,6 +52,8 @@ test_that("sf attributes are extracted", {
 
 
 test_that("sf attributes extracted", {
+  
+  testthat::skip_on_cran()
   
   nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
   
@@ -146,6 +150,7 @@ test_that("sf attributes extracted", {
 
 test_that("geometry rows extracted", {
   
+  testthat::skip_on_cran()
   
   df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
     lineId = c(1,1,1,1,2,2,2,2,1,1,1,2),
