@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -100,8 +100,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 lon &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">144.9709</span>, <span class="fl">144.9713</span>, <span class="fl">144.9715</span>, <span class="fl">144.9719</span>, <span class="fl">144.9728</span>, <span class="fl">144.9732</span>, 
 <span class="fl">144.973</span>, <span class="fl">144.9727</span>, <span class="fl">144.9731</span>, <span class="fl">144.9749</span>, <span class="fl">144.9742</span>)
 
-lat &lt;-<span class="st"> </span><span class="kw">c</span>(-<span class="fl">37.8075</span>, -<span class="fl">37.8076</span>, -<span class="fl">37.8076</span>, -<span class="fl">37.8078</span>, -<span class="fl">37.8079</span>, -<span class="fl">37.8079</span>, 
--<span class="fl">37.8091</span>, -<span class="fl">37.8107</span>, -<span class="fl">37.8115</span>, -<span class="fl">37.8153</span>, -<span class="fl">37.8155</span>)
+lat &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="fl">37.8075</span>, <span class="op">-</span><span class="fl">37.8076</span>, <span class="op">-</span><span class="fl">37.8076</span>, <span class="op">-</span><span class="fl">37.8078</span>, <span class="op">-</span><span class="fl">37.8079</span>, <span class="op">-</span><span class="fl">37.8079</span>, 
+<span class="op">-</span><span class="fl">37.8091</span>, <span class="op">-</span><span class="fl">37.8107</span>, <span class="op">-</span><span class="fl">37.8115</span>, <span class="op">-</span><span class="fl">37.8153</span>, <span class="op">-</span><span class="fl">37.8155</span>)
 
 <span class="kw">encodeCoordinates</span>(lon, lat)</code></pre></div>
 <pre><code>## [1] &quot;xgweFcsysZToA?g@f@oAPsD?oApFf@|Hz@`DmAvViJf@jC&quot;</code></pre>
@@ -111,7 +111,7 @@ lat &lt;-<span class="st"> </span><span class="kw">c</span>(-<span class="fl">37
 <p>The <code>encode()</code> function will attempt to find the lon &amp; lat columns inside a data.frame using regex matching. However, you can also specify the columns of coordinates:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">lon =</span> <span class="kw">c</span>(<span class="fl">144.9709</span>, <span class="fl">144.9713</span>, <span class="fl">144.9715</span>, <span class="fl">144.9719</span>, <span class="fl">144.9728</span>, <span class="fl">144.9732</span>, <span class="fl">144.973</span>, <span class="fl">144.9727</span>, <span class="fl">144.9731</span>, <span class="fl">144.9749</span>, <span class="fl">144.9742</span>),
-  <span class="dt">lat =</span> <span class="kw">c</span>(-<span class="fl">37.8075</span>, -<span class="fl">37.8076</span>, -<span class="fl">37.8076</span>, -<span class="fl">37.8078</span>, -<span class="fl">37.8079</span>, -<span class="fl">37.8079</span>, -<span class="fl">37.8091</span>, -<span class="fl">37.8107</span>, -<span class="fl">37.8115</span>, -<span class="fl">37.8153</span>, -<span class="fl">37.8155</span>)
+  <span class="dt">lat =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">37.8075</span>, <span class="op">-</span><span class="fl">37.8076</span>, <span class="op">-</span><span class="fl">37.8076</span>, <span class="op">-</span><span class="fl">37.8078</span>, <span class="op">-</span><span class="fl">37.8079</span>, <span class="op">-</span><span class="fl">37.8079</span>, <span class="op">-</span><span class="fl">37.8091</span>, <span class="op">-</span><span class="fl">37.8107</span>, <span class="op">-</span><span class="fl">37.8115</span>, <span class="op">-</span><span class="fl">37.8153</span>, <span class="op">-</span><span class="fl">37.8155</span>)
   )
 
 <span class="kw">encode</span>(df)</code></pre></div>
@@ -131,18 +131,18 @@ lat &lt;-<span class="st"> </span><span class="kw">c</span>(-<span class="fl">37
 <li>MULTIPOLYGON</li>
 </ul>
 <p>It will not work on GEOMETRYCOLLECTION objects.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sf)
-
-## data set of North Carolina states
-nc &lt;-<span class="st"> </span>sf::<span class="kw">st_read</span>(<span class="kw">system.file</span>(<span class="st">&quot;shape/nc.shp&quot;</span>, <span class="dt">package=</span><span class="st">&quot;sf&quot;</span>))</code></pre></div>
-<pre><code>## Reading layer `nc' from data source `/home/starkie/Rlibs/sf/shape/nc.shp' using driver `ESRI Shapefile'
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sf)</code></pre></div>
+<pre><code>## Linking to GEOS 3.6.1, GDAL 2.1.3, proj.4 4.9.3</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## data set of North Carolina states
+nc &lt;-<span class="st"> </span>sf<span class="op">::</span><span class="kw">st_read</span>(<span class="kw">system.file</span>(<span class="st">&quot;shape/nc.shp&quot;</span>, <span class="dt">package=</span><span class="st">&quot;sf&quot;</span>))</code></pre></div>
+<pre><code>## Reading layer `nc' from data source `/Library/Frameworks/R.framework/Versions/3.4/Resources/library/sf/shape/nc.shp' using driver `ESRI Shapefile'
 ## Simple feature collection with 100 features and 14 fields
 ## geometry type:  MULTIPOLYGON
 ## dimension:      XY
 ## bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
 ## epsg (SRID):    4267
 ## proj4string:    +proj=longlat +datum=NAD27 +no_defs</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nc[<span class="dv">1</span>:<span class="dv">5</span>,]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nc[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,]</code></pre></div>
 <pre><code>## Simple feature collection with 5 features and 14 fields
 ## geometry type:  MULTIPOLYGON
 ## dimension:      XY
@@ -220,7 +220,7 @@ nc &lt;-<span class="st"> </span>sf::<span class="kw">st_read</span>(<span class
 <pre><code>## [[1]]
 ## [1] &quot;u_d|EtsgpNmmFphLyEbcCibLf{Lk~H`bT}rNmjGihHd[kvL_lEzgBkl~@lyE`MnvCimCbmEqfAxnGieH~gEeTd_DmiCxvA_D|oAdwCidAtsKr_AjiEdwA~YztFggAjbCfrAwf@hrF~mBdd@bh@zsB`cCpgCt_@d{B&quot;</code></pre>
 <p>The benefit of stripping the attributes is to reduce the size of the object, which can be useful for web plotting if bandwidth/data transfer speeds are an issue.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vapply</span>(<span class="kw">mget</span>(<span class="kw">c</span>(<span class="st">'nc'</span>, <span class="st">'enc'</span>, <span class="st">'encLite'</span>) ), function(x) { <span class="kw">format</span>(<span class="kw">object.size</span>(x), <span class="dt">units =</span> <span class="st">&quot;Kb&quot;</span>) }, <span class="st">''</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vapply</span>(<span class="kw">mget</span>(<span class="kw">c</span>(<span class="st">'nc'</span>, <span class="st">'enc'</span>, <span class="st">'encLite'</span>) ), <span class="cf">function</span>(x) { <span class="kw">format</span>(<span class="kw">object.size</span>(x), <span class="dt">units =</span> <span class="st">&quot;Kb&quot;</span>) }, <span class="st">''</span>)</code></pre></div>
 <pre><code>##         nc        enc    encLite 
 ## &quot;132.2 Kb&quot;    &quot;85 Kb&quot;  &quot;50.5 Kb&quot;</code></pre>
 </div>
@@ -249,7 +249,7 @@ enc2[<span class="dv">1</span>, ]</code></pre></div>
 <div id="benchmarking" class="section level2">
 <h2>Benchmarking</h2>
 <p>You will note that the encoded strings are different between the two objects. For example</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">enc[<span class="dv">1</span>, <span class="st">'geometry'</span>][[<span class="dv">1</span>]] ==<span class="st"> </span>enc2[<span class="dv">1</span>, <span class="st">'geometry'</span>][[<span class="dv">1</span>]]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">enc[<span class="dv">1</span>, <span class="st">'geometry'</span>][[<span class="dv">1</span>]] <span class="op">==</span><span class="st"> </span>enc2[<span class="dv">1</span>, <span class="st">'geometry'</span>][[<span class="dv">1</span>]]</code></pre></div>
 <pre><code>## [1] FALSE</code></pre>
 <p>This results from the <strong>lossy</strong>-ness of the encoding. However, the general shape of the information is preserved. These two maps are plots of the <code>enc</code> and <code>enc2</code> objects respectively:</p>
 <pre><code>library(googleway)
@@ -294,6 +294,7 @@ Unit: milliseconds
  goog  5.457699  5.972203  6.379053  6.162676  6.467225   8.876789   100
  leaf 29.915151 32.093100 34.251388 33.088324 34.629769 106.124047   100
  </code></pre>
+<p>These benchmarks don’t account for the time taken for the browswer to render the maps</p>
 </div>
 </div>
 
@@ -304,7 +305,7 @@ Unit: milliseconds
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
