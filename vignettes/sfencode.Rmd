@@ -21,7 +21,7 @@ I am intending to update `googleway` to support plotting `sf` objects using thes
 
 ## Caution
 
-The word **lossy** is important to keep in mind, as the encoding process could reduce precision of your data. If you are after highly accurate coordiantes this process probably isn't for you. 
+The word **lossy** is important to keep in mind, as the encoding process could reduce precision of your data. If you are after highly accurate coordinates this process probably isn't for you. 
 
 However, if you need to reduce the size of spatial objects/data, and want quicker plots (see the **Benchmarking** section), then this could help.
 
@@ -36,7 +36,7 @@ Encoding is split across two functions
 
 ### vectors
 
-Given two vectors of longitude and latitude coordinates
+Given two vectors of longitude and latitude coordinates:
 
 ```{r}
 library(googlePolylines)
@@ -54,7 +54,7 @@ encodeCoordinates(lon, lat)
 
 ### data.frame
 
-The `encode()` function will attempt to find the lon & lat columns inside a data.frame using regex matching. However, you can also specify the columns of coordinates
+The `encode()` function will attempt to find the lon & lat columns inside a data.frame using regex matching. However, you can also specify the columns of coordinates:
 
 ```{r}
 
@@ -129,7 +129,7 @@ vapply(mget(c('nc', 'enc', 'encLite') ), function(x) { format(object.size(x), un
 
 ## Well-known Text
 
-The two functions `polyline_wkt` and `wkt_polylne` can be used to convert `sfencoded` ojbects to and from well-known text.
+The two functions `polyline_wkt` and `wkt_polylne` can be used to convert `sfencoded` objects to and from well-known text.
 
 ```{r}
 
@@ -145,9 +145,9 @@ enc2[1, ]
 
 ```
 
-I've provided these functions to enable the conversion of encoded polylines into other geometry foramts, should they be required by other packages.  
+I've provided these functions to enable the conversion of encoded polylines into other geometry formats, should they be required by other packages.  
 
-## Bencmarking
+## Benchmarking
 
 You will note that the encoded strings are different between the two objects. For example
 
@@ -155,7 +155,7 @@ You will note that the encoded strings are different between the two objects. Fo
 enc[1, 'geometry'][[1]] == enc2[1, 'geometry'][[1]]
 ```
 
-This is manifested through the **lossy**-ness of the encoding. However, the general shape of the information is preserved. These two maps are plots of the `enc` and `enc2` objects respectively
+This results from the **lossy**-ness of the encoding. However, the general shape of the information is preserved. These two maps are plots of the `enc` and `enc2` objects respectively:
 
 ```
 library(googleway)

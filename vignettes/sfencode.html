@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8" />
+<meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -12,7 +12,7 @@
 
 <meta name="author" content="D Cooley" />
 
-<meta name="date" content="2018-01-05" />
+<meta name="date" content="2018-01-06" />
 
 <title>Google Polylines</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Google Polylines</h1>
 <h4 class="author"><em>D Cooley</em></h4>
-<h4 class="date"><em>2018-01-05</em></h4>
+<h4 class="date"><em>2018-01-06</em></h4>
 
 
 
@@ -78,12 +78,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <blockquote>
 <p>Polyline encoding is a lossy compression algorithm that allows you to store a series of coordinates as a single string.</p>
 </blockquote>
-<p>Encoded polylines are used by Google Maps to draw lines and polygons, and are therefore supported in the <a href="https://cran.r-project.org/web/packages/googleway/index.html">googleway</a> package.</p>
-<p>I am intending to update <code>googleway</code> to support plotting <code>sf</code> objects using encoded polylines.</p>
+<p>Encoded polylines are used by Google Maps to draw lines and polygons, and are therefore supported in the <a href="https://CRAN.R-project.org/package=googleway">googleway</a> package.</p>
+<p>I am intending to update <code>googleway</code> to support plotting <code>sf</code> objects using these encoded polylines.</p>
 <div id="caution" class="section level2">
 <h2>Caution</h2>
-<p>The word <strong>lossy</strong> is important to keep in mind, as the encoding process could reduce precision of your data. If you are after highly-accurate coordiantes this process probably isn’t for you.</p>
-<p>However, if you need to reduce the size of objects/data, and want quicker plots (see the <strong>Benchmarking</strong> section), then this could help.</p>
+<p>The word <strong>lossy</strong> is important to keep in mind, as the encoding process could reduce precision of your data. If you are after highly accurate coordinates this process probably isn’t for you.</p>
+<p>However, if you need to reduce the size of spatial objects/data, and want quicker plots (see the <strong>Benchmarking</strong> section), then this could help.</p>
 </div>
 <div id="encoding" class="section level2">
 <h2>Encoding</h2>
@@ -94,24 +94,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul>
 <div id="vectors" class="section level3">
 <h3>vectors</h3>
-<p>Given two vectors of longitude and latitude coordinates</p>
+<p>Given two vectors of longitude and latitude coordinates:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googlePolylines)
 
 lon &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">144.9709</span>, <span class="fl">144.9713</span>, <span class="fl">144.9715</span>, <span class="fl">144.9719</span>, <span class="fl">144.9728</span>, <span class="fl">144.9732</span>, 
 <span class="fl">144.973</span>, <span class="fl">144.9727</span>, <span class="fl">144.9731</span>, <span class="fl">144.9749</span>, <span class="fl">144.9742</span>)
 
-lat &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="fl">37.8075</span>, <span class="op">-</span><span class="fl">37.8076</span>, <span class="op">-</span><span class="fl">37.8076</span>, <span class="op">-</span><span class="fl">37.8078</span>, <span class="op">-</span><span class="fl">37.8079</span>, <span class="op">-</span><span class="fl">37.8079</span>, 
-<span class="op">-</span><span class="fl">37.8091</span>, <span class="op">-</span><span class="fl">37.8107</span>, <span class="op">-</span><span class="fl">37.8115</span>, <span class="op">-</span><span class="fl">37.8153</span>, <span class="op">-</span><span class="fl">37.8155</span>)
+lat &lt;-<span class="st"> </span><span class="kw">c</span>(-<span class="fl">37.8075</span>, -<span class="fl">37.8076</span>, -<span class="fl">37.8076</span>, -<span class="fl">37.8078</span>, -<span class="fl">37.8079</span>, -<span class="fl">37.8079</span>, 
+-<span class="fl">37.8091</span>, -<span class="fl">37.8107</span>, -<span class="fl">37.8115</span>, -<span class="fl">37.8153</span>, -<span class="fl">37.8155</span>)
 
 <span class="kw">encodeCoordinates</span>(lon, lat)</code></pre></div>
 <pre><code>## [1] &quot;xgweFcsysZToA?g@f@oAPsD?oApFf@|Hz@`DmAvViJf@jC&quot;</code></pre>
 </div>
 <div id="data.frame" class="section level3">
 <h3>data.frame</h3>
-<p>The <code>encode()</code> function will attempt to find the lon &amp; lat columns inside a data.frame using regex matching. However, you can also specify the columns of coordinates</p>
+<p>The <code>encode()</code> function will attempt to find the lon &amp; lat columns inside a data.frame using regex matching. However, you can also specify the columns of coordinates:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">lon =</span> <span class="kw">c</span>(<span class="fl">144.9709</span>, <span class="fl">144.9713</span>, <span class="fl">144.9715</span>, <span class="fl">144.9719</span>, <span class="fl">144.9728</span>, <span class="fl">144.9732</span>, <span class="fl">144.973</span>, <span class="fl">144.9727</span>, <span class="fl">144.9731</span>, <span class="fl">144.9749</span>, <span class="fl">144.9742</span>),
-  <span class="dt">lat =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">37.8075</span>, <span class="op">-</span><span class="fl">37.8076</span>, <span class="op">-</span><span class="fl">37.8076</span>, <span class="op">-</span><span class="fl">37.8078</span>, <span class="op">-</span><span class="fl">37.8079</span>, <span class="op">-</span><span class="fl">37.8079</span>, <span class="op">-</span><span class="fl">37.8091</span>, <span class="op">-</span><span class="fl">37.8107</span>, <span class="op">-</span><span class="fl">37.8115</span>, <span class="op">-</span><span class="fl">37.8153</span>, <span class="op">-</span><span class="fl">37.8155</span>)
+  <span class="dt">lat =</span> <span class="kw">c</span>(-<span class="fl">37.8075</span>, -<span class="fl">37.8076</span>, -<span class="fl">37.8076</span>, -<span class="fl">37.8078</span>, -<span class="fl">37.8079</span>, -<span class="fl">37.8079</span>, -<span class="fl">37.8091</span>, -<span class="fl">37.8107</span>, -<span class="fl">37.8115</span>, -<span class="fl">37.8153</span>, -<span class="fl">37.8155</span>)
   )
 
 <span class="kw">encode</span>(df)</code></pre></div>
@@ -131,18 +131,18 @@ lat &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</
 <li>MULTIPOLYGON</li>
 </ul>
 <p>It will not work on GEOMETRYCOLLECTION objects.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sf)</code></pre></div>
-<pre><code>## Linking to GEOS 3.6.1, GDAL 2.1.3, proj.4 4.9.3</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## data set of North Carolina states
-nc &lt;-<span class="st"> </span>sf<span class="op">::</span><span class="kw">st_read</span>(<span class="kw">system.file</span>(<span class="st">&quot;shape/nc.shp&quot;</span>, <span class="dt">package=</span><span class="st">&quot;sf&quot;</span>))</code></pre></div>
-<pre><code>## Reading layer `nc' from data source `/Users/david/Library/R/3.4/library/sf/shape/nc.shp' using driver `ESRI Shapefile'
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sf)
+
+## data set of North Carolina states
+nc &lt;-<span class="st"> </span>sf::<span class="kw">st_read</span>(<span class="kw">system.file</span>(<span class="st">&quot;shape/nc.shp&quot;</span>, <span class="dt">package=</span><span class="st">&quot;sf&quot;</span>))</code></pre></div>
+<pre><code>## Reading layer `nc' from data source `/home/starkie/Rlibs/sf/shape/nc.shp' using driver `ESRI Shapefile'
 ## Simple feature collection with 100 features and 14 fields
 ## geometry type:  MULTIPOLYGON
 ## dimension:      XY
 ## bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
 ## epsg (SRID):    4267
 ## proj4string:    +proj=longlat +datum=NAD27 +no_defs</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nc[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nc[<span class="dv">1</span>:<span class="dv">5</span>,]</code></pre></div>
 <pre><code>## Simple feature collection with 5 features and 14 fields
 ## geometry type:  MULTIPOLYGON
 ## dimension:      XY
@@ -220,22 +220,22 @@ nc &lt;-<span class="st"> </span>sf<span class="op">::</span><span class="kw">st
 <pre><code>## [[1]]
 ## [1] &quot;u_d|EtsgpNmmFphLyEbcCibLf{Lk~H`bT}rNmjGihHd[kvL_lEzgBkl~@lyE`MnvCimCbmEqfAxnGieH~gEeTd_DmiCxvA_D|oAdwCidAtsKr_AjiEdwA~YztFggAjbCfrAwf@hrF~mBdd@bh@zsB`cCpgCt_@d{B&quot;</code></pre>
 <p>The benefit of stripping the attributes is to reduce the size of the object, which can be useful for web plotting if bandwidth/data transfer speeds are an issue.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vapply</span>(<span class="kw">mget</span>(<span class="kw">c</span>(<span class="st">'nc'</span>, <span class="st">'enc'</span>, <span class="st">'encLite'</span>) ), <span class="cf">function</span>(x) { <span class="kw">format</span>(<span class="kw">object.size</span>(x), <span class="dt">units =</span> <span class="st">&quot;Kb&quot;</span>) }, <span class="st">''</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vapply</span>(<span class="kw">mget</span>(<span class="kw">c</span>(<span class="st">'nc'</span>, <span class="st">'enc'</span>, <span class="st">'encLite'</span>) ), function(x) { <span class="kw">format</span>(<span class="kw">object.size</span>(x), <span class="dt">units =</span> <span class="st">&quot;Kb&quot;</span>) }, <span class="st">''</span>)</code></pre></div>
 <pre><code>##         nc        enc    encLite 
 ## &quot;132.2 Kb&quot;    &quot;85 Kb&quot;  &quot;50.5 Kb&quot;</code></pre>
 </div>
 </div>
 <div id="well-known-text" class="section level2">
 <h2>Well-known Text</h2>
-<p>The two functions <code>polyline_wkt</code> and <code>wkt_polylne</code> can be used to convert <code>sfencoded</code> ojbects to and from well-known text.</p>
+<p>The two functions <code>polyline_wkt</code> and <code>wkt_polylne</code> can be used to convert <code>sfencoded</code> objects to and from well-known text.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wkt &lt;-<span class="st"> </span><span class="kw">polyline_wkt</span>(enc)
 wkt[<span class="dv">1</span>, ]</code></pre></div>
 <pre><code>##    AREA PERIMETER CNTY_ CNTY_ID NAME  FIPS FIPSNO CRESS_ID BIR74 SID74
 ## 1 0.114     1.442  1825    1825 Ashe 37009  37009        5  1091     1
 ##   NWBIR74 BIR79 SID79 NWBIR79
 ## 1      10  1364     0      19
-##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             geometry
-## 1 MULTIPOLYGON ((( -81.4727 36.2343, -81.5408 36.2725, -81.562 36.2736, -81.6331 36.3407, -81.7411 36.3918, -81.6983 36.4718, -81.7028 36.5193, -81.67 36.5896, -81.3453 36.5729, -81.3475 36.5379, -81.3248 36.5137, -81.3133 36.4807, -81.2662 36.4372, -81.2628 36.405, -81.2407 36.3794, -81.2399 36.3654, -81.2642 36.3524, -81.329 36.3635, -81.3614 36.3532, -81.3657 36.3391, -81.3541 36.2997, -81.3674 36.2787, -81.4064 36.285, -81.4123 36.2673, -81.431 36.2607, -81.4529 36.2396, -81.4727 36.2343 )))</code></pre>
+##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           geometry
+## 1 MULTIPOLYGON (((-81.4727 36.2343, -81.5408 36.2725, -81.562 36.2736, -81.6331 36.3407, -81.7411 36.3918, -81.6983 36.4718, -81.7028 36.5193, -81.67 36.5896, -81.3453 36.5729, -81.3475 36.5379, -81.3248 36.5137, -81.3133 36.4807, -81.2662 36.4372, -81.2628 36.405, -81.2407 36.3794, -81.2399 36.3654, -81.2642 36.3524, -81.329 36.3635, -81.3614 36.3532, -81.3657 36.3391, -81.3541 36.2997, -81.3674 36.2787, -81.4064 36.285, -81.4123 36.2673, -81.431 36.2607, -81.4529 36.2396, -81.4727 36.2343)))</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">enc2 &lt;-<span class="st"> </span><span class="kw">wkt_polyline</span>(wkt)
 enc2[<span class="dv">1</span>, ]</code></pre></div>
 <pre><code>##    AREA PERIMETER CNTY_ CNTY_ID NAME  FIPS FIPSNO CRESS_ID BIR74 SID74
@@ -244,14 +244,14 @@ enc2[<span class="dv">1</span>, ]</code></pre></div>
 ## 1      10  1364     0      19
 ##                                                                                                                                                            geometry
 ## 1 i_d|EjsgpNymFrhL{EncCkbLj{Lk~H~aT_sNojG{gHb[ivL_lEjgBml~@tyExLfvC{lCfmE{fA|nGkeHdhEgT`_DciClvA_DfpAzvCkdA|sKj_ApiEbwAzYfuFogAfbCbrAif@vrFpmBzc@fh@zsBzbCzgCd`@vzB</code></pre>
-<p>I’ve provided these functions to enable the conversion of encoded polylines into other geometry foramts, shoudl they be required by other packages.</p>
+<p>I’ve provided these functions to enable the conversion of encoded polylines into other geometry formats, should they be required by other packages.</p>
 </div>
-<div id="bencmarking" class="section level2">
-<h2>Bencmarking</h2>
+<div id="benchmarking" class="section level2">
+<h2>Benchmarking</h2>
 <p>You will note that the encoded strings are different between the two objects. For example</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">enc[<span class="dv">1</span>, <span class="st">'geometry'</span>][[<span class="dv">1</span>]] <span class="op">==</span><span class="st"> </span>enc2[<span class="dv">1</span>, <span class="st">'geometry'</span>][[<span class="dv">1</span>]]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">enc[<span class="dv">1</span>, <span class="st">'geometry'</span>][[<span class="dv">1</span>]] ==<span class="st"> </span>enc2[<span class="dv">1</span>, <span class="st">'geometry'</span>][[<span class="dv">1</span>]]</code></pre></div>
 <pre><code>## [1] FALSE</code></pre>
-<p>This is manifested through the <strong>lossy</strong>-ness of the encoding. However, the general shape of the information is preserved. These two maps are plots of the <code>enc</code> and <code>enc2</code> objects respectively</p>
+<p>This results from the <strong>lossy</strong>-ness of the encoding. However, the general shape of the information is preserved. These two maps are plots of the <code>enc</code> and <code>enc2</code> objects respectively:</p>
 <pre><code>library(googleway)
 
 ## You'll need a Google Map API key to run this code
@@ -304,7 +304,7 @@ Unit: milliseconds
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
