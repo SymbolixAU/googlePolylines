@@ -11,14 +11,3 @@ str.encoded_column <- function(object, ...) {
     utils::str(object[[1]], ...)
   }
 }
-
-
-## TODO:
-## - decoding
-## - print method for encoded geo columns
-
-## TODO(updates):
-## - polygons are closed correctly
-## - geometry collection
-## - wkt_polyline on non-sfencoded objects: wkt_polyline(x, col = ... )
-## - polyline_wkt on non-sfencoded objects: polyline_wkt(x, col = ... )
