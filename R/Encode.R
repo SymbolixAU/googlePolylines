@@ -1,6 +1,9 @@
 #' Encode
 #' 
-#' Encodes coordinates into an encoded polyline
+#' Encodes coordinates into an encoded polyline. 
+#' 
+#' The function assumes Google Web Mercator projection (WSG 84 / EPSG:3857 / EPSG:900913)
+#' for inputs and outputs.
 #' 
 #' @details 
 #' Will work with
