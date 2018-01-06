@@ -204,7 +204,7 @@ Unit: milliseconds
  
 ```
 
-
+These benchmarks don't account for the time taken for the browswer to render the maps
 
 
 
