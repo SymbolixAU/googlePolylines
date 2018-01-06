@@ -43,7 +43,10 @@
 #'   
 #' }
 #' 
-#' @seealso encodeCoordinates
+#' @note When encoding an \code{sf} object, only the XY dimensions will be used,
+#' the Z or M (3D and/or Measure) dimensions are dropped.
+#' 
+#' @seealso \link{encodeCoordinates}
 #' 
 #' @export
 encode <- function(obj, ...) UseMethod("encode")
@@ -132,6 +135,8 @@ encode.default <- function(obj, ...) {
 #' 
 #' 
 #' }
+#' 
+#' @seealso \link{encode}
 #' 
 #' @export
 encodeCoordinates <- function(lon, lat) rcpp_encode_polyline(lon, lat)

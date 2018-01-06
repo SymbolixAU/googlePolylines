@@ -42,3 +42,6 @@ df[, encodeCoordinates(lon = lon, lat = lat), by = .(polygonId, lineId)]
 }
 
 }
+\seealso{
+\link{encode}
+}

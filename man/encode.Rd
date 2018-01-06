@@ -40,6 +40,10 @@ Will work with
   \item{latitude and longitude coordinate vectors}
 }
 }
+\note{
+When encoding an \code{sf} object, only the XY dimensions will be used,
+the Z or M (3D and/or Measure) dimensions are dropped.
+}
 \examples{
 \dontrun{
 
@@ -69,5 +73,5 @@ encode(df)
 
 }
 \seealso{
-encodeCoordinates
+\link{encodeCoordinates}
 }

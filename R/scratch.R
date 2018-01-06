@@ -1,5 +1,12 @@
 
 
+# ### XYZ coordinates
+# 
+# sf <- sf::st_sf(geo = sf::st_sfc(sf::st_point(x = c(0, 2, 1, 3))))
+# sf::st_geometry(sf)
+# 
+# polyline_wkt(encode(sf))
+
 
 
 ## encoding using osstringstream:
