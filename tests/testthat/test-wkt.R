@@ -194,5 +194,9 @@ test_that("wkt converted back to encoded_column", {
     "Can not find the encoded_column"
   )
   
+  expect_error(
+    wkt_polyline(sf),
+    "I was expecting an sfencoded object with a wkt_column"
+  )
 })
 

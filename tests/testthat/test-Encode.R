@@ -197,3 +197,28 @@ test_that("default encoding method errors", {
   )
   
 })
+
+test_that("GEOMETRYCOLLECTIONS error", {
+  
+  df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
+                   lineId = c(1,1,1,1,2,2,2,2,1,1,1,2),
+                   lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, -66.668, -70.579, -70, -49, -51, -70),
+                   lat = c(26.774, 18.466, 32.321, 26.774, 28.745, 29.570, 27.339, 28.745, 22, 23, 22, 22))
+  
+  p1 <- as.matrix(df[1:4, c("lon", "lat")])
+  p2 <- as.matrix(df[5:8, c("lon", "lat")])
+  p3 <- as.matrix(df[9:12, c("lon", "lat")])
+  
+  point <- sf::st_point(x = c(df[1,"lon"], df[1,"lat"]))
+  polygon <- sf::st_polygon(x = list(p1, p2))
+  linestring <- sf::st_linestring(p3)
+  
+  sf <- sf::st_sfc(geo = sf::st_geometrycollection(x = list(point, linestring, polygon)))
+  
+  expect_error(
+    encode(sf),
+    "encoding this sf type is currently not supported"
+  )
+  
+})
+
