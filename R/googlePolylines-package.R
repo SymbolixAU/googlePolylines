@@ -11,3 +11,14 @@ str.encoded_column <- function(object, ...) {
     utils::str(object[[1]], ...)
   }
 }
+
+
+#' @export
+`[.sfencoded` <- function(x, i, j, ...) { 
+  
+  geomColumn <- attr(x, "encoded_column")
+  x <- NextMethod()
+  if( geomColumn %in% names(x)) attr(x, "encoded_column") <- geomColumn
+  return(x)
+}
+
