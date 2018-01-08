@@ -1,6 +1,6 @@
 Package: googlePolylines
 Type: Package
-Title: Encoding coordinates into 'Google' polylines
+Title: Encoding Coordinates into 'Google' Polylines
 Version: 0.2.0
 Date: 2018-01-06
 Authors@R: c(
