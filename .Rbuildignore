@@ -2,5 +2,5 @@
 ^\.Rproj\.user$
 ^\.travis\.yml$
 ^codecov\.yml$
-^cran-comments\.md$ 
 ^NEWS\.md$
+^cran-comments\.md$
