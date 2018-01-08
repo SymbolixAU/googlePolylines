@@ -47,6 +47,16 @@ When encoding an \code{sf} object, only the XY dimensions will be used,
 the Z or M (3D and/or Measure) dimensions are dropped.
 }
 \examples{
+
+## data.frame
+df <- data.frame(polygonId = c(1,1,1,1),
+  lineId = c(1,1,1,1),
+  lon = c(-80.190, -66.118, -64.757, -80.190),
+  lat = c(26.774, 18.466, 32.321, 26.774))
+  
+## on a data.frame, it will attemp to find the lon & lat columns
+encode(df)
+
 \dontrun{
 
 ## sf objects
@@ -58,15 +68,6 @@ encoded <- encode(nc)
 ## strip attributes
 encodedLite <- encode(nc, strip = TRUE)
 
-## data.frame
-df <- data.frame(polygonId = c(1,1,1,1),
-  lineId = c(1,1,1,1),
-  lon = c(-80.190, -66.118, -64.757, -80.190),
-  lat = c(26.774, 18.466, 32.321, 26.774))
-  
-## on a data.frame, it will attemp to find the lon & lat columns
-encode(df)
-  
 }
 
 }
