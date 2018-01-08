@@ -1,12 +1,12 @@
 Package: googlePolylines
 Type: Package
-Title: Google Polylines
+Title: Encoding coordinates into 'Google' polylines
 Version: 0.2.0
 Date: 2018-01-06
 Authors@R: c(
     person("David", "Cooley", ,"dcooley@symbolix.com.au", role = c("aut", "cre"))
     )
-Description: Encode coordinates using Google's polyline encoding algorithm.
+Description: Encodes simple feature ('sf') objects and coordinates using the 'Google' polyline encoding algorithm (<https://developers.google.com/maps/documentation/utilities/polylinealgorithm>).
 License: GPL-3
 SystemRequirements: C++11
 Depends: R (>= 3.3.0)
