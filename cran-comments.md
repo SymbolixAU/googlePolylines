@@ -12,6 +12,7 @@
 
 ## CRAN change requests
 
+* Fixed description title case
 * added a link to polyline encoding algorithm in Description. However, there is no DOI, arXiv, ISBN or author(s) listed, nor any citation specifications.
 * examples that require external libraries (sf, dplyr and data.table) have been wrapped in `\dontrun{}`. Those that don't require libraries have been removed from `\dontrun{}`.
 * single quotes have been added around software and package names
