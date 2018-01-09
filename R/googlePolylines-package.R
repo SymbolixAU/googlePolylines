@@ -20,16 +20,17 @@ str.encoded_column <- function(object, ...) {
 ## - should I remove 'sfencoded' class if the geometry is dropped? 
 ## because they could re-attach it....
 
-
 #' @export
 `[.sfencoded` <- function(x, i, j, drop = TRUE) { 
   
   geomColumn <- attr(x, "encoded_column")
   wktColumn <- attr(x, "wkt_column")
+  attr(x, "sfAttributes") <- NULL
 #  sfAtts <- attr(x, "sfAttributes")
   
-  x <- `[.data.frame`(x, i, j, drop)
-  
+  # x <- `[.data.frame`(x, i, j, drop)
+  x <- NextMethod()
+
   if( !is.null(geomColumn) ) { 
     if( geomColumn %in% names(x) ) {
       attr(x, "encoded_column") <- geomColumn
