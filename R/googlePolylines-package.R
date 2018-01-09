@@ -20,6 +20,7 @@ str.encoded_column <- function(object, ...) {
 ## - should I remove 'sfencoded' class if the geometry is dropped? 
 ## because they could re-attach it....
 
+
 #' @export
 `[.sfencoded` <- function(x, i, j, drop = TRUE) { 
   
@@ -59,6 +60,27 @@ str.encoded_column <- function(object, ...) {
   return(x)
 }
 
+
+#' #' @export
+#' print.sfencoded <- function(x, ..., 
+#'                             n = ifelse(options("max.print")[[1]] == 99999, 
+#'                                        20, options("max.print")[[1]])) {
+#' #   print("printing encoded")
+#' 
+#'   encoded <- names( which(vapply(x, function(cols) inherits(cols, "encoded_column"), T)) )
+#'   nonEncoded <- setdiff(names(x), encoded)
+#' 
+#'   x <- x[, nonEncoded, drop = FALSE ]
+#'   
+#'   if (nrow(x) > n) {
+#'     x <- x[1:n, nonEncoded, drop = FALSE ]
+#'   }
+#'   
+#'   print.data.frame(x, ...)
+#' 
+#'   invisible(x)
+#' }
+
 # library(sf)
 # df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
 # 								 lineId = c(1,1,1,1,2,2,2,2,1,1,1,2),
@@ -84,3 +106,5 @@ str.encoded_column <- function(object, ...) {
 # 	st_sf(geometry = point),
 #   st_sf(geometry = multipoint)
 # 	)
+# enc <- encode(sf)
+
