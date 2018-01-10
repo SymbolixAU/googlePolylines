@@ -36,32 +36,32 @@ test_that("wkt generated for all geometries", {
   
   expect_equal(
     "POINT (-80.19 26.774)", 
-    wkt[1, 'geo'] 
+    as.character(wkt[1, 'geo']) 
   )
   
   expect_equal(
     "MULTIPOINT ((-80.19 26.774),(-66.118 18.466))",
-    wkt[2, 'geo']
+    as.character(wkt[2, 'geo'])
   )
   
   expect_equal(
     "LINESTRING (-70 22, -49 23, -51 22, -70 22)",
-    wkt[3, 'geo']
+    as.character(wkt[3, 'geo'])
   )
   
   expect_equal(
     "MULTILINESTRING ((-80.19 26.774, -66.118 18.466, -64.757 32.321, -80.19 26.774),(-70.579 28.745, -67.514 29.57, -66.668 27.339, -70.579 28.745))",
-    wkt[4, 'geo']
+    as.character(wkt[4, 'geo'])
   )
   
   expect_equal(
     "POLYGON ((-80.19 26.774, -66.118 18.466, -64.757 32.321, -80.19 26.774),(-70.579 28.745, -67.514 29.57, -66.668 27.339, -70.579 28.745))",
-    wkt[5, 'geo']
+    as.character(wkt[5, 'geo'])
   )
   
   expect_equal(
     "MULTIPOLYGON (((-80.19 26.774, -66.118 18.466, -64.757 32.321, -80.19 26.774),(-70.579 28.745, -67.514 29.57, -66.668 27.339, -70.579 28.745)),((-70 22, -49 23, -51 22, -70 22)))",
-    wkt[6, 'geo']
+    as.character(wkt[6, 'geo'])
   )
   
   expect_error(
