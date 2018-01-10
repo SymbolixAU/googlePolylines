@@ -43,43 +43,50 @@ str.encoded_column <- function(object, ...) {
       attr(x, "wkt_column") <- wktColumn
     }
   }
-  
-  
-  ## sfAttributes relates to the whole data.frame, so attaching it 
-  ## back on doesn't make sense
-  # if( !is.null(sfAtts) ) {
-  #   attr(x, "sfAttributes") <- sfAtts
-  # }
-  # 
-  # if( inherits(x, "list") ) 
-  #   class(x) <- c("sfencoded_list", class(x))
-  
-  # if ( is.null(geomColumn) && is.null(wktColumn) ) 
-  #   class(x) <- setdiff(class(x),"sfencoded")
-   
   return(x)
 }
 
 
-#' #' @export
-#' print.sfencoded <- function(x, ..., 
-#'                             n = ifelse(options("max.print")[[1]] == 99999, 
-#'                                        20, options("max.print")[[1]])) {
-#' #   print("printing encoded")
-#' 
-#'   encoded <- names( which(vapply(x, function(cols) inherits(cols, "encoded_column"), T)) )
-#'   nonEncoded <- setdiff(names(x), encoded)
-#' 
-#'   x <- x[, nonEncoded, drop = FALSE ]
-#'   
-#'   if (nrow(x) > n) {
-#'     x <- x[1:n, nonEncoded, drop = FALSE ]
-#'   }
-#'   
-#'   print.data.frame(x, ...)
-#' 
-#'   invisible(x)
-#' }
+#' @export
+print.sfencoded <- function(x, ..., n = 20)
+                            #n = ifelse(options("max.print")[[1]] == 99999,
+                            #           20, options("max.print")[[1]])) 
+  {
+  #if(n < nrow(x)) x <- x[1:n, ]
+  
+  #x <- x[1:(pmin(20, nrow(x))), , drop = FALSE]
+  
+  if(is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column"))) {
+    NextMethod()
+    return()
+  }
+  
+  encoded <- attr(x, "encoded_column")
+  wkt <- attr(x, "wkt_column")
+  
+  if(!is.null(encoded)) {
+    e <- x[[encoded]]
+    e <- vapply(e, function(z) paste0( attr(z, "sfc")[2], ": ",  substr(z[1], 1, pmin(nchar(z[1]), 20)), "..."), "" )
+    e <- setNames(data.frame(e), encoded)
+    x[, encoded] <- e
+  }
+  
+  if(!is.null(wkt)) {
+    w <- x[[wkt]]
+    w <- paste0(substr(w, 1, pmin(nchar(w), 30)), "...")
+    w <- setNames(data.frame(w), wkt)
+    x[, wkt] <- w  
+  }
+
+  attr(x, "class") <- setdiff(class(x), "sfencoded")
+
+  print(x)
+  invisible(x)
+}
+
+
+# nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+# enc <- encode(nc)
 
 # library(sf)
 # df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
