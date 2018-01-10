@@ -48,14 +48,8 @@ str.encoded_column <- function(object, ...) {
 
 
 #' @export
-print.sfencoded <- function(x, ..., n = 20)
-                            #n = ifelse(options("max.print")[[1]] == 99999,
-                            #           20, options("max.print")[[1]])) 
-  {
-  #if(n < nrow(x)) x <- x[1:n, ]
-  
-  #x <- x[1:(pmin(20, nrow(x))), , drop = FALSE]
-  
+print.sfencoded <- function(x, ... ){
+
   if(is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column"))) {
     NextMethod()
     return()
@@ -65,6 +59,7 @@ print.sfencoded <- function(x, ..., n = 20)
   wkt <- attr(x, "wkt_column")
   
   if(!is.null(encoded)) {
+    print("encoded column")
     e <- x[[encoded]]
     e <- vapply(e, function(z) paste0( attr(z, "sfc")[2], ": ",  substr(z[1], 1, pmin(nchar(z[1]), 20)), "..."), "" )
     e <- setNames(data.frame(e), encoded)
@@ -72,6 +67,7 @@ print.sfencoded <- function(x, ..., n = 20)
   }
   
   if(!is.null(wkt)) {
+    print("wkt column")
     w <- x[[wkt]]
     w <- paste0(substr(w, 1, pmin(nchar(w), 30)), "...")
     w <- setNames(data.frame(w), wkt)
@@ -87,6 +83,10 @@ print.sfencoded <- function(x, ..., n = 20)
 
 # nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
 # enc <- encode(nc)
+# wkt <- polyline_wkt(enc)
+# df <- enc
+# df$wkt <- wkt$geometry
+
 
 # library(sf)
 # df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
