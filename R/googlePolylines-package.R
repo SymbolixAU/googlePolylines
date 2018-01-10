@@ -22,7 +22,7 @@ str.encoded_column <- function(object, ...) {
 
 
 #' @export
-`[.sfencoded` <- function(x, i, j, drop = TRUE) { 
+`[.sfencoded` <- function(x, i, j, ..., drop = TRUE) { 
   
   geomColumn <- attr(x, "encoded_column")
   wktColumn <- attr(x, "wkt_column")
