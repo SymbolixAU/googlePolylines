@@ -13,12 +13,11 @@ str.encoded_column <- function(object, ...) {
 }
 
 ## TODO:
-## - having drop = FALSE will override the default `[.data.frame` method
-## is this what I want?
 ## - if drop = TRUE, and a single column is selected (the encoded_column), 
 ## return the list, give it an 'sfencoded' class, and make it usable in googleway
 ## - should I remove 'sfencoded' class if the geometry is dropped? 
 ## because they could re-attach it....
+## - include sfAttributes in polyline_wkt 
 
 
 #' @export
@@ -27,22 +26,29 @@ str.encoded_column <- function(object, ...) {
   geomColumn <- attr(x, "encoded_column")
   wktColumn <- attr(x, "wkt_column")
   attr(x, "sfAttributes") <- NULL
-#  sfAtts <- attr(x, "sfAttributes")
   
-  # x <- `[.data.frame`(x, i, j, drop)
   x <- NextMethod()
-
-  if( !is.null(geomColumn) ) { 
-    if( geomColumn %in% names(x) ) {
-      attr(x, "encoded_column") <- geomColumn
-    }
+  x <- attachEncodedAttribute(x, geomColumn, "encoded_column")
+  x <- attachEncodedAttribute(x, wktColumn, "wkt_column")
+  
+  if( is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column")) ){
+    x <- removeSfencodedClass(x)
   }
   
-  if( !is.null(wktColumn) ) {  
-    if( wktColumn %in% names(x) ) {
-      attr(x, "wkt_column") <- wktColumn
+  return(x)
+}
+
+attachEncodedAttribute <- function(x, attrCol, attribute) {
+  if ( !is.null(attrCol) ) {
+    if ( attrCol %in% names(x) ) {
+      attr(x, attribute) <- attrCol
     }
   }
+  return(x)
+}
+
+removeSfencodedClass <- function(x) {
+  attr(x, "class") <- setdiff(class(x), "sfencoded")
   return(x)
 }
 
@@ -59,22 +65,29 @@ print.sfencoded <- function(x, ... ){
   wkt <- attr(x, "wkt_column")
   
   if(!is.null(encoded)) {
-    print("encoded column")
     e <- x[[encoded]]
-    e <- vapply(e, function(z) paste0( attr(z, "sfc")[2], ": ",  substr(z[1], 1, pmin(nchar(z[1]), 20)), "..."), "" )
+    e <- vapply(e, 
+                function(z) {
+                  paste0( 
+                    attr(z, "sfc")[2], ": ",  
+                    substr(z[1], 1, pmin(nchar(z[1]), 20)), 
+                    "..."
+                    )
+                  }, 
+                "" )
+    
     e <- setNames(data.frame(e), encoded)
     x[, encoded] <- e
   }
   
   if(!is.null(wkt)) {
-    print("wkt column")
     w <- x[[wkt]]
     w <- paste0(substr(w, 1, pmin(nchar(w), 30)), "...")
     w <- setNames(data.frame(w), wkt)
     x[, wkt] <- w  
   }
 
-  attr(x, "class") <- setdiff(class(x), "sfencoded")
+  x <- removeSfencodedClass(x)
 
   print(x)
   invisible(x)
@@ -86,6 +99,9 @@ print.sfencoded <- function(x, ... ){
 # wkt <- polyline_wkt(enc)
 # df <- enc
 # df$wkt <- wkt$geometry
+
+# nc2 <- rbind(nc, nc, nc, nc, nc, nc, nc, nc, nc, nc, nc, nc, nc, nc, nc, nc, nc, nc, nc, nc)
+# nc3 <- rbind(nc2, nc2, nc2, nc2, nc2, nc2, nc2, nc2, nc2, nc2, nc2, nc2)
 
 
 # library(sf)
