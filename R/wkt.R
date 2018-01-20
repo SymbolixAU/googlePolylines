@@ -49,6 +49,9 @@ polyline_wkt.sfencoded <- function(obj) {
 }
 
 #' @export
+polyline_wkt.sfencodedLite <- polyline_wkt.sfencoded
+
+#' @export
 polyline_wkt.encoded_column <- function(obj) polyline_to_wkt(obj)
 
 #' @export

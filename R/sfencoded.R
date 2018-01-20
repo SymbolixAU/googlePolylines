@@ -26,8 +26,6 @@ str.wkt_column <- strSfEncoded
 #' @export
 `[.sfencoded` <- function(x, i, j, ..., drop = TRUE) {
 
-  print("subset sfencoded")
-
   geomColumn <- attr(x, "encoded_column")
   wktColumn <- attr(x, "wkt_column")
   attr(x, "sfAttributes") <- NULL
