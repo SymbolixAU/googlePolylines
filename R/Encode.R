@@ -17,7 +17,12 @@
 #' @param obj either an \code{sf} object or \code{data.frame}
 #' @param ... other parameters passed to methods
 #' 
-#' @return encoded object
+#' @return \code{sfencoded} object
+#' 
+#' @note When an \code{sfencoded} object is colulmn-subset using \code{`[`} and 
+#' the encoded column is retained, the attributes of the column will remain. This 
+#' is different behaviour to standard subsetting of \code{data.frames}, where all 
+#' attributes are dropped by default. See examples.
 #' 
 #' @examples 
 #' 
@@ -38,9 +43,25 @@
 #' 
 #' encoded <- encode(nc)
 #' 
+#' ## view attributes
+#' attributes(encoded) 
+#' 
+#' ## view attributes of subset object
+#' attributes(encoded[, c("AREA", "PERIMETER", "geometry")])
+#' 
+#' ## view attributes without encoded column
+#' attributes(encoded[, c("AREA", "PERIMETER")])
+#' 
 #' ## strip attributes
 #' encodedLite <- encode(nc, strip = TRUE)
 #' 
+#' attributes(encodedLite)
+#' 
+#' ## view attributes of subset lite object
+#' attributes(encodedLite[, c("AREA", "PERIMETER", "geometry")])
+#' 
+#' ## view attributes without encoded column
+#' attributes(encodedLite[, c("AREA", "PERIMETER")])
 #' }
 #' 
 #' @note When encoding an \code{sf} object, only the XY dimensions will be used,
@@ -72,11 +93,16 @@ encode.sf <- function(obj, strip = FALSE, ...) {
   attr(obj[[geomCol]], 'class') <- c('encoded_column', class(obj[[geomCol]]) )
   attr(obj, 'encoded_column') <- geomCol
   
-  if(!strip) attr(obj, "sfAttributes") <- sfAttrs
+  if(!strip) {
+    attr(obj, "sfAttributes") <- sfAttrs
+    
+    if(!inherits(obj, 'sfencoded'))
+      attr(obj, 'class') <- c("sfencoded", attr(obj, 'class'))
+  }else{
+    if(!inherits(obj, 'sfencodedLite'))
+      attr(obj, 'class') <- c("sfencodedLite", attr(obj, 'class'))
+  }
 
-  if (!inherits(obj, 'sfencoded'))
-    attr(obj, 'class') <- c("sfencoded", attr(obj, 'class'))
-  
   return(obj)
 }
 

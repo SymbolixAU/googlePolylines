@@ -16,30 +16,36 @@ str.wkt_column <- strSfEncoded
 
 
 ## TODO:
-## - if drop = TRUE, and a single column is selected (the encoded_column), 
+## - if drop = TRUE, and a single column is selected (the encoded_column),
 ## return the list, give it an 'sfencoded' class, and make it usable in googleway
-## - should I remove 'sfencoded' class if the geometry is dropped? 
+## - should I remove 'sfencoded' class if the geometry is dropped?
 ## because they could re-attach it....
-## - include sfAttributes in polyline_wkt 
+## - include sfAttributes in polyline_wkt
 
 
 #' @export
-`[.sfencoded` <- function(x, i, j, ..., drop = TRUE) { 
-  
+`[.sfencoded` <- function(x, i, j, ..., drop = TRUE) {
+
+  print("subset sfencoded")
+
   geomColumn <- attr(x, "encoded_column")
   wktColumn <- attr(x, "wkt_column")
   attr(x, "sfAttributes") <- NULL
-  
+
   x <- NextMethod()
   x <- attachEncodedAttribute(x, geomColumn, "encoded_column")
   x <- attachEncodedAttribute(x, wktColumn, "wkt_column")
-  
+
   if( is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column")) ){
     x <- removeSfencodedClass(x)
   }
-  
   return(x)
 }
+
+#' @export
+`[.sfencodedLite` <- `[.sfencoded`
+
+
 
 attachEncodedAttribute <- function(x, attrCol, attribute) {
   if ( !is.null(attrCol) ) {
@@ -51,13 +57,23 @@ attachEncodedAttribute <- function(x, attrCol, attribute) {
 }
 
 removeSfencodedClass <- function(x) {
-  attr(x, "class") <- setdiff(class(x), "sfencoded")
+  attr(x, "class") <- setdiff(class(x), c("sfencoded", "sfencodedLite"))
   return(x)
 }
 
 
 #' @export
 print.sfencoded <- function(x, ... ){
+  printSfEncoded(x, "sfencoded", ... )
+}
+
+#' @export
+print.sfencodedLite <- function(x, ... ){
+  printSfEncoded(x, "sfencodedLite", ...)
+}
+
+
+printSfEncoded <- function(x, encType, ...) {
   
   if(is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column"))) {
     NextMethod()
@@ -66,26 +82,29 @@ print.sfencoded <- function(x, ... ){
   
   encoded <- attr(x, "encoded_column")
   wkt <- attr(x, "wkt_column")
-  
+
   if(!is.null(encoded)) {
     e <- x[[encoded]]
+    
     e <- vapply(e, function(z) {
-      paste0( 
-        attr(z, "sfc")[2], ": ",  
-        substr(z[1], 1, pmin(nchar(z[1]), 20)), 
+      paste0(
+        switch(encType, 
+               "sfencoded" = paste0(attr(z, "sfc")[2], ": "), 
+               "sfencodedLite" = NULL ),
+        substr(z[1], 1, pmin(nchar(z[1]), 20)),
         "..."
-        )
-      }, "" )
+      )
+    }, "" )
     
     e <- stats::setNames(data.frame(e), encoded)
     x[, encoded] <- e
   }
-  
+
   if(!is.null(wkt)) {
     w <- x[[wkt]]
     w <- paste0(substr(w, 1, pmin(nchar(w), 30)), "...")
     w <- stats::setNames(data.frame(w), wkt)
-    x[, wkt] <- w  
+    x[, wkt] <- w
   }
   
   x <- removeSfencodedClass(x)
@@ -110,11 +129,11 @@ print.sfencoded <- function(x, ... ){
 # 								 lineId = c(1,1,1,1,2,2,2,2,1,1,1,2),
 # 								 lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, -66.668, -70.579, -70, -49, -51, -70),
 # 								 lat = c(26.774, 18.466, 32.321, 26.774, 28.745, 29.570, 27.339, 28.745, 22, 23, 22, 22))
-# 
+#
 # p1 <- as.matrix(df[4:1, c("lon", "lat")])
 # p2 <- as.matrix(df[8:5, c("lon", "lat")])
 # p3 <- as.matrix(df[9:12, c("lon", "lat")])
-# 
+#
 # point <- sf::st_sfc(sf::st_point(x = c(df[1,"lon"], df[1,"lat"])))
 # multipoint <- sf::st_sfc(sf::st_multipoint(x = as.matrix(df[1:2, c("lon", "lat")])))
 # polygon <- sf::st_sfc(sf::st_polygon(x = list(p1, p2)))

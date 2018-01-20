@@ -26,7 +26,7 @@ spatial attributes associated with the \code{sf} object}
 \item{lat}{vector of latitudes}
 }
 \value{
-encoded object
+\code{sfencoded} object
 }
 \description{
 Encodes coordinates into an encoded polyline.
@@ -43,6 +43,11 @@ Will work with
 }
 }
 \note{
+When an \code{sfencoded} object is colulmn-subset using \code{`[`} and 
+the encoded column is retained, the attributes of the column will remain. This 
+is different behaviour to standard subsetting of \code{data.frames}, where all 
+attributes are dropped by default. See examples.
+
 When encoding an \code{sf} object, only the XY dimensions will be used,
 the Z or M (3D and/or Measure) dimensions are dropped.
 }
@@ -65,9 +70,25 @@ nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
 
 encoded <- encode(nc)
 
+## view attributes
+attributes(encoded) 
+
+## view attributes of subset object
+attributes(encoded[, c("AREA", "PERIMETER", "geometry")])
+
+## view attributes without encoded column
+attributes(encoded[, c("AREA", "PERIMETER")])
+
 ## strip attributes
 encodedLite <- encode(nc, strip = TRUE)
 
+attributes(encodedLite)
+
+## view attributes of subset lite object
+attributes(encodedLite[, c("AREA", "PERIMETER", "geometry")])
+
+## view attributes without encoded column
+attributes(encodedLite[, c("AREA", "PERIMETER")])
 }
 
 }
