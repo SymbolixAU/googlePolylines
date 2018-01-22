@@ -45,6 +45,18 @@ test_that("encoed objects printed", {
     inherits(withVisible(enc)$value, "sfencoded")
   )
   
+  expect_true(
+    inherits(withVisible(googlePolylines:::print.sfencoded(enc))$value, "data.frame")
+  )
+  
+  expect_true(
+    inherits(withVisible(googlePolylines:::print.sfencodedLite(enc))$value, "data.frame")
+  )
+  
+  expect_true(
+    inherits(withVisible(googlePolylines:::print.sfencoded(enc))$value, "data.frame")
+  )
+  
 })
 
 test_that("prefix printed", {
