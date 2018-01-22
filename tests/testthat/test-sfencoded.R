@@ -57,6 +57,38 @@ test_that("encoed objects printed", {
     inherits(withVisible(googlePolylines:::print.sfencoded(enc))$value, "data.frame")
   )
   
+  ## WKT attribute
+  enc <- data.frame(polyline = "abc", stringsAsFactors = F)
+  attr(enc, 'class') <- c('sfencoded', class(enc))
+  attr(enc, 'wkt_column') <- 'polyline'
+  
+  
+  expect_true(
+    inherits(withVisible(enc)$value, "sfencoded")
+  )
+  
+  expect_true(
+    inherits(withVisible(googlePolylines:::print.sfencoded(enc))$value, "data.frame")
+  )
+  
+  expect_true(
+    inherits(withVisible(googlePolylines:::print.sfencodedLite(enc))$value, "data.frame")
+  )
+  
+  expect_true(
+    inherits(withVisible(googlePolylines:::print.sfencoded(enc))$value, "data.frame")
+  )
+  
+  ## NO attribute column
+  # enc <- data.frame(polyline = "abc", stringsAsFactors = F)
+  # attr(enc, 'class') <- c('sfencoded', class(enc))
+  # 
+  # 
+  # enc <- data.frame(polyline = "abc", stringsAsFactors = F)
+  # attr(enc, 'class') <- c('sfencoded', class(enc))
+  
+  
+  
 })
 
 test_that("prefix printed", {
@@ -75,7 +107,6 @@ test_that("prefix printed", {
   expect_true(
     substr(googlePolylines:::printSfEncodedPrefix(enc[1, 'geometry'], 'sfencodedLite'), 1, 5) == "u_d|E"
   )
-  
   
 })
 

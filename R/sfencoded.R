@@ -62,16 +62,29 @@ removeSfencodedClass <- function(x) {
 
 #' @export
 print.sfencoded <- function(x, ... ){
+  
+  if(is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column"))) {
+    NextMethod()
+    return()
+  }
+  
   printSfEncoded(x, "sfencoded", ... )
 }
 
 #' @export
 print.sfencodedLite <- function(x, ... ){
+  
+  if(is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column"))) {
+    NextMethod()
+    return()
+  }
+  
   printSfEncoded(x, "sfencodedLite", ...)
 }
 
 
 printSfEncodedPrefix <- function(e, encType) {
+  
   if(encType == "sfencoded") {
     e <- vapply(e, function(z) {
       paste0(
@@ -89,14 +102,10 @@ printSfEncodedPrefix <- function(e, encType) {
     }, "" )
   }
   return(e)
+  
 }
 
 printSfEncoded <- function(x, encType, ...) {
-  
-  if(is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column"))) {
-    NextMethod()
-    return()
-  }
   
   encoded <- attr(x, "encoded_column")
   wkt <- attr(x, "wkt_column")

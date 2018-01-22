@@ -1,7 +1,6 @@
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/googlePolylines)](http://cran.r-project.org/package=googlePolylines)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/googlePolylines)](https://CRAN.R-project.org/package=googlePolylines)
 ![downloads](http://cranlogs.r-pkg.org/badges/grand-total/googlePolylines)
-[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/googlePolylines)](http://cran.r-project.org/web/packages/googlePolylines/index.html)
 [![Github Stars](https://img.shields.io/github/stars/SymbolixAU/googlePolylines.svg?style=social&label=Github)](https://github.com/SymbolixAU/googlePolylines)
 [![Travis-CI Build Status](https://travis-ci.org/SymbolixAU/googlePolylines.svg?branch=master)](https://travis-ci.org/SymbolixAU/googlePolylines)
 [![Coverage Status](https://img.shields.io/codecov/c/github/SymbolixAU/googlePolylines/master.svg)](https://codecov.io/github/SymbolixAU/googlePolylines?branch=master)
