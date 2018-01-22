@@ -68,44 +68,15 @@ print.sfencoded <- function(x, ... ){
     return()
   }
   
-  printSfEncoded(x, "sfencoded", ... )
+  printSfEncoded(x, ... )
 }
 
 #' @export
-print.sfencodedLite <- function(x, ... ){
-  
-  if(is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column"))) {
-    NextMethod()
-    return()
-  }
-  
-  printSfEncoded(x, "sfencodedLite", ...)
-}
+print.sfencodedLite <- print.sfencoded
 
-
-printSfEncodedPrefix <- function(e, encType) {
+printSfEncoded <- function(x, ...) {
   
-  if(encType == "sfencoded") {
-    e <- vapply(e, function(z) {
-      paste0(
-        attr(z, "sfc")[2], ": ",
-        substr(z[1], 1, pmin(nchar(z[1]), 20)),
-        "..."
-      )
-    }, "" )
-  }else{
-    e <- vapply(e, function(z) {
-      paste0(
-        substr(z[1], 1, pmin(nchar(z[1]), 20)),
-        "..."
-      )
-    }, "" )
-  }
-  return(e)
-  
-}
-
-printSfEncoded <- function(x, encType, ...) {
+  encType <- ifelse(inherits(x, 'sfencoded'), 'sfencoded', 'sfencodedLite')
   
   encoded <- attr(x, "encoded_column")
   wkt <- attr(x, "wkt_column")
@@ -130,6 +101,27 @@ printSfEncoded <- function(x, encType, ...) {
   invisible(x)
 }
 
+printSfEncodedPrefix <- function(e, encType) {
+  
+  if(encType == "sfencoded") {
+    e <- vapply(e, function(z) {
+      paste0(
+        attr(z, "sfc")[2], ": ",
+        substr(z[1], 1, pmin(nchar(z[1]), 20)),
+        "..."
+      )
+    }, "" )
+  }else{
+    e <- vapply(e, function(z) {
+      paste0(
+        substr(z[1], 1, pmin(nchar(z[1]), 20)),
+        "..."
+      )
+    }, "" )
+  }
+  return(e)
+  
+}
 
 # nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
 # enc <- encode(nc)
