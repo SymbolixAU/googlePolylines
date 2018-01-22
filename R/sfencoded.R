@@ -71,6 +71,26 @@ print.sfencodedLite <- function(x, ... ){
 }
 
 
+printSfEncodedPrefix <- function(e, encType) {
+  if(encType == "sfencoded") {
+    e <- vapply(e, function(z) {
+      paste0(
+        attr(z, "sfc")[2], ": ",
+        substr(z[1], 1, pmin(nchar(z[1]), 20)),
+        "..."
+      )
+    }, "" )
+  }else{
+    e <- vapply(e, function(z) {
+      paste0(
+        substr(z[1], 1, pmin(nchar(z[1]), 20)),
+        "..."
+      )
+    }, "" )
+  }
+  return(e)
+}
+
 printSfEncoded <- function(x, encType, ...) {
   
   if(is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column"))) {
@@ -83,17 +103,7 @@ printSfEncoded <- function(x, encType, ...) {
 
   if(!is.null(encoded)) {
     e <- x[[encoded]]
-    
-    e <- vapply(e, function(z) {
-      paste0(
-        switch(encType, 
-               "sfencoded" = paste0(attr(z, "sfc")[2], ": "), 
-               "sfencodedLite" = NULL ),
-        substr(z[1], 1, pmin(nchar(z[1]), 20)),
-        "..."
-      )
-    }, "" )
-    
+    e <- printSfEncodedPrefix(e, encType)
     e <- stats::setNames(data.frame(e), encoded)
     x[, encoded] <- e
   }
