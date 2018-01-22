@@ -52,6 +52,32 @@ test_that("*POINTs are encoded", {
 })
 
 
+test_that("UNKNOWN geometry & sf type", {
+  
+  testthat::skip_on_cran()
+  
+  point <- sf::st_sfc(sf::st_point(x = c(144, -37)))
+  
+  class(point) <- c("sfc_NEWPOINT", "sfc")
+  
+  expect_error(
+    encode(point),
+    "encoding this sf typ eis currently not supported"
+  )
+  
+  point <- sf::st_sfc(sf::st_point(x = c(144, -37)))
+  
+  enc <- encode(point)
+  
+  expect_error(
+    polyline_wkt(enc),
+    "I was expecting an sfencoded object or an encoded_column"
+  )
+  
+#  point <- sf::st_sfc(sf::st_point(x = c(144, -37)), sf::st_point(x = c(144, -37)))
+  
+})
+
 test_that("*LINES are encoded", {
 
   testthat::skip_on_cran()

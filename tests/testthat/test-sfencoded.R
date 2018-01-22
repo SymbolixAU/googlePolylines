@@ -80,14 +80,12 @@ test_that("encoed objects printed", {
   )
   
   ## NO attribute column
-  # enc <- data.frame(polyline = "abc", stringsAsFactors = F)
-  # attr(enc, 'class') <- c('sfencoded', class(enc))
-  # 
-  # 
-  # enc <- data.frame(polyline = "abc", stringsAsFactors = F)
-  # attr(enc, 'class') <- c('sfencoded', class(enc))
+  enc <- data.frame(polyline = "abc", stringsAsFactors = F)
+  attr(enc, 'class') <- c('sfencoded', class(enc))
   
-  
+  expect_output(
+    print(enc)
+  )
   
 })
 
