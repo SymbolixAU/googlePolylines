@@ -62,7 +62,7 @@ test_that("UNKNOWN geometry & sf type", {
   
   expect_error(
     encode(point),
-    "encoding this sf typ eis currently not supported"
+    "encoding this sf type is currently not supported"
   )
   
   point <- sf::st_sfc(sf::st_point(x = c(144, -37)))
