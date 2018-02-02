@@ -37,7 +37,7 @@ for inputs and outputs.
 
 Will work with
 \itemize{
-  \item{\code{sf} and \code{sfc} objects} directly
+  \item{\code{sf} and \code{sfc} objects} directly.
   \item{\code{data.frames}} - It will attempt to find lat & lon coordinates, 
   or you can explicitely define them using the \code{lat} and \code{lon} arguments
 }

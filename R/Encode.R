@@ -9,7 +9,7 @@
 #' 
 #' Will work with
 #' \itemize{
-#'   \item{\code{sf} and \code{sfc} objects} directly
+#'   \item{\code{sf} and \code{sfc} objects} directly.
 #'   \item{\code{data.frames}} - It will attempt to find lat & lon coordinates, 
 #'   or you can explicitely define them using the \code{lat} and \code{lon} arguments
 #' }
@@ -89,10 +89,43 @@ encode.sf <- function(obj, strip = FALSE, ...) {
   
   ## strip attributes
   obj <- structure(obj, sf_column = NULL, agr = NULL, class = setdiff(class(obj), "sf"))
+  
+  obj <- assignEncodedColumn(obj, geomCol)
+  obj <- assignEncodedAttribute(obj, sfAttrs, strip)
 
+  return(obj)
+}
+
+#' @export
+encode.sfc <- function(obj, strip = FALSE, ...) {
+
+  # df <- data.frame(geometry = character(length(obj)))
+  # 
+  # geomCol <- "geometry"
+  # lst <- rcpp_encodeSfGeometry(obj, strip)
+  # 
+  # if(!strip) sfAttrs <- sfGeometryAttributes(obj)
+  # 
+  # df[[geomCol]] <- lst
+  # 
+  # # ## strip attributes
+  # # obj <- structure(obj, sf_column = NULL, agr = NULL, class = setdiff(class(obj), "sf"))
+  # 
+  # df <- assignEncodedColumn(df, geomCol)
+  # df <- assignEncodedAttribute(df, sfAttrs, strip)
+  rcpp_encodeSfGeometry(obj, strip)
+  #return(df)
+}  
+
+assignEncodedColumn <- function(obj, geomCol) {
+  
   attr(obj[[geomCol]], 'class') <- c('encoded_column', class(obj[[geomCol]]) )
   attr(obj, 'encoded_column') <- geomCol
   
+  return(obj)
+}
+
+assignEncodedAttribute <- function(obj, sfAttrs, strip) {
   if(!strip) {
     attr(obj, "sfAttributes") <- sfAttrs
     
@@ -102,13 +135,11 @@ encode.sf <- function(obj, strip = FALSE, ...) {
     if(!inherits(obj, 'sfencodedLite'))
       attr(obj, 'class') <- c("sfencodedLite", attr(obj, 'class'))
   }
-
   return(obj)
 }
 
-#' @export
-encode.sfc <- function(obj, strip = FALSE, ...) rcpp_encodeSfGeometry(obj, strip)
 
+  
 #' @rdname encode
 #' @param lon vector of longitudes
 #' @param lat vector of latitudes
