@@ -6,6 +6,17 @@
 
 using namespace Rcpp;
 
+// rcpp_decode_sfencoded
+Rcpp::List rcpp_decode_sfencoded(Rcpp::List polylines);
+RcppExport SEXP _googlePolylines_rcpp_decode_sfencoded(SEXP polylinesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type polylines(polylinesSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_decode_sfencoded(polylines));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rcpp_encodeSfGeometry
 Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip);
 RcppExport SEXP _googlePolylines_rcpp_encodeSfGeometry(SEXP sfcSEXP, SEXP stripSEXP) {
@@ -15,6 +26,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::List >::type sfc(sfcSEXP);
     Rcpp::traits::input_parameter< bool >::type strip(stripSEXP);
     rcpp_result_gen = Rcpp::wrap(rcpp_encodeSfGeometry(sfc, strip));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rcpp_decode_polyline
+Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings);
+RcppExport SEXP _googlePolylines_rcpp_decode_polyline(SEXP encodedStringsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type encodedStrings(encodedStringsSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_decode_polyline(encodedStrings));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -54,7 +76,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_googlePolylines_rcpp_decode_sfencoded", (DL_FUNC) &_googlePolylines_rcpp_decode_sfencoded, 1},
     {"_googlePolylines_rcpp_encodeSfGeometry", (DL_FUNC) &_googlePolylines_rcpp_encodeSfGeometry, 2},
+    {"_googlePolylines_rcpp_decode_polyline", (DL_FUNC) &_googlePolylines_rcpp_decode_polyline, 1},
     {"_googlePolylines_rcpp_encode_polyline", (DL_FUNC) &_googlePolylines_rcpp_encode_polyline, 2},
     {"_googlePolylines_polyline_to_wkt", (DL_FUNC) &_googlePolylines_polyline_to_wkt, 1},
     {"_googlePolylines_wkt_to_polyline", (DL_FUNC) &_googlePolylines_wkt_to_polyline, 1},

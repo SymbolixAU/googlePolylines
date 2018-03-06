@@ -3,7 +3,7 @@
 
 using namespace Rcpp;
 
-/*
+
 // [[Rcpp::export]]
 Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings) {
   
@@ -16,7 +16,7 @@ Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings) {
     
     std::string encoded = Rcpp::as< std::string >(encodedStrings[i]);
     
-    Rcpp::NumericMatrix decoded = decode_polyline(encoded);
+    Rcpp::DataFrame decoded = decode_polyline(encoded);
     
     //resultLons[i] = decoded["lon"];
     //resultLats[i] = decoded["lat"];
@@ -30,7 +30,7 @@ Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings) {
 
 
 
-Rcpp::NumericMatrix decode_polyline(std::string encoded){
+Rcpp::DataFrame decode_polyline(std::string encoded){
   
   int len = encoded.size();
   int index = 0;
@@ -66,21 +66,20 @@ Rcpp::NumericMatrix decode_polyline(std::string encoded){
     pointsLon.push_back(lng * (float)1e-5);
   }
   
-//  return Rcpp::DataFrame::create(
-//    Named("lon") = pointsLon,
-//    Named("lat") = pointsLat);
+  return Rcpp::DataFrame::create(
+    Named("lon") = pointsLon,
+    Named("lat") = pointsLat);
   
-  Rcpp::NumericMatrix mat(pointsLat.size(), 2);
-  mat(_, 0) = pointsLon;
-  mat(_, 1) = pointsLat;
+//  Rcpp::NumericMatrix mat(pointsLat.size(), 2);
+//  mat(_, 0) = pointsLon;
+//  mat(_, 1) = pointsLat;
   
-  return mat;
+//  return mat;
   
 //  return Rcpp::List::create(
 //    _["lon"] = pointsLon,
 //    _["lat"] = pointsLat);
 }
-*/
 
 void EncodeNumber(std::ostringstream& os, int num){
   
