@@ -6,14 +6,17 @@
 \alias{encode.data.frame}
 \title{Encode}
 \usage{
-encode(obj, ...)
+encode(obj, precision = 5, ...)
 
-\method{encode}{sf}(obj, strip = FALSE, ...)
+\method{encode}{sf}(obj, precision = 5, strip = FALSE, ...)
 
-\method{encode}{data.frame}(obj, lon = NULL, lat = NULL, ...)
+\method{encode}{data.frame}(obj, precision = 5, lon = NULL, lat = NULL,
+  ...)
 }
 \arguments{
 \item{obj}{either an \code{sf} object or \code{data.frame}}
+
+\item{precision}{number of decimal places}
 
 \item{...}{other parameters passed to methods}
 

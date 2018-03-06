@@ -1,6 +1,6 @@
 # googlePolylines 0.5.0 (development)
 
-
+* `encode` functions gain `precision` argument
 
 
 # googlePolylines 0.4.0

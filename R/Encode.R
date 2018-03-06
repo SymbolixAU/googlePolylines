@@ -1,7 +1,7 @@
 ## TODO:
 ## - expose 'precision' to wkt_to_polyline
-## - combine the different polylineToWKT and encode_polyline cpp functions
-
+## - combine the different polylineToWKT and decode_polyline cpp functions
+## - tests for higher precisions
 
 #' Encode
 #' 
@@ -20,6 +20,7 @@
 #' }
 #' 
 #' @param obj either an \code{sf} object or \code{data.frame}
+#' @param precision number of decimal places 
 #' @param ... other parameters passed to methods
 #' 
 #' @return \code{sfencoded} object
@@ -75,7 +76,7 @@
 #' @seealso \link{encodeCoordinates}
 #' 
 #' @export
-encode <- function(obj, ...) UseMethod("encode")
+encode <- function(obj, precision = 5, ...) UseMethod("encode")
 
 #' @rdname encode
 #'  
@@ -83,10 +84,10 @@ encode <- function(obj, ...) UseMethod("encode")
 #' Useful if you want to reduce the size even further, but you will lose the 
 #' spatial attributes associated with the \code{sf} object 
 #' @export
-encode.sf <- function(obj, strip = FALSE, ...) {
+encode.sf <- function(obj, precision = 5, strip = FALSE, ...) {
 
   geomCol <- sfGeometryColumn(obj)
-  lst <- rcpp_encodeSfGeometry(obj[[geomCol]], strip, 100000)
+  lst <- rcpp_encodeSfGeometry(obj[[geomCol]], strip, 10^precision)
   
   if(!strip) sfAttrs <- sfGeometryAttributes(obj)
   
@@ -112,24 +113,24 @@ encode.sf <- function(obj, strip = FALSE, ...) {
 }
 
 #' @export
-encode.sfc <- function(obj, strip = FALSE, ...) rcpp_encodeSfGeometry(obj, strip, 100000)
+encode.sfc <- function(obj, precision = 5, strip = FALSE, ...) rcpp_encodeSfGeometry(obj, strip, 10^precision)
 
 #' @rdname encode
 #' @param lon vector of longitudes
 #' @param lat vector of latitudes
 #' @export
-encode.data.frame <- function(obj, lon = NULL, lat = NULL, ...) {
+encode.data.frame <- function(obj, precision = 5, lon = NULL, lat = NULL, ...) {
 
   if(is.null(lat)) lat <- find_lat_column(names(obj))
   if(is.null(lon)) lon <- find_lon_column(names(obj))
 
-  rcpp_encode_polyline(obj[[lon]], obj[[lat]], 100000)
+  rcpp_encode_polyline(obj[[lon]], obj[[lat]], 10^precision)
 }
 
 
 
 #' @export
-encode.default <- function(obj, ...) {
+encode.default <- function(obj, precision = 5, ...) {
   stop(paste0("I currently don't know how to encode ", paste0(class(obj), collapse = ", "), " objects"))
 }
 

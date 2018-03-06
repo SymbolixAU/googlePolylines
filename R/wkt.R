@@ -63,6 +63,7 @@ polyline_wkt.default <- function(obj) stop(paste0("I was expecting an sfencoded 
 #' Converts well-known text into encoded polylines.
 #' 
 #' @param obj \code{sfencoded} object or \code{wkt_column} of well-known text
+#' @param precision number of decimal places 
 #' 
 #' @return encoded polyline representation of geometries
 #' 
@@ -88,16 +89,18 @@ polyline_wkt.default <- function(obj) stop(paste0("I was expecting an sfencoded 
 #' polyline encoding algorithm.
 #' 
 #' @export
-wkt_polyline <- function(obj) UseMethod("wkt_polyline")
+wkt_polyline <- function(obj, precision = 5) UseMethod("wkt_polyline")
 
 #' @export
-wkt_polyline.sfencoded <- function(obj) {
+wkt_polyline.sfencoded <- function(obj, precision = 5) {
+  
+  print(precision)
   
   if(is.null(attr(obj, "wkt_column"))) stop("Can not find the wkt_column")
   
   geomCol <- attr(obj, "wkt_column")
   
-  obj[[geomCol]] <- wkt_polyline(obj[[geomCol]])
+  obj[[geomCol]] <- wkt_polyline(obj[[geomCol]], precision)
   
   attr(obj[[geomCol]], "class") <- c("encoded_column", class(obj[[geomCol]]))
   
@@ -108,7 +111,7 @@ wkt_polyline.sfencoded <- function(obj) {
 }
 
 #' @export
-wkt_polyline.wkt_column <- function(obj) wkt_to_polyline(obj, 100000)
+wkt_polyline.wkt_column <- function(obj, precision = 5) wkt_to_polyline(obj, 10^precision)
 
 #' @export
-wkt_polyline.default <- function(obj) stop(paste0("I was expecting an sfencoded object with a wkt_column"))
+wkt_polyline.default <- function(obj, precision = 5) stop(paste0("I was expecting an sfencoded object with a wkt_column"))

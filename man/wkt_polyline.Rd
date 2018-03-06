@@ -4,10 +4,12 @@
 \alias{wkt_polyline}
 \title{WKT Polyline}
 \usage{
-wkt_polyline(obj)
+wkt_polyline(obj, precision = 5)
 }
 \arguments{
 \item{obj}{\code{sfencoded} object or \code{wkt_column} of well-known text}
+
+\item{precision}{number of decimal places}
 }
 \value{
 encoded polyline representation of geometries
