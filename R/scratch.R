@@ -39,7 +39,10 @@
 # 
 # dt[, rbindlist(myFun(foo), idcol = T)]
 
-
-# pt <- sf::st_sf(geometry = sf::st_sfc(sf::st_point(x = c(-38, 144))))
-# enc <- encode(pt)
+# pt1 <- sf::st_point(x = c(-38, 144))
+# pt2 <- sf::st_point(x = c(-39, 145))
+# pts <- sf::st_sfc(list(pt1, pt2))
+# pts <- sf::st_sf(geometry = pts)
+# 
+# enc <- encode(pts)
 # decode(enc)

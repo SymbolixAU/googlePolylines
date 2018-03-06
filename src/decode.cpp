@@ -5,13 +5,16 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 Rcpp::List rcpp_decode_sfencoded(Rcpp::List polylines){
   
-  Rcpp::List res;
   Rcpp::Rcout << "debug: step1" << std::endl;
-  Rcpp::StringVector sv = polylines[0];
+  int n = polylines.size();
+  Rcpp::List res(n);
+  Rcpp::Rcout << "debug: polylines size: " << n << std::endl;
   
-  Rcpp::Rcout << sv << std::endl;
-  
-  res = decode_data(sv, "POINT");
+  for (int i = 0; i < n; i++) {
+    Rcpp::StringVector sv = polylines[i];
+    Rcpp::Rcout << sv << std::endl;
+    res[i] = decode_data(sv, "POINT");
+  }
   
   return res;
   
