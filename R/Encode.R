@@ -1,5 +1,4 @@
 ## TODO:
-## - expose 'precision' to wkt_to_polyline
 ## - combine the different polylineToWKT and decode_polyline cpp functions
 ## - tests for higher precisions
 

@@ -212,15 +212,21 @@ test_that("data.frames are encoded", {
   
   testthat::skip_on_cran()
   
-  df <- data.frame(polygonId = c(1,1,1,1),
+  df <- data.frame(
+    polygonId = c(1,1,1,1),
     lineId = c(1,1,1,1),
-    lon = c(-80.190, -66.118, -64.757, -80.190),
-    lat = c(26.774, 18.466, 32.321, 26.774))
+    lon = c(-80.190324, -66.118435, -64.757236, -80.190835),
+    lat = c(26.774836, 18.466467, 32.321886, 26.774582))
 
   expect_true(
-    encode(df) == "ohlbDnbmhN~suq@am{tAw`qsAeyhGvkz`@fge}A"
+    encode(df) == "umlbDndmhNhvuq@il{tAkcqsAozhGrmz`@~je}A"
+  )
+  
+  expect_true(
+    encode(df, precision = 6) == "grear@fvl}wC`hbzNad{yYujtlY}qarAnqqqI|v~l\\"
   )
 })
+
 
 test_that("default encoding method errors", {
   
