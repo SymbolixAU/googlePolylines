@@ -107,7 +107,8 @@ void EncodeSignedNumber(std::ostringstream& os, int num){
 }
 
 Rcpp::String encode_polyline(Rcpp::NumericVector longitude,
-                             Rcpp::NumericVector latitude){
+                             Rcpp::NumericVector latitude,
+                             int precision){
   
   int plat = 0;
   int plon = 0;
@@ -118,8 +119,8 @@ Rcpp::String encode_polyline(Rcpp::NumericVector longitude,
   
   for(int i = 0; i < num_coords; i++){
     
-    int late5 = latitude[i] * 1e5;
-    int lone5 = longitude[i] * 1e5;
+    int late5 = latitude[i] * precision;
+    int lone5 = longitude[i] * precision;
     
     EncodeSignedNumber(os, late5 - plat);
     EncodeSignedNumber(os, lone5 - plon);
@@ -134,8 +135,9 @@ Rcpp::String encode_polyline(Rcpp::NumericVector longitude,
 
 // [[Rcpp::export]]
 Rcpp::String rcpp_encode_polyline(Rcpp::NumericVector longitude,
-                                  Rcpp::NumericVector latitude){
+                                  Rcpp::NumericVector latitude,
+                                  int precision){
 
-  return encode_polyline(longitude,latitude);
+  return encode_polyline(longitude, latitude, precision);
 }
 

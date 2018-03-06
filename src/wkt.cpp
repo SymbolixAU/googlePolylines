@@ -218,7 +218,7 @@ std::string geomFromWKT(std::string& pl) {
 }
 
 template <typename Point>
-void encode_wkt_point(Point const& p, std::ostringstream& os) {
+void encode_wkt_point(Point const& p, std::ostringstream& os, int precision) {
   
   Rcpp::NumericVector lon(1);
   Rcpp::NumericVector lat(1);
@@ -226,12 +226,12 @@ void encode_wkt_point(Point const& p, std::ostringstream& os) {
   lon[0] = bg::get<0>(p);
   lat[0] = bg::get<1>(p);
   
-  addToStream(os, encode_polyline(lon, lat));
+  addToStream(os, encode_polyline(lon, lat, precision));
 }
 
 
 template <typename MultiPoint>
-void encode_wkt_multipoint(MultiPoint const& mp, std::ostringstream& os) {
+void encode_wkt_multipoint(MultiPoint const& mp, std::ostringstream& os, int precision) {
   
   typedef typename boost::range_iterator
   <
@@ -242,13 +242,13 @@ void encode_wkt_multipoint(MultiPoint const& mp, std::ostringstream& os) {
        it != boost::end(mp);
        ++it) 
   {
-    encode_wkt_point(*it, os);
+    encode_wkt_point(*it, os, precision);
   }
   
 }
 
 template <typename LineString>
-void encode_wkt_linestring(LineString const& ls, std::ostringstream& os) {
+void encode_wkt_linestring(LineString const& ls, std::ostringstream& os, int precision) {
   
   // works for RINGS (because it's templated)
   
@@ -270,11 +270,11 @@ void encode_wkt_linestring(LineString const& ls, std::ostringstream& os) {
     lat[i] = bg::get<1>(*it);
     i++;
   }
-  addToStream(os, encode_polyline(lon, lat));
+  addToStream(os, encode_polyline(lon, lat, precision));
 }
 
 template <typename MultiLinestring>
-void encode_wkt_multi_linestring(MultiLinestring const& mls, std::ostringstream& os) {
+void encode_wkt_multi_linestring(MultiLinestring const& mls, std::ostringstream& os, int precision) {
   
   typedef typename boost::range_iterator
   <
@@ -285,25 +285,25 @@ void encode_wkt_multi_linestring(MultiLinestring const& mls, std::ostringstream&
        it != boost::end(mls);
        ++it)
   {
-    encode_wkt_linestring(*it, os);
+    encode_wkt_linestring(*it, os, precision);
   }
 }
 
 template <typename Polygon>
-void encode_wkt_polygon(Polygon const& pl, std::ostringstream& os) {
+void encode_wkt_polygon(Polygon const& pl, std::ostringstream& os, int precision) {
   
-  encode_wkt_linestring(pl.outer(), os);
+  encode_wkt_linestring(pl.outer(), os, precision);
   
   // perhaps use
   // https://stackoverflow.com/questions/7722087/getting-the-coordinates-of-points-from-a-boost-geometry-polygon/7748091#7748091
   // https://stackoverflow.com/questions/37071031/how-to-get-a-polygon-from-boostgeometrymodelpolygon
   for (auto& i: pl.inners() ) {
-    encode_wkt_linestring(i, os);
+    encode_wkt_linestring(i, os, precision);
   }
 }
 
 template <typename MultiPolygon>
-void encode_wkt_multi_polygon(MultiPolygon const& mpl, std::ostringstream& os) {
+void encode_wkt_multi_polygon(MultiPolygon const& mpl, std::ostringstream& os, int precision) {
   
   typedef typename boost::range_iterator
   <
@@ -314,13 +314,13 @@ void encode_wkt_multi_polygon(MultiPolygon const& mpl, std::ostringstream& os) {
        it != boost::end(mpl);
        ++it)
   {
-    encode_wkt_polygon(*it, os);
+    encode_wkt_polygon(*it, os, precision);
     addToStream(os, SPLIT_CHAR);
   }
 }
 
 // [[Rcpp::export]]
-Rcpp::List wkt_to_polyline(Rcpp::StringVector wkt) {
+Rcpp::List wkt_to_polyline(Rcpp::StringVector wkt, int precision) {
   
   size_t n = wkt.length();
   Rcpp::String r_wkt;
@@ -347,37 +347,37 @@ Rcpp::List wkt_to_polyline(Rcpp::StringVector wkt) {
       
       point_type pt;
       bg::read_wkt(str_wkt, pt);
-      encode_wkt_point(pt, os);
+      encode_wkt_point(pt, os, precision);
       
     }else if (geomType == "MULTIPOINT" ) {
       
       multi_point_type mp;
       bg::read_wkt(str_wkt, mp);
-      encode_wkt_multipoint(mp, os);
+      encode_wkt_multipoint(mp, os, precision);
       
     }else if (geomType == "LINESTRING" ) {
       
       linestring_type ls;
       bg::read_wkt(str_wkt, ls);
-      encode_wkt_linestring(ls, os);
+      encode_wkt_linestring(ls, os, precision);
       
     }else if (geomType == "MULTILINESTRING" ) {
       
       multi_linestring_type mls;
       bg::read_wkt(str_wkt, mls);
-      encode_wkt_multi_linestring(mls, os);
+      encode_wkt_multi_linestring(mls, os, precision);
       
     }else if (geomType == "POLYGON" ) { 
       
       polygon_type pl;
       bg::read_wkt(str_wkt, pl);
-      encode_wkt_polygon(pl, os);
+      encode_wkt_polygon(pl, os, precision);
       
     }else if (geomType == "MULTIPOLYGON" ) {
       
       multi_polygon_type mpl;
       bg::read_wkt(str_wkt, mpl);
-      encode_wkt_multi_polygon(mpl, os);
+      encode_wkt_multi_polygon(mpl, os, precision);
     }
     
     std::string str = os.str();

@@ -39,9 +39,9 @@ std::vector<std::string> split(const std::string &s, char delim) {
 
 
 void write_data(std::ostringstream& os, SEXP sfc,
-                const char *cls, int srid);
+                const char *cls, int srid, int precision);
 
-void write_matrix_list(std::ostringstream& os, Rcpp::List lst);
+void write_matrix_list(std::ostringstream& os, Rcpp::List lst, int precision);
 
 void make_type(const char *cls, int *tp = NULL,
                        int srid = 0) {
@@ -72,10 +72,10 @@ void make_type(const char *cls, int *tp = NULL,
   //return type;
 }
 
-void write_multipolygon(std::ostringstream& os, Rcpp::List lst) {
+void write_multipolygon(std::ostringstream& os, Rcpp::List lst, int precision) {
   
   for (int i = 0; i < lst.length(); i++){
-    write_matrix_list(os, lst[i]);
+    write_matrix_list(os, lst[i], precision);
   }
 }
 
@@ -85,7 +85,7 @@ void addToStream(std::ostringstream& os, Rcpp::String encodedString ) {
 }
 
 
-void encode_point( std::ostringstream& os, Rcpp::NumericVector point) {
+void encode_point( std::ostringstream& os, Rcpp::NumericVector point, int precision) {
   
 //  Rcpp::Rcout << point << std::endl;
 //  Rcpp::Rcout << "size: " << point.size() << " length: " << point.length() << std::endl;
@@ -95,11 +95,11 @@ void encode_point( std::ostringstream& os, Rcpp::NumericVector point) {
   lon[0] = point[0];
   lat[0] = point[1];
   
-  Rcpp::String encodedString = encode_polyline(lon, lat);
+  Rcpp::String encodedString = encode_polyline(lon, lat, precision);
   addToStream(os, encodedString);
 }
 
-void encode_points( std::ostringstream& os, Rcpp::NumericMatrix point) {
+void encode_points( std::ostringstream& os, Rcpp::NumericMatrix point, int precision) {
   
   int n = point.size() / 2;
   Rcpp::String encodedString;
@@ -109,13 +109,13 @@ void encode_points( std::ostringstream& os, Rcpp::NumericMatrix point) {
   for (int i = 0; i < n; i++){
     pointLon = point(i, 0);
     pointLat = point(i, 1);
-    encodedString = encode_polyline( pointLon, pointLat);
+    encodedString = encode_polyline( pointLon, pointLat, precision);
     addToStream(os, encodedString);
   }
   
 }
 
-void encode_vector( std::ostringstream& os, Rcpp::List vec ) {
+void encode_vector( std::ostringstream& os, Rcpp::List vec, int precision ) {
   
   int n = vec.size() / 2;
   
@@ -129,46 +129,46 @@ void encode_vector( std::ostringstream& os, Rcpp::List vec ) {
     lats[i] = vec[(i + n)];
   }
   
-  encodedString = encode_polyline(lons, lats);
+  encodedString = encode_polyline(lons, lats, precision);
   addToStream(os, encodedString);
 }
 
-void encode_vectors( std::ostringstream& os, Rcpp::List sfc ){
+void encode_vectors( std::ostringstream& os, Rcpp::List sfc, int precision){
   
   size_t n = sfc.size();
   for (size_t i = 0; i < n; i++) {
-    encode_vector(os, sfc[i]);
+    encode_vector(os, sfc[i], precision);
   }
 }
 
-void encode_matrix(std::ostringstream& os, Rcpp::NumericMatrix mat ) {
+void encode_matrix(std::ostringstream& os, Rcpp::NumericMatrix mat, int precision ) {
 
   Rcpp::String encodedString;
   
   Rcpp::NumericVector lats = mat(_, 1);
   Rcpp::NumericVector lons = mat(_, 0);
   
-  encodedString = encode_polyline(lons, lats);
+  encodedString = encode_polyline(lons, lats, precision);
   
   addToStream(os, encodedString);
 }
 
-void write_matrix_list(std::ostringstream& os, Rcpp::List lst) {
+void write_matrix_list(std::ostringstream& os, Rcpp::List lst, int precision) {
   
   size_t len = lst.length();
 
   for (size_t j = 0; j < len; j++){
-    encode_matrix(os, lst[j]);
+    encode_matrix(os, lst[j], precision);
   }
   
   addToStream(os, SPLIT_CHAR);
 }
 
-void write_geometry(std::ostringstream& os, SEXP s) {
+void write_geometry(std::ostringstream& os, SEXP s, int precision) {
   
   Rcpp::CharacterVector cls_attr = getSfClass(s);
   
-  write_data(os, s, cls_attr[1], 0);
+  write_data(os, s, cls_attr[1], 0, precision);
 }
 
 //void write_geometrycollection(std::ostringstream& os, Rcpp::List lst) {
@@ -189,32 +189,32 @@ void write_geometry(std::ostringstream& os, SEXP s) {
 
 
 void write_data(std::ostringstream& os, SEXP sfc,
-                const char *cls = NULL, int srid = 0) {
+                const char *cls = NULL, int srid = 0, int precision = 100000) {
   
   int tp;
   make_type(cls, &tp, srid);
   
   switch(tp) {
   case SF_Point:
-    encode_point(os, sfc);
+    encode_point(os, sfc, precision);
     break;
   case SF_MultiPoint:
-    encode_points(os, sfc);
+    encode_points(os, sfc, precision);
     break;
   case SF_LineString:
-    encode_vector(os, sfc);
+    encode_vector(os, sfc, precision);
     break;
   case SF_MultiLineString:
-    encode_vectors(os, sfc);
+    encode_vectors(os, sfc, precision);
     break;
   case SF_Polygon:
-    write_matrix_list(os, sfc);
+    write_matrix_list(os, sfc, precision);
     break;
   case SF_MultiPolygon:
-    write_multipolygon(os, sfc);
+    write_multipolygon(os, sfc, precision);
     break;
   case SF_Geometry:
-    write_geometry(os, sfc);
+    write_geometry(os, sfc, precision);
     break;
 //  case SF_GeometryCollection:
 //  	write_geometrycollection(os, sfc);
@@ -228,7 +228,7 @@ void write_data(std::ostringstream& os, SEXP sfc,
 
 
 // [[Rcpp::export]]
-Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
+Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip, int precision){
   
   Rcpp::CharacterVector cls_attr = sfc.attr("class");
   Rcpp::List output(sfc.size());
@@ -239,7 +239,7 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
     std::ostringstream os;
     Rcpp::checkUserInterrupt();
 
-    write_data(os, sfc[i], cls_attr[0], 0);
+    write_data(os, sfc[i], cls_attr[0], 0, precision);
     
     std::string str = os.str();
 

@@ -7,26 +7,28 @@
 using namespace Rcpp;
 
 // rcpp_encodeSfGeometry
-Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip);
-RcppExport SEXP _googlePolylines_rcpp_encodeSfGeometry(SEXP sfcSEXP, SEXP stripSEXP) {
+Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip, int precision);
+RcppExport SEXP _googlePolylines_rcpp_encodeSfGeometry(SEXP sfcSEXP, SEXP stripSEXP, SEXP precisionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::List >::type sfc(sfcSEXP);
     Rcpp::traits::input_parameter< bool >::type strip(stripSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_encodeSfGeometry(sfc, strip));
+    Rcpp::traits::input_parameter< int >::type precision(precisionSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_encodeSfGeometry(sfc, strip, precision));
     return rcpp_result_gen;
 END_RCPP
 }
 // rcpp_encode_polyline
-Rcpp::String rcpp_encode_polyline(Rcpp::NumericVector longitude, Rcpp::NumericVector latitude);
-RcppExport SEXP _googlePolylines_rcpp_encode_polyline(SEXP longitudeSEXP, SEXP latitudeSEXP) {
+Rcpp::String rcpp_encode_polyline(Rcpp::NumericVector longitude, Rcpp::NumericVector latitude, int precision);
+RcppExport SEXP _googlePolylines_rcpp_encode_polyline(SEXP longitudeSEXP, SEXP latitudeSEXP, SEXP precisionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type longitude(longitudeSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type latitude(latitudeSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_encode_polyline(longitude, latitude));
+    Rcpp::traits::input_parameter< int >::type precision(precisionSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_encode_polyline(longitude, latitude, precision));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -42,22 +44,23 @@ BEGIN_RCPP
 END_RCPP
 }
 // wkt_to_polyline
-Rcpp::List wkt_to_polyline(Rcpp::StringVector wkt);
-RcppExport SEXP _googlePolylines_wkt_to_polyline(SEXP wktSEXP) {
+Rcpp::List wkt_to_polyline(Rcpp::StringVector wkt, int precision);
+RcppExport SEXP _googlePolylines_wkt_to_polyline(SEXP wktSEXP, SEXP precisionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type wkt(wktSEXP);
-    rcpp_result_gen = Rcpp::wrap(wkt_to_polyline(wkt));
+    Rcpp::traits::input_parameter< int >::type precision(precisionSEXP);
+    rcpp_result_gen = Rcpp::wrap(wkt_to_polyline(wkt, precision));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_googlePolylines_rcpp_encodeSfGeometry", (DL_FUNC) &_googlePolylines_rcpp_encodeSfGeometry, 2},
-    {"_googlePolylines_rcpp_encode_polyline", (DL_FUNC) &_googlePolylines_rcpp_encode_polyline, 2},
+    {"_googlePolylines_rcpp_encodeSfGeometry", (DL_FUNC) &_googlePolylines_rcpp_encodeSfGeometry, 3},
+    {"_googlePolylines_rcpp_encode_polyline", (DL_FUNC) &_googlePolylines_rcpp_encode_polyline, 3},
     {"_googlePolylines_polyline_to_wkt", (DL_FUNC) &_googlePolylines_polyline_to_wkt, 1},
-    {"_googlePolylines_wkt_to_polyline", (DL_FUNC) &_googlePolylines_wkt_to_polyline, 1},
+    {"_googlePolylines_wkt_to_polyline", (DL_FUNC) &_googlePolylines_wkt_to_polyline, 2},
     {NULL, NULL, 0}
 };
 

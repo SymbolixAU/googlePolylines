@@ -42,6 +42,7 @@ Rcpp::String EncodeNumber(int num);
 Rcpp::String EncodeSignedNumber(int num);
 
 Rcpp::String encode_polyline(Rcpp::NumericVector latitude,
-                             Rcpp::NumericVector longitude);
+                             Rcpp::NumericVector longitude,
+                             int precision);
 
 #endif

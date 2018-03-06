@@ -1,3 +1,8 @@
+## TODO:
+## - expose 'precision' to wkt_to_polyline
+## - combine the different polylineToWKT and encode_polyline cpp functions
+
+
 #' Encode
 #' 
 #' Encodes coordinates into an encoded polyline. 
@@ -81,7 +86,7 @@ encode <- function(obj, ...) UseMethod("encode")
 encode.sf <- function(obj, strip = FALSE, ...) {
 
   geomCol <- sfGeometryColumn(obj)
-  lst <- rcpp_encodeSfGeometry(obj[[geomCol]], strip)
+  lst <- rcpp_encodeSfGeometry(obj[[geomCol]], strip, 100000)
   
   if(!strip) sfAttrs <- sfGeometryAttributes(obj)
   
@@ -107,7 +112,7 @@ encode.sf <- function(obj, strip = FALSE, ...) {
 }
 
 #' @export
-encode.sfc <- function(obj, strip = FALSE, ...) rcpp_encodeSfGeometry(obj, strip)
+encode.sfc <- function(obj, strip = FALSE, ...) rcpp_encodeSfGeometry(obj, strip, 100000)
 
 #' @rdname encode
 #' @param lon vector of longitudes
@@ -118,7 +123,7 @@ encode.data.frame <- function(obj, lon = NULL, lat = NULL, ...) {
   if(is.null(lat)) lat <- find_lat_column(names(obj))
   if(is.null(lon)) lon <- find_lon_column(names(obj))
 
-  rcpp_encode_polyline(obj[[lon]], obj[[lat]])
+  rcpp_encode_polyline(obj[[lon]], obj[[lat]], 100000)
 }
 
 
@@ -135,6 +140,7 @@ encode.default <- function(obj, ...) {
 #' 
 #' @param lon vector of longitudes
 #' @param lat vector of latitudes
+#' @param precision number of decimal places 
 #' 
 #' @examples 
 #' \dontrun{
@@ -166,5 +172,5 @@ encode.default <- function(obj, ...) {
 #' @seealso \link{encode}
 #' 
 #' @export
-encodeCoordinates <- function(lon, lat) rcpp_encode_polyline(lon, lat)
+encodeCoordinates <- function(lon, lat, precision = 5) rcpp_encode_polyline(lon, lat, 10^precision)
 

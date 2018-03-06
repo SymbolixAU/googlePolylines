@@ -4,12 +4,14 @@
 \alias{encodeCoordinates}
 \title{Encode coordinates}
 \usage{
-encodeCoordinates(lon, lat)
+encodeCoordinates(lon, lat, precision = 5)
 }
 \arguments{
 \item{lon}{vector of longitudes}
 
 \item{lat}{vector of latitudes}
+
+\item{precision}{number of decimal places}
 }
 \description{
 Encodes a vector of lon & lat coordinates
