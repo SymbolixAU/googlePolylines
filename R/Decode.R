@@ -32,24 +32,34 @@ decodePolyline.sfencoded <- function(polylines) {
   
   geomCol <- attr(polylines, "encoded_column")
   
-  decode(polylines[[geomCol]])
+  #obj <- rcpp_decode_sfencoded( polylines[[geomCol]] , sfAttributes(polylines) )
+
+  # decode( polylines[[geomCol]] )
   
+  rcpp_decode_sfencoded(polylines[[geomCol]], sfAttributes(polylines) )
+  
+  # obj <- stats::setNames(data.frame(obj), geomCol)
+  # 
+  # attr(obj, "sf_column") <- geomCol
+  # attr(obj, "class") <- c("sf", "data.frame")
+  # return(obj)
 }
 
 decodePolyline.encoded_column <- function(polylines) {
-  
-  ## for each list entry, decode, and turn into the correct sf object. 
-  ## should do this at the C++ level for speed. 
-  
-  ## this will return a 'st_geometry' column, that will be attached to the 
+
+  ## for each list entry, decode, and turn into the correct sf object.
+  ## should do this at the C++ level for speed.
+
+  ## this will return a 'st_geometry' column, that will be attached to the
   ## rest of the sfencoded data.frame
-  str(polylines)
-  rcpp_decode_sfencoded(polylines)
-  
-  
-  ## then need to ensure the correct sf attributes are attached to make it 
+
+  obj <- rcpp_decode_sfencoded(polylines)
+
+  ## then need to ensure the correct sf attributes are attached to make it
   ## a valid sf object
-  
+
+  return(obj)
+
 }
 
 

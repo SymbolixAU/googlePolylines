@@ -3,24 +3,35 @@ using namespace Rcpp;
 #include "googlePolylines.h"
 
 // [[Rcpp::export]]
-Rcpp::List rcpp_decode_sfencoded(Rcpp::List polylines){
+Rcpp::List rcpp_decode_sfencoded(Rcpp::List polylines, Rcpp::List sfAttributes){
   
   Rcpp::Rcout << "debug: step1" << std::endl;
   int n = polylines.size();
   Rcpp::List res(n);
   Rcpp::List thisGeom(0);
-  Rcpp::Rcout << "debug: polylines size: " << n << std::endl;
+//  Rcpp::Rcout << "debug: polylines size: " << n << std::endl;
+  
+  Rcpp::List crs = Rcpp::List::create(Named("epsg") = sfAttributes["epsg"],
+                                      Named("proj4string") = sfAttributes["proj"]);
+  crs.attr("class") = "cls";
+  
   
   for (int i = 0; i < n; i++) {
     Rcpp::StringVector sv = polylines[i];
-    Rcpp::Rcout << sv << std::endl;
+//    Rcpp::Rcout << sv << std::endl;
     Rcpp::CharacterVector cls = sv.attr("sfc");
-    Rcpp::Rcout << cls << std::endl;
+//    Rcpp::Rcout << cls << std::endl;
     
     thisGeom = decode_data(sv, cls[1]);
-    thisGeom.attr("class") = Rcpp::CharacterVector::create("sfc_POINT", "sfc");;
+    thisGeom.attr("class") = Rcpp::CharacterVector::create("sfc_POINT", "sfc");
+    
     res[i] = thisGeom;
   }
+  
+  res.attr("crs") = crs;
+  res.attr("bbox") = sfAttributes["bbox"];
+  res.attr("precision") = sfAttributes["prec"];
+  res.attr("n_empty") = sfAttributes["n_em"];
   
   return res;
   
