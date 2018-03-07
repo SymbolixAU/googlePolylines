@@ -32,7 +32,6 @@ nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
 nc[1:5,]
 
 
-
 ## ------------------------------------------------------------------------
 enc <- encode(nc)
 str(enc)
@@ -63,6 +62,13 @@ wkt[1, ]
 enc2 <- wkt_polyline(wkt)
 enc2[1, ]
 
+
+## ------------------------------------------------------------------------
+
+wkt$geometry <- st_as_sfc(wkt)
+wkt <- st_sf(wkt)
+
+head(wkt[, c("AREA", "PERIMETER", "geometry")])
 
 ## ------------------------------------------------------------------------
 enc[1, 'geometry'][[1]] == enc2[1, 'geometry'][[1]]

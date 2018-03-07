@@ -1,7 +1,7 @@
 # googlePolylines 0.5.0 (development)
 
 
-
+* methods conversion back to `sfc`
 
 # googlePolylines 0.4.0
 

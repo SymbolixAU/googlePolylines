@@ -1,3 +1,20 @@
+
+#' @export
+st_as_sfc.sfencoded <- function(wkt) {
+  wktCol <- attr(wkt, "wkt_column")
+  wkt <- st_as_sfc(wkt[[wktCol]])
+  return(wkt)
+}
+
+#' @export
+st_as_sfc.wkt_column <- function(wkt) {
+  wkt <- as.character(wkt)
+  NextMethod()
+}
+
+
+
+
 #' sf Attributes
 #' 
 #' Retrieves the sf attributes stored on the \code{sfencoded} object
