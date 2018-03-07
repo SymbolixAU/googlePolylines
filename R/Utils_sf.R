@@ -46,7 +46,9 @@ sfGeometryAttributes.sfc <- function(sfc) {
     dim  = sfDimension(sfc),
     bbox = sfBbox(sfc),
     epsg = sfEpsg(sfc),
-    proj = sfProj(sfc)
+    proj = sfProj(sfc),
+    prec = sfPrecision(sfc),
+    n_em = sfNEmpty(sfc)
   )
   
 }
@@ -90,9 +92,23 @@ sfEpsg.sfc <- function(sfc) attr(sfc, "crs")$epsg
 ### PROJ4STRINg
 sfProj <- function(sf) UseMethod("sfProj")
 
-
 #' @export
 sfProj.sfc <- function(sfc) attr(sfc, "crs")$proj4string
+
+
+### PRECISION
+sfPrecision <- function(sf) UseMethod("sfPrecision")
+
+#' @export
+sfPrecision.sfc <- function(sfc) attr(sfc, "precision")
+
+
+### N_EMPTY
+sfNEmpty <- function(sf) UseMethod("sfNEmpty")
+
+#' @export
+sfNEmpty.sfc <- function(sfc) attr(sfc, "n_empty")
+
 
 
 

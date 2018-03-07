@@ -35,7 +35,7 @@ std::vector<std::string> split(const std::string &s, char delim);
 
 Rcpp::CharacterVector getSfClass(SEXP sf);
 
-Rcpp::NumericMatrix decode_polyline(std::string encoded);
+Rcpp::DataFrame decode_polyline(std::string encoded);
 
 Rcpp::String EncodeNumber(int num);
 
@@ -43,5 +43,8 @@ Rcpp::String EncodeSignedNumber(int num);
 
 Rcpp::String encode_polyline(Rcpp::NumericVector latitude,
                              Rcpp::NumericVector longitude);
+
+Rcpp::List decode_data(Rcpp::StringVector pl,
+                 const char *cls = NULL);
 
 #endif
