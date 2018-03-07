@@ -8,12 +8,18 @@ Rcpp::List rcpp_decode_sfencoded(Rcpp::List polylines){
   Rcpp::Rcout << "debug: step1" << std::endl;
   int n = polylines.size();
   Rcpp::List res(n);
+  Rcpp::List thisGeom(0);
   Rcpp::Rcout << "debug: polylines size: " << n << std::endl;
   
   for (int i = 0; i < n; i++) {
     Rcpp::StringVector sv = polylines[i];
     Rcpp::Rcout << sv << std::endl;
-    res[i] = decode_data(sv, "POINT");
+    Rcpp::CharacterVector cls = sv.attr("sfc");
+    Rcpp::Rcout << cls << std::endl;
+    
+    thisGeom = decode_data(sv, cls[1]);
+    thisGeom.attr("class") = Rcpp::CharacterVector::create("sfc_POINT", "sfc");;
+    res[i] = thisGeom;
   }
   
   return res;
@@ -77,12 +83,19 @@ Rcpp::NumericVector decode_point(Rcpp::StringVector pl) {
   
   res[0] = df["lon"];
   res[1] = df["lat"];
+  res.attr("class") = Rcpp::StringVector::create("XY", "POINT", "sfg");
   return res;
 }
 
 Rcpp::NumericMatrix decode_points(Rcpp::StringVector pl) {
-  Rcpp::NumericMatrix res;
+  Rcpp::NumericMatrix res(pl.size());
+  Rcpp::StringVector thisPoint;
   
+  for (int i = 0; i < pl.size(); i++) {
+    thisPoint = pl[i];
+    res(i, _) = decode_point(thisPoint);
+  }
+  res.attr("class") = Rcpp::StringVector::create("XY", "MULTIPOINT", "sfg");
   return res;
 }
 
@@ -123,9 +136,11 @@ Rcpp::List decode_data(Rcpp::StringVector pl,
   switch(tp) {
   case SF_Point:
     output[0] = decode_point(pl);
+    //output.attr("class") = Rcpp::CharacterVector::create("sfc_POINT", "sfc");
     break;
   case SF_MultiPoint:
     output[0] = decode_points(pl);
+    //output.attr("class") = Rcpp::CharacterVector::create("sfc_MULTIPOINT", "sfc");
     break;
   case SF_LineString:
     output[0] = decode_line(pl);

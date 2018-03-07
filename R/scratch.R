@@ -46,3 +46,8 @@
 # 
 # enc <- encode(pts)
 # decode(enc)
+
+# mpt <- sf::st_multipoint(matrix(c(-38, 144, -39, 145), ncol = 2, byrow = T))
+# mpts <- sf::st_sf(geometry = sf::st_sfc(mpt))
+# enc <- encode(mpts)
+# d <- decode(enc)
