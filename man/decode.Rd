@@ -18,6 +18,6 @@ polylines <- c(
   "ggmnDt}wmLgc`DesuQvvrLofdDorqGtzzV"
 )
 
-decodePolyline(polylines)
+decode(polylines)
 
 }
