@@ -84,7 +84,6 @@ encode(df)
 
 It will not work on GEOMETRYCOLLECTION objects.
 
-
 ```{r}
 
 library(sf)
@@ -92,7 +91,6 @@ library(sf)
 ## data set of North Carolina states
 nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
 nc[1:5,]
-
 
 ```
 
@@ -146,6 +144,16 @@ enc2[1, ]
 ```
 
 I've provided these functions to enable the conversion of encoded polylines into other geometry formats, should they be required by other packages.  
+
+You can use the well-known text representation to convert back to an `sf` object
+
+```{r}
+
+wkt$geometry <- st_as_sfc(wkt)
+wkt <- st_sf(wkt)
+
+head(wkt[, c("AREA", "PERIMETER", "geometry")])
+```
 
 ## Benchmarking
 
