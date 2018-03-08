@@ -13,7 +13,7 @@ st_as_sfc.sfencoded <- function(wkt) {
     wktCol <- wkt[[wktCol]]
     
   } else {
-    stop("There is know wkt or encoded column to convert to sfc")
+    stop("There is no wkt or encoded column to convert to sfc")
   }
   
   wkt <- st_as_sfc(wktCol)
@@ -46,7 +46,7 @@ st_as_sf.sfencoded <- function(sfencoded) {
     geom <- sfencoded[[geomCol]]
     
   } else {
-    stop("There is know wkt or encoded column to convert to sf")
+    stop("There is no wkt or encoded column to convert to sf")
   }
   
   sfencoded[[geomCol]] <- st_as_sfc(geom)
@@ -54,6 +54,18 @@ st_as_sf.sfencoded <- function(sfencoded) {
 #  return(sfencoded)
 }
 
+#' @export
+st_as_sf.encoded_column <- function(enc) {
+  #wkt <- polyline_wkt(enc)
+  #st_sf(st_as_sfc(wkt))
+  stop("Can't convert an encoded_column to sf directly")
+}
+
+#' @export
+st_as_sf.wkt_column <- function(wkt) {
+  #st_sf(st_as_sfc(wkt))
+  stop("Can't convert a wkt_column to sf directly")
+}
 
 
 #' sf Attributes
