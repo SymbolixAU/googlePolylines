@@ -65,10 +65,11 @@ enc2[1, ]
 
 ## ------------------------------------------------------------------------
 
-## SFC from WKT
-# st_as_sfc(wkt)
+# # SFC from WKT
+# st_as_sfc(wkt$geometry)
 # 
-# sf <- st_as_sf(enc)
+# 
+# sf <- st_as_sf(st_as_sfc(wkt$geometry))
 # 
 # head(sf[, c("AREA", "PERIMETER", "geometry")])
 

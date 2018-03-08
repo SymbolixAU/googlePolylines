@@ -12,7 +12,7 @@
 
 <meta name="author" content="D Cooley" />
 
-<meta name="date" content="2018-03-08" />
+<meta name="date" content="2018-03-09" />
 
 <title>Google Polylines</title>
 
@@ -280,7 +280,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Google Polylines</h1>
 <h4 class="author"><em>D Cooley</em></h4>
-<h4 class="date"><em>2018-03-08</em></h4>
+<h4 class="date"><em>2018-03-09</em></h4>
 
 
 
@@ -462,12 +462,13 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## 1      10  1364     0      19 MULTIPOLYGON: i_d|EjsgpNymFrhL{Enc...</code></pre>
 <p>I’ve provided these functions to enable the conversion of encoded polylines into other geometry formats, should they be required by other packages.</p>
 <p>You can also convert back to an <code>sf</code> object</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">## SFC from WKT</a>
-<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="co"># st_as_sfc(wkt)</span></a>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="co"># # SFC from WKT</span></a>
+<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="co"># st_as_sfc(wkt$geometry)</span></a>
 <a class="sourceLine" id="cb28-3" data-line-number="3"><span class="co"># </span></a>
-<a class="sourceLine" id="cb28-4" data-line-number="4"><span class="co"># sf &lt;- st_as_sf(enc)</span></a>
-<a class="sourceLine" id="cb28-5" data-line-number="5"><span class="co"># </span></a>
-<a class="sourceLine" id="cb28-6" data-line-number="6"><span class="co"># head(sf[, c(&quot;AREA&quot;, &quot;PERIMETER&quot;, &quot;geometry&quot;)])</span></a></code></pre></div>
+<a class="sourceLine" id="cb28-4" data-line-number="4"><span class="co"># </span></a>
+<a class="sourceLine" id="cb28-5" data-line-number="5"><span class="co"># sf &lt;- st_as_sf(st_as_sfc(wkt$geometry))</span></a>
+<a class="sourceLine" id="cb28-6" data-line-number="6"><span class="co"># </span></a>
+<a class="sourceLine" id="cb28-7" data-line-number="7"><span class="co"># head(sf[, c(&quot;AREA&quot;, &quot;PERIMETER&quot;, &quot;geometry&quot;)])</span></a></code></pre></div>
 </section>
 <section id="benchmarking" class="level2">
 <h2>Benchmarking</h2>
