@@ -1,8 +1,22 @@
 
 #' @export
 st_as_sfc.sfencoded <- function(wkt) {
-  wktCol <- attr(wkt, "wkt_column")
-  wkt <- st_as_sfc(wkt[[wktCol]])
+  
+  if(!is.null(attr(wkt,"encoded_column"))) {
+    
+    wktCol <- attr(wkt, "encoded_column")
+    wktCol <- polyline_wkt(wkt[[wktCol]])
+    
+  } else if(!is.null(attr(wkt, "wkt_column"))) {
+    
+    wktCol <- attr(wkt, "wkt_column")
+    wktCol <- wkt[[wktCol]]
+    
+  } else {
+    stop("There is know wkt or encoded column to convert to sfc")
+  }
+  
+  wkt <- st_as_sfc(wktCol)
   return(wkt)
 }
 
@@ -12,6 +26,33 @@ st_as_sfc.wkt_column <- function(wkt) {
   NextMethod()
 }
 
+#' @export
+st_as_sfc.encoded_column <- function(wkt) {
+  wkt <- polyline_wkt(wkt)
+  NextMethod()
+}
+
+#' @export
+st_as_sf.sfencoded <- function(sfencoded) {
+  
+  if(!is.null(attr(sfencoded,"encoded_column"))) {
+    
+    geomCol <- attr(sfencoded, "encoded_column")
+    geom <- polyline_wkt(sfencoded[[geomCol]])
+    
+  } else if(!is.null(attr(sfencoded, "wkt_column"))) {
+    
+    geomCol <- attr(sfencoded, "wkt_column")
+    geom <- sfencoded[[geomCol]]
+    
+  } else {
+    stop("There is know wkt or encoded column to convert to sf")
+  }
+  
+  sfencoded[[geomCol]] <- st_as_sfc(geom)
+  NextMethod()
+#  return(sfencoded)
+}
 
 
 

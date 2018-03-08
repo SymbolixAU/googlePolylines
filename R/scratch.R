@@ -93,4 +93,24 @@
 
 
 
+# library(sf)
+# nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+# 
+# encoded <- encode(nc)
+# wkt <- polyline_wkt(encoded)
+# 
+# st_as_sfc(wkt)
+# 
+# wktCol <- wkt$geometry
+# st_as_sfc(wktCol)
+# 
+# st_as_sfc(encoded)
+# encCol <- encoded$geometry
+# st_as_sfc(encCol)
+# 
+# st_as_sf(encoded)
+# st_as_sf(wkt)
+# 
+# st_as_sf(encoded$geometry)
+# st_as_sf(wkt$geometry)
 

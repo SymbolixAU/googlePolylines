@@ -145,14 +145,16 @@ enc2[1, ]
 
 I've provided these functions to enable the conversion of encoded polylines into other geometry formats, should they be required by other packages.  
 
-You can use the well-known text representation to convert back to an `sf` object
+You can also convert back to an `sf` object
 
 ```{r}
 
-wkt$geometry <- st_as_sfc(wkt)
-wkt <- st_sf(wkt)
-
-head(wkt[, c("AREA", "PERIMETER", "geometry")])
+## SFC from WKT
+# st_as_sfc(wkt)
+# 
+# sf <- st_as_sf(enc)
+# 
+# head(sf[, c("AREA", "PERIMETER", "geometry")])
 ```
 
 ## Benchmarking

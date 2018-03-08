@@ -461,29 +461,18 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ##   NWBIR74 BIR79 SID79 NWBIR79                              geometry
 ## 1      10  1364     0      19 MULTIPOLYGON: i_d|EjsgpNymFrhL{Enc...</code></pre>
 <p>I’ve provided these functions to enable the conversion of encoded polylines into other geometry formats, should they be required by other packages.</p>
-<p>You can use the well-known text representation to convert back to an <code>sf</code> object</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">wkt<span class="op">$</span>geometry &lt;-<span class="st"> </span><span class="kw">st_as_sfc</span>(wkt)</a>
-<a class="sourceLine" id="cb28-2" data-line-number="2">wkt &lt;-<span class="st"> </span><span class="kw">st_sf</span>(wkt)</a>
-<a class="sourceLine" id="cb28-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb28-4" data-line-number="4"><span class="kw">head</span>(wkt[, <span class="kw">c</span>(<span class="st">&quot;AREA&quot;</span>, <span class="st">&quot;PERIMETER&quot;</span>, <span class="st">&quot;geometry&quot;</span>)])</a></code></pre></div>
-<pre><code>## Simple feature collection with 6 features and 2 fields
-## geometry type:  MULTIPOLYGON
-## dimension:      XY
-## bbox:           xmin: -81.7411 ymin: 36.0728 xmax: -75.7731 ymax: 36.5896
-## epsg (SRID):    NA
-## proj4string:    NA
-##    AREA PERIMETER                       geometry
-## 1 0.114     1.442 MULTIPOLYGON (((-81.4727 36...
-## 2 0.061     1.231 MULTIPOLYGON (((-81.2399 36...
-## 3 0.143     1.630 MULTIPOLYGON (((-80.4563 36...
-## 4 0.070     2.968 MULTIPOLYGON (((-76.009 36....
-## 5 0.153     2.206 MULTIPOLYGON (((-77.2177 36...
-## 6 0.097     1.670 MULTIPOLYGON (((-76.7451 36...</code></pre>
+<p>You can also convert back to an <code>sf</code> object</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">## SFC from WKT</a>
+<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="co"># st_as_sfc(wkt)</span></a>
+<a class="sourceLine" id="cb28-3" data-line-number="3"><span class="co"># </span></a>
+<a class="sourceLine" id="cb28-4" data-line-number="4"><span class="co"># sf &lt;- st_as_sf(enc)</span></a>
+<a class="sourceLine" id="cb28-5" data-line-number="5"><span class="co"># </span></a>
+<a class="sourceLine" id="cb28-6" data-line-number="6"><span class="co"># head(sf[, c(&quot;AREA&quot;, &quot;PERIMETER&quot;, &quot;geometry&quot;)])</span></a></code></pre></div>
 </section>
 <section id="benchmarking" class="level2">
 <h2>Benchmarking</h2>
 <p>You will note that the encoded strings are different between the two objects. For example</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">enc[<span class="dv">1</span>, <span class="st">'geometry'</span>][[<span class="dv">1</span>]] <span class="op">==</span><span class="st"> </span>enc2[<span class="dv">1</span>, <span class="st">'geometry'</span>][[<span class="dv">1</span>]]</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1">enc[<span class="dv">1</span>, <span class="st">'geometry'</span>][[<span class="dv">1</span>]] <span class="op">==</span><span class="st"> </span>enc2[<span class="dv">1</span>, <span class="st">'geometry'</span>][[<span class="dv">1</span>]]</a></code></pre></div>
 <pre><code>## [1] FALSE</code></pre>
 <p>This results from the <strong>lossy</strong>-ness of the encoding. However, the general shape of the information is preserved. These two maps are plots of the <code>enc</code> and <code>enc2</code> objects respectively:</p>
 <pre><code>library(googleway)
