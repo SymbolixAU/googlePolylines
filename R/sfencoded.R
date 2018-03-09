@@ -1,4 +1,11 @@
 
+#' @export
+as.data.frame.sfencoded <- function(x, ...) {
+  x <- removeSfencodedClass(x)
+  x <- removeSfEncodedAttributes(x)
+  NextMethod()
+}
+
 strSfEncoded <- function(object, ...) {
   n <- length(object)
   cat(paste0(class(object)[1], " of length ", n))
@@ -50,6 +57,27 @@ removeSfencodedClass <- function(x) {
   attr(x, "class") <- setdiff(class(x), c("sfencoded", "sfencodedLite"))
   return(x)
 }
+
+removeSfEncodedAttributes <- function(x) {
+  geomCol <- attr(x, "encoded_column")
+  wktCol <- attr(x, "wkt_column")
+  
+  if(!is.null(geomCol)) {
+    x[[geomCol]] <- sapply(x[[geomCol]], function(y) { attr(y, "sfc") <- NULL; return(y) })
+    attr(x[[geomCol]], "class") <- NULL
+  }
+  
+  if(!is.null(wktCol)) {
+    attr(x[[wktCol]], "class") <- NULL
+  }
+  
+  attr(x, "encoded_column") <- NULL
+  attr(x, "wkt_column") <- NULL
+  attr(x, "sfAttributes") <- NULL
+  
+  return(x)
+}
+
 
 
 #' @export

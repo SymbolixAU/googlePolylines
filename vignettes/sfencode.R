@@ -68,15 +68,13 @@ enc2[1, ]
 # sfc from wkt
 st_as_sfc(wkt$geometry)
 
-## sf from wkt
-st_sf(st_as_sfc(wkt$geometry))
+## back to sf - use `as.data.frame` to remove sfencoded attributes
+sf_wkt <- as.data.frame(wkt)
+sf_wkt$geometry <- st_as_sfc(sf_wkt$geometry)
+sf_wkt <- st_sf(sf_wkt)
+  
+head(sf_wkt[, c("AREA", "PERIMETER", "geometry")])
 
-# new_sf <- wkt
-# new_sf$geometry <- st_as_sfc(wkt$geometry)
-# class(new_sf) <- c("sf", "data.frame")
-# new_sf
-
-#head(sf[, c("AREA", "PERIMETER", "geometry")])
 
 ## ------------------------------------------------------------------------
 enc[1, 'geometry'][[1]] == enc2[1, 'geometry'][[1]]
