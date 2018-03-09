@@ -14,7 +14,7 @@ The goal of googlePolylines is to encode and decode coordinates using [Google's 
 
 ## Installation
 
-Version 0.2.0 will be on CRAN and can be installed through
+Version 0.4.0 id on CRAN and can be installed through
 
 ```
 install.packages("googlePolylines")

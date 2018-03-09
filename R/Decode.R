@@ -17,10 +17,10 @@
 #' decode(polylines)
 #' 
 #' @export
-decode <- function(polylines) UseMethod("decodePolyline")
+decode <- function(polylines) UseMethod("decode")
 
 #' @export
-decodePolyline.character <- function(polylines) {
+decode.character <- function(polylines) {
   rcpp_decode_polyline(polylines)
 }
 

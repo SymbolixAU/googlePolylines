@@ -65,13 +65,18 @@ enc2[1, ]
 
 ## ------------------------------------------------------------------------
 
-# # SFC from WKT
-# st_as_sfc(wkt$geometry)
-# 
-# 
-# sf <- st_as_sf(st_as_sfc(wkt$geometry))
-# 
-# head(sf[, c("AREA", "PERIMETER", "geometry")])
+# sfc from wkt
+st_as_sfc(wkt$geometry)
+
+## sf from wkt
+st_sf(st_as_sfc(wkt$geometry))
+
+# new_sf <- wkt
+# new_sf$geometry <- st_as_sfc(wkt$geometry)
+# class(new_sf) <- c("sf", "data.frame")
+# new_sf
+
+#head(sf[, c("AREA", "PERIMETER", "geometry")])
 
 ## ------------------------------------------------------------------------
 enc[1, 'geometry'][[1]] == enc2[1, 'geometry'][[1]]
