@@ -1,7 +1,3 @@
-
-## TODO
-# decode <- function(obj, ...) { }  ## - to decode objects
-
 #' Decode Polyline
 #' 
 #' Decodes encoded polylines
@@ -24,3 +20,5 @@ decode.character <- function(polylines) {
   rcpp_decode_polyline(polylines)
 }
 
+#' @export
+decode.default <- function(polylines) stop("I was expecting a vector of encoded polylines")
