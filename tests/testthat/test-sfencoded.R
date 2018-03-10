@@ -1,5 +1,57 @@
 context("sfencoded")
 
+
+test_that("sfencoded converted to data.frame",  {
+  
+  testthat::skip_on_cran()
+  
+  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+  enc <- encode(nc)
+  x <- as.data.frame(enc)
+  
+  expect_true(
+    !"sfencoded" %in% class(x)
+  )
+  
+  expect_true(
+    "data.frame" == class(x)
+  )
+})
+
+test_that("sfencoded attributes are removed", {
+  
+  testthat::skip_on_cran()
+  
+  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+  enc <- encode(nc)
+  x <- googlePolylines:::removeSfencodedClass(enc)
+  
+  expect_true(
+    !"sfencoded" %in% attr(x, "class")
+  )
+  
+  x <- googlePolylines:::removeSfEncodedAttributes(enc)
+  
+  expect_true(
+    sum(c("encoded_column", "sfAttributes") %in% names(attributes(x))) == 0
+  )
+  
+  wkt <- polyline_wkt(enc)
+  x <- googlePolylines:::removeSfencodedClass(wkt)
+  
+  expect_true(
+    !"sfencoded" %in% attr(x, "class")
+  )
+  
+  x <- googlePolylines:::removeSfEncodedAttributes(wkt)
+  
+  expect_true(
+    sum(c("encoded_column", "sfAttributes") %in% names(attributes(x))) == 0
+  )
+  
+    
+})
+
 test_that("correct structure is printed", {
   
   testthat::skip_on_cran()
