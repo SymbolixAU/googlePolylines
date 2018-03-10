@@ -21,5 +21,10 @@ test_that("decode works", {
     round(lst[[1]]$lat, 3)
   )
 
+  expect_error(
+    decode(data.frame()),
+    "I was expecting a vector of encoded polylines"
+  )
+  
 })
 
