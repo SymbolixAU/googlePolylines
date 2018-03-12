@@ -1,4 +1,4 @@
-# googlePolylines 0.5.0 (development)
+# googlePolylines 0.6.0
 
 * Example converting to `sfc` and `sf`
 * `as.data.frame.sfencoded()` to convert back to `data.frame` class

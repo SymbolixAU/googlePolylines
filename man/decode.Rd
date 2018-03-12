@@ -7,10 +7,10 @@
 decode(polylines)
 }
 \arguments{
-\item{polylines}{strings of encoded polylines}
+\item{polylines}{vector of encoded polyline strings}
 }
 \description{
-Decodes encoded polylines
+Decodes encoded polylines into a list of data.frames.
 }
 \examples{
 polylines <- c(

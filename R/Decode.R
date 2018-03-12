@@ -1,8 +1,8 @@
 #' Decode Polyline
 #' 
-#' Decodes encoded polylines
+#' Decodes encoded polylines into a list of data.frames.
 #' 
-#' @param polylines strings of encoded polylines
+#' @param polylines vector of encoded polyline strings
 #' 
 #' @examples
 #' polylines <- c(

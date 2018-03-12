@@ -6,7 +6,7 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings) {
-  
+
   int encodedSize = encodedStrings.size();
   //Rcpp::List resultLats(encodedSize);
   //Rcpp::List resultLons(encodedSize);
@@ -66,9 +66,10 @@ Rcpp::DataFrame decode_polyline(std::string encoded){
     pointsLon.push_back(lng * (float)1e-5);
   }
   
+  // putting latitude first
   return Rcpp::DataFrame::create(
-    Named("lon") = pointsLon,
-    Named("lat") = pointsLat);
+    Named("lat") = pointsLat,
+    Named("lon") = pointsLon);
   
 //  Rcpp::NumericMatrix mat(pointsLat.size(), 2);
 //  mat(_, 0) = pointsLon;

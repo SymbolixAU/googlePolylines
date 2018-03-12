@@ -77,5 +77,14 @@ head(sf_wkt[, c("AREA", "PERIMETER", "geometry")])
 
 
 ## ------------------------------------------------------------------------
+polylines <- c(
+ "ohlbDnbmhN~suq@am{tAw`qsAeyhGvkz`@fge}A",
+ "ggmnDt}wmLgc`DesuQvvrLofdDorqGtzzV"
+)
+
+decode(polylines)
+
+
+## ------------------------------------------------------------------------
 enc[1, 'geometry'][[1]] == enc2[1, 'geometry'][[1]]
 

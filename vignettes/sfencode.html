@@ -12,7 +12,7 @@
 
 <meta name="author" content="D Cooley" />
 
-<meta name="date" content="2018-03-09" />
+<meta name="date" content="2018-03-11" />
 
 <title>Google Polylines</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Google Polylines</h1>
 <h4 class="author"><em>D Cooley</em></h4>
-<h4 class="date"><em>2018-03-09</em></h4>
+<h4 class="date"><em>2018-03-11</em></h4>
 
 
 
@@ -253,7 +253,7 @@ enc2[<span class="dv">1</span>, ]</code></pre></div>
 <p>I’ve provided these functions to enable the conversion of encoded polylines into other geometry formats, should they be required by other packages.</p>
 <div id="converting-to-sf" class="section level3">
 <h3>Converting to sf</h3>
-<p><code>sf</code> can read well-known text directly, so you can convert the wkt back to <code>sf</code> / <code>sfc</code> objects</p>
+<p><code>sf</code> can read well-known text, so you can convert the wkt object back to <code>sf</code> / <code>sfc</code> objects</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># sfc from wkt</span>
 <span class="kw">st_as_sfc</span>(wkt<span class="op">$</span>geometry)</code></pre></div>
 <pre><code>## Geometry set for 100 features 
@@ -289,9 +289,32 @@ sf_wkt &lt;-<span class="st"> </span><span class="kw">st_sf</span>(sf_wkt)
 ## 6 0.097     1.670 MULTIPOLYGON (((-76.7451 36...</code></pre>
 </div>
 </div>
+<div id="decoding" class="section level2">
+<h2>Decoding</h2>
+<p>Use <code>decode()</code> to decode polylines into coordinates. This function will return a list of data.frames with lon/lat column.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">polylines &lt;-<span class="st"> </span><span class="kw">c</span>(
+ <span class="st">&quot;ohlbDnbmhN~suq@am{tAw`qsAeyhGvkz`@fge}A&quot;</span>,
+ <span class="st">&quot;ggmnDt}wmLgc`DesuQvvrLofdDorqGtzzV&quot;</span>
+)
+
+<span class="kw">decode</span>(polylines)</code></pre></div>
+<pre><code>## [[1]]
+##      lat       lon
+## 1 26.774 -80.18999
+## 2 18.466 -66.11799
+## 3 32.321 -64.75700
+## 4 26.774 -80.18999
+## 
+## [[2]]
+##      lat       lon
+## 1 28.745 -70.57899
+## 2 29.570 -67.51400
+## 3 27.339 -66.66800
+## 4 28.745 -70.57899</code></pre>
+</div>
 <div id="benchmarking" class="section level2">
 <h2>Benchmarking</h2>
-<p>You will note that the encoded strings are different between the two objects. For example</p>
+<p>You will note that the encoded strings are different between the two <code>enc</code> objects created earlier. For example</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">enc[<span class="dv">1</span>, <span class="st">'geometry'</span>][[<span class="dv">1</span>]] <span class="op">==</span><span class="st"> </span>enc2[<span class="dv">1</span>, <span class="st">'geometry'</span>][[<span class="dv">1</span>]]</code></pre></div>
 <pre><code>## [1] FALSE</code></pre>
 <p>This results from the <strong>lossy</strong>-ness of the encoding. However, the general shape of the information is preserved. These two maps are plots of the <code>enc</code> and <code>enc2</code> objects respectively:</p>
@@ -321,15 +344,18 @@ library(microbenchmark)
 library(leaflet)
 
 microbenchmark(
+
   goog = { 
     google_map(key = mapKey) %&gt;%
       add_polygons(data = enc, polyline = &quot;polyline&quot;)
       },
+      
   leaf = { 
     leaflet() %&gt;%
       addTiles() %&gt;%
       addPolygons(data = nc)
-    }
+    }, 
+    times = 25
 )
 
 Unit: milliseconds

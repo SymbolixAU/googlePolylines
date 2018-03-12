@@ -147,7 +147,7 @@ I've provided these functions to enable the conversion of encoded polylines into
 
 ### Converting to sf
 
-`sf` can read well-known text directly, so you can convert the wkt back to `sf` / `sfc` objects
+`sf` can read well-known text, so you can convert the wkt object back to `sf` / `sfc` objects
 
 ```{r}
 
@@ -163,9 +163,24 @@ head(sf_wkt[, c("AREA", "PERIMETER", "geometry")])
 
 ```
 
+## Decoding
+
+Use `decode()` to decode polylines into coordinates. This function will return a list of data.frames with lon/lat column.
+
+```{r}
+polylines <- c(
+ "ohlbDnbmhN~suq@am{tAw`qsAeyhGvkz`@fge}A",
+ "ggmnDt}wmLgc`DesuQvvrLofdDorqGtzzV"
+)
+
+decode(polylines)
+
+```
+
+
 ## Benchmarking
 
-You will note that the encoded strings are different between the two objects. For example
+You will note that the encoded strings are different between the two `enc` objects created earlier. For example
 
 ```{r}
 enc[1, 'geometry'][[1]] == enc2[1, 'geometry'][[1]]
@@ -202,15 +217,18 @@ library(microbenchmark)
 library(leaflet)
 
 microbenchmark(
+
   goog = { 
     google_map(key = mapKey) %>%
       add_polygons(data = enc, polyline = "polyline")
       },
+      
   leaf = { 
     leaflet() %>%
       addTiles() %>%
       addPolygons(data = nc)
-    }
+    }, 
+    times = 25
 )
 
 Unit: milliseconds

@@ -1,8 +1,9 @@
 
 ## Release summary
 
-* Updates v0.2.0 to v0.4.0
-* `print.sfencoded` and `[.sfencoded` methods added
+* Updates v0.4.0 to v0.6.0
+* `as.data.frame.sfencoded` method
+* `decode` function for decoding polylines
 
 ## Test environments
 
