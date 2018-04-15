@@ -165,7 +165,7 @@ void polylineToWKT(std::ostringstream& os, std::string encoded){
   
   while (index < len){
     char b;
-    int shift = 0;
+    unsigned int shift = 0;
     int result = 0;
     do {
       b = encoded.at(index++) - 63;

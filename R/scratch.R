@@ -4,6 +4,13 @@
 ## - will return two vectors, lon & lat...
 ## - TESTS: encode(sfc) object - do I do this??
 
+# library(googleway)
+# library(sf)
+# nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+# set_key(read.dcf("~/Documents/.googleAPI", fields = "GOOGLE_MAP_KEY"))
+# 
+# google_map() %>%
+#   add_polygons(nc[1:5,])
 
 # pl <- "umlbDndmhNhvuq@il{tAkcqsAozhGrmz`@~je}A"
 

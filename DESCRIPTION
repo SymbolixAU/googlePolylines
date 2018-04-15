@@ -4,9 +4,11 @@ Title: Encoding Coordinates into 'Google' Polylines
 Version: 0.6.0
 Date: 2018-03-11
 Authors@R: c(
-    person("David", "Cooley", ,"dcooley@symbolix.com.au", role = c("aut", "cre"))
+    person("David", "Cooley", ,"dcooley@symbolix.com.au", role = c("aut", "cre")),
+    person("Paulo", "Barcelos", role = "ctb", comment = "Author of c++ decode_polyline")
     )
-Description: Encodes simple feature ('sf') objects and coordinates, and decodes polylines using the 'Google' polyline encoding algorithm (<https://developers.google.com/maps/documentation/utilities/polylinealgorithm>).
+Description: Encodes simple feature ('sf') objects and coordinates, and decodes polylines 
+    using the 'Google' polyline encoding algorithm (<https://developers.google.com/maps/documentation/utilities/polylinealgorithm>).
 License: GPL-3
 SystemRequirements: C++11
 Depends: R (>= 3.3.0)
