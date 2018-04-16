@@ -5,7 +5,7 @@ test_that("sfencoded converted to data.frame",  {
   
   testthat::skip_on_cran()
   
-  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
   enc <- encode(nc)
   x <- as.data.frame(enc)
   
@@ -16,13 +16,24 @@ test_that("sfencoded converted to data.frame",  {
   expect_true(
     "data.frame" == class(x)
   )
+  
+  ## subsetting without including the geom column
+  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
+  enc <- encode(nc)
+  
+  x <- enc[, c("AREA", "PERIMETER")]
+  
+  expect_true(
+    class(x) == "data.frame"
+  )
+  
 })
 
 test_that("sfencoded attributes are removed", {
   
   testthat::skip_on_cran()
   
-  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
   enc <- encode(nc)
   x <- googlePolylines:::removeSfencodedClass(enc)
   
@@ -36,6 +47,8 @@ test_that("sfencoded attributes are removed", {
     sum(c("encoded_column", "sfAttributes") %in% names(attributes(x))) == 0
   )
   
+  
+
   wkt <- polyline_wkt(enc)
   x <- googlePolylines:::removeSfencodedClass(wkt)
   
@@ -56,7 +69,7 @@ test_that("correct structure is printed", {
   
   testthat::skip_on_cran()
   
-  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
   enc <- encode(nc)
   
   ## not sure these tests do anything...
@@ -145,7 +158,7 @@ test_that("prefix printed", {
   
   testthat::skip_on_cran()
   
-  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
   enc <- encode(nc)
 
   expect_true(

@@ -84,7 +84,7 @@ encode.sf <- function(obj, strip = FALSE, ...) {
   lst <- rcpp_encodeSfGeometry(obj[[geomCol]], strip)
   
   if(!strip) sfAttrs <- sfGeometryAttributes(obj)
-  
+
   obj[[geomCol]] <- lst
   
   ## strip attributes
@@ -102,7 +102,6 @@ encode.sf <- function(obj, strip = FALSE, ...) {
     if(!inherits(obj, 'sfencodedLite'))
       attr(obj, 'class') <- c("sfencodedLite", attr(obj, 'class'))
   }
-
   return(obj)
 }
 

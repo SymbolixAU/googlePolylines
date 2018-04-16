@@ -4,7 +4,7 @@ test_that("sf attributes are extracted", {
   
   testthat::skip_on_cran()
   
-  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
   enc <- encode(nc)
   
   sfAttrs <- sfAttributes(enc)
@@ -55,7 +55,7 @@ test_that("sf attributes extracted", {
   
   testthat::skip_on_cran()
   
-  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"))
+  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
   
   ## from sf obj
   sfAttrs <- googlePolylines:::sfGeometryAttributes(nc)

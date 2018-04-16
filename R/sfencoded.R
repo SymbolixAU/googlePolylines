@@ -59,15 +59,28 @@ removeSfencodedClass <- function(x) {
 }
 
 removeSfEncodedAttributes <- function(x) {
+  
+  # print("-- removing encoded attributes --")
+  
   geomCol <- attr(x, "encoded_column")
   wktCol <- attr(x, "wkt_column")
   
-  if(!is.null(geomCol)) {
-    x[[geomCol]] <- sapply(x[[geomCol]], function(y) { attr(y, "sfc") <- NULL; return(y) })
+  if(!is.null(geomCol) && geomCol %in% names(x)) {
+    # print("-- geomCol not null -- ")
+    # print(geomCol)
+    # print(x)
+    x[[geomCol]] <- sapply(x[[geomCol]], function(y) { 
+      # print("-- y --")
+      # print(y)
+      attr(y, "sfc") <- NULL 
+      return(y) 
+      })
+    
     attr(x[[geomCol]], "class") <- NULL
+    
   }
   
-  if(!is.null(wktCol)) {
+  if(!is.null(wktCol) && wktCol %in% names(x)) {
     attr(x[[wktCol]], "class") <- NULL
   }
   
@@ -75,6 +88,7 @@ removeSfEncodedAttributes <- function(x) {
   attr(x, "wkt_column") <- NULL
   attr(x, "sfAttributes") <- NULL
   
+  # print("-- attributes removed --")
   return(x)
 }
 

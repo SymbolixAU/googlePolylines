@@ -195,7 +195,7 @@ library(googleway)
 mapKey <- "your_api_key"
 
 google_map(key = mapKey) %>%
-  add_polygons(data = enc, polyline = "geometry", fill_colour = "#00FF00", fill_opacity = 0.2)
+  add_polygons(data = nc, polyline = "geometry", fill_colour = "#00FF00", fill_opacity = 0.2)
 
 ```
 ![map_enc](./img/map_enc.png)
