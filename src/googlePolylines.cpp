@@ -95,15 +95,32 @@ void EncodeNumber(std::ostringstream& os, int num){
   os << out_str;
 }
 
-void EncodeSignedNumber(std::ostringstream& os, int num){
-  
-  int sgn_num = num << 1;
+void EncodeSignedNumber(std::ostringstream& os, int32_t val){
+  /*
+  int sgn_num;
+  sgn_num = val << 1;
   
   if (sgn_num < 0) {
     sgn_num = ~sgn_num;
   }
+  */
   
-  EncodeNumber(os, sgn_num);
+  uint32_t usgn_num;
+  //std::string bin;
+  
+  usgn_num = (val < 0) ? ~((~val)+1)+1 : val;
+  // bin = std::bitset<32>(usgn_num).to_string();
+  // Rcpp::Rcout << bin << std::endl;
+  
+  usgn_num <<= 1;
+  usgn_num = (val < 0) ? (~usgn_num) : usgn_num;
+  
+  // bin = std::bitset<32>(usgn_num).to_string();
+  // Rcpp::Rcout << bin << std::endl;
+  
+  //return usgn_num;
+  
+  EncodeNumber(os, usgn_num);
 }
 
 Rcpp::String encode_polyline(Rcpp::NumericVector longitude,

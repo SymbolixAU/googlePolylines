@@ -107,7 +107,7 @@ void coordSeparateWKT(std::ostringstream& os) {
 // [[Rcpp::export]]
 Rcpp::StringVector polyline_to_wkt(Rcpp::List sfencoded) {
   
-  int nrow = sfencoded.size();
+  unsigned int nrow = sfencoded.size();
   Rcpp::StringVector res(nrow);
   
   for (size_t i = 0; i < nrow; i++ ){
@@ -126,7 +126,7 @@ Rcpp::StringVector polyline_to_wkt(Rcpp::List sfencoded) {
     }
 
     beginWKT(os, cls);
-    int n =  pl.size();
+    unsigned int n =  pl.size();
   
     for(size_t j = 0; j < n; j ++ ) {
   
@@ -329,8 +329,9 @@ Rcpp::List wkt_to_polyline(Rcpp::StringVector wkt) {
   
   Rcpp::List resultPolylines(n);
   int lastItem;
+  unsigned int i;
   
-  for (int i = 0; i < n; i++ ) {
+  for (i = 0; i < n; i++ ) {
     
     std::ostringstream os;
     

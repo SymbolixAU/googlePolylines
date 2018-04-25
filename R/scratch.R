@@ -1,4 +1,67 @@
 
+# library(Rcpp)
+# 
+# cppFunction('void shifting(int i){
+#   int sgn_num = i << 1;
+#   if (sgn_num < 0) {
+#     sgn_num = ~sgn_num;
+#   }
+#   std::cout << "sgn_num: " << sgn_num << std::endl;
+# }')
+# 
+# 
+# cppFunction('int compliment(int i){
+#   return -(unsigned int)i;
+# }')
+
+# cppFunction('int invert(int i){
+#   return ~i;
+# }')
+# 
+# invert(0)
+
+# cppFunction('void leftShift(int i){
+#   int n = i << 1;
+#   Rcpp::Rcout << n << std::endl;
+# }')
+# 
+# leftShift(-8019000)
+# 
+# cppFunction('int enc(int num){
+#   int sgn_num;
+#   sgn_num = num << 1;
+# 
+#   if (sgn_num < 0) {
+#     sgn_num = ~sgn_num;
+#   }
+#   return sgn_num;
+# }')
+# 
+# enc(-8019000)
+# 
+# cppFunction('int enc2(int32_t val){
+#   uint32_t usgn_num;
+#   std::string bin;
+# 
+#   usgn_num = (val < 0) ? ~((~val)+1)+1 : val;
+#   bin = std::bitset<32>(usgn_num).to_string();
+#   Rcpp::Rcout << bin << std::endl;
+# 
+#   usgn_num <<= 1;
+#   usgn_num = (val < 0) ? (~usgn_num) : usgn_num;
+# 
+#   bin = std::bitset<32>(usgn_num).to_string();
+#   Rcpp::Rcout << bin << std::endl;
+# 
+#   return usgn_num;
+# }')
+# 
+# enc(17998321)
+# enc2(17998321)
+# 
+# enc(-17998321)
+# enc2(-17998321)
+
 ## decoding
 ##
 ## - will return two vectors, lon & lat...
