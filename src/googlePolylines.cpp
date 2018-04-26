@@ -95,10 +95,6 @@ void EncodeNumber(std::ostringstream& os, int num){
   os << out_str;
 }
 
-int compliment(int i) {
-  return -(unsigned int)i;
-}
-
 void EncodeSignedNumber(std::ostringstream& os, int num){
   
   unsigned int ui = num;      //3
