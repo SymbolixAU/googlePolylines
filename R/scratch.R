@@ -10,16 +10,22 @@
 # }')
 # 
 # 
-# cppFunction('int compliment(int i){
-#   return -(unsigned int)i;
+# cppFunction('unsigned int compliment(int i){
+#   std::string bin;
+#   unsigned int ui = ~(-(unsigned int)i) + 1;
+#   bin = std::bitset<32>(ui).to_string();
+#   Rcpp::Rcout << bin << std::endl;
+#   return ui;
 # }')
-
+# 
+# compliment(-17998321)
+# 
 # cppFunction('int invert(int i){
 #   return ~i;
 # }')
 # 
-# invert(0)
-
+# invert(-17998321)
+# 
 # cppFunction('void leftShift(int i){
 #   int n = i << 1;
 #   Rcpp::Rcout << n << std::endl;
@@ -61,6 +67,43 @@
 # 
 # enc(-17998321)
 # enc2(-17998321)
+# 
+# cppFunction('int enc3(int num){
+#   unsigned int ui;
+#   std::string bin;
+#   Rcpp::Rcout << "convert number to binary: " << std::endl;
+#   bin = std::bitset<32>(num).to_string();
+#   Rcpp::Rcout << bin << std::endl;
+# 
+#   //ui = (num < 0) ? (~num) : num;          //3
+#   //bin = std::bitset<32>(ui).to_string();
+#   //Rcpp::Rcout << bin << std::endl;
+# 
+#   Rcpp::Rcout << "left-shift by one bit" << std::endl;
+#   ui = num;
+#   ui <<= 1;                               //4
+#   bin = std::bitset<32>(ui).to_string();
+#   Rcpp::Rcout << bin << std::endl;
+# 
+#   Rcpp::Rcout << "Invert negative encoding" << std::endl;
+#   ui = (num < 0) ? ~ui : ui;              //5
+#   bin = std::bitset<32>(ui).to_string();
+#   Rcpp::Rcout << bin << std::endl;
+# 
+#   return ui;
+# }')
+# 
+# # enc(17998321)
+# # enc3(17998321)
+# # 
+# # enc(-17998321)
+# enc3(-17998321)
+# 
+# factor <- 10^5
+# coord <- -179.98321
+# pt <- round(coord * factor, digits = 0) * 2
+# if(pt < 0) pt <- bitops::bitFlip(pt)
+# pt
 
 ## decoding
 ##

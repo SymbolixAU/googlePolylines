@@ -3,10 +3,36 @@ context("encode")
 ## TODO
 ## - sf_GEOMETRY
 
+test_that("google's example encodes correctly", {
+  
+  df <- data.frame(lat = c(38.5, 40.7, 43.252),
+                   lon = c(-120.2, -120.95, -126.453))
+  
+  expect_true(encode(df) == "_p~iF~ps|U_ulLnnqC_mqNvxq`@")
+  
+})
+
+test_that("answers are same as other implementations", {
+  
+  testthat::skip_on_cran()
+  testthat::skip_on_travis()
+  
+  df <- data.frame(lat = c(38.5, 40.7, 43.252),
+                   lon = c(-120.2, -120.95, -126.453))
+  
+  expect_true(gepaf::encodePolyline(df) == encode(df))
+  
+  df <- data.frame(lat = c(41.8249, 41.8300, 41.8288, 41.8339, 41.8380),
+                   lon = c(-87.7200, -87.7043, -87.6940, -87.6833, -87.6703))
+  
+  expect_true(gepaf::encodePolyline(df) == encode(df))
+  
+  
+})
 
 test_that("encode coordinates algorithim works", {
   
-  testthat::skip_on_cran()
+#  testthat::skip_on_cran()
 
   expect_equal(
     encodeCoordinates(lon = c(144.9731, 144.9729, 144.9731), 
