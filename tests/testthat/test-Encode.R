@@ -32,13 +32,12 @@ test_that("answers are same as other implementations", {
 
 test_that("encode coordinates algorithim works", {
   
-#  testthat::skip_on_cran()
+  testthat::skip_on_cran()
 
   expect_equal(
     encodeCoordinates(lon = c(144.9731, 144.9729, 144.9731), 
                       lat = c(-37.8090, -37.8094, -37.8083)),
-    "dqweFy`zsZnAd@yEe@"
-  )
+    "dqweFy`zsZnAd@yEe@")
 })
 
 
@@ -52,29 +51,20 @@ test_that("*POINTs are encoded", {
   ## sfc
   point <- sf::st_sfc(sf::st_point(x = c(144, -37)))
 
-  expect_true(
-    encode(point)[[1]] == encode14437
-  )
+  expect_true(encode(point)[[1]] == encode14437)
 
   ## sf
   sf <- sf::st_sf(point)
 
-  expect_true(
-    encode(sf)[, 'point'][[1]] == encode14437
-  )
+  expect_true(encode(sf)[, 'point'][[1]] == encode14437)
 
   multipoint <- sf::st_sfc(sf::st_multipoint(x = matrix(c(144, 145, -37, -37), ncol = 2)))
 
-  expect_true(
-    all(encode(multipoint)[[1]] %in% c(encode14437, encode14537))
-  )
+  expect_true(all(encode(multipoint)[[1]] %in% c(encode14437, encode14537)))
 
   sf <- sf::st_sf(multipoint)
 
-  expect_true(
-    all(encode(sf)[, 'multipoint'][[1]]  %in% c(encode14437, encode14537))
-  )
-
+  expect_true(all(encode(sf)[, 'multipoint'][[1]]  %in% c(encode14437, encode14537)))
 })
 
 
@@ -86,21 +76,13 @@ test_that("UNKNOWN geometry & sf type", {
   
   class(point) <- c("sfc_NEWPOINT", "sfc")
   
-  expect_error(
-    encode(point),
-    "encoding this sf type is currently not supported"
-  )
+  expect_error(encode(point),"encoding this sf type is currently not supported")
   
   point <- sf::st_sfc(sf::st_point(x = c(144, -37)))
   
   enc <- encode(point)
   
-  expect_error(
-    polyline_wkt(enc),
-    "I was expecting an sfencoded object or an encoded_column"
-  )
-  
-#  point <- sf::st_sfc(sf::st_point(x = c(144, -37)), sf::st_point(x = c(144, -37)))
+  expect_error(polyline_wkt(enc),"I was expecting an sfencoded object or an encoded_column")
   
 })
 
@@ -111,15 +93,11 @@ test_that("*LINES are encoded", {
   encodedLine <- "~py`F__|mZ~oR_pR~oR}oR"
   line <- sf::st_sfc(sf::st_linestring(matrix(c(144, 144.1, 144.2, -37, -37.1, -37.2), ncol = 2)))
 
-  expect_true(
-    encode(line)[[1]] == encodedLine
-  )
+  expect_true(encode(line)[[1]] == encodedLine)
 
   sf <- sf::st_sf(line)
   
-  expect_true(
-    encode(sf)[[1]] == encodedLine
-  )
+  expect_true(encode(sf)[[1]] == encodedLine)
   
   multilinestring <- sf::st_sfc(
     sf::st_multilinestring(
@@ -130,14 +108,9 @@ test_that("*LINES are encoded", {
       )
     )
  
-  expect_true(
-    encode(multilinestring)[[1]][1] == encodedLine
-  )
+  expect_true(encode(multilinestring)[[1]][1] == encodedLine)
   
-  expect_true(
-    encode(multilinestring)[[1]][2] == encodedLine
-  )
-  
+  expect_true(encode(multilinestring)[[1]][2] == encodedLine)
 })
 
 test_that("*POLYGONS are encoded", {
@@ -149,15 +122,11 @@ test_that("*POLYGONS are encoded", {
     list(matrix(c(144, 144.1, 144.2, 144, -37, -37.1, -37.2, -37), ncol = 2))
     ))
   
-  expect_true(
-    encode(polygon)[[1]] == "~py`F__|mZ~oR_pR~oR}oR_af@|`f@"
-  )
+  expect_true(encode(polygon)[[1]] == "~py`F__|mZ~oR_pR~oR}oR_af@|`f@")
   
   sf <- sf::st_sf(geo = polygon)
   
-  expect_true(
-    encode(sf)[[1]] == "~py`F__|mZ~oR_pR~oR}oR_af@|`f@"
-  )
+  expect_true(encode(sf)[[1]] == "~py`F__|mZ~oR_pR~oR}oR_af@|`f@")
   
   m1 <- matrix(c(144, 144.1, 144.2, 144, -37, -37.1, -37.2, -37), ncol = 2)
   m2 <- m1 + 1
@@ -169,9 +138,7 @@ test_that("*POLYGONS are encoded", {
     list(list(m1, m2))
   ))
   
-  expect_true(
-    all(encode(multipolygon)[[1]] %in% c(m1encoded, m2encoded))
-  )
+  expect_true(all(encode(multipolygon)[[1]] %in% c(m1encoded, m2encoded)))
 })
 
 
@@ -207,30 +174,12 @@ test_that("sf_GEOMETRYs are encoded", {
   
   encoded <- encode(sf)
   
-  expect_true(
-    encoded$geo[[1]] == encode(point)
-  )
-  
-  expect_true(
-    all(encoded$geo[[2]] %in% encode(multipoint)[[1]])
-  )
-  
-  expect_true(
-    encoded$geo[[3]] == encode(linestring)
-  )
-  
-  expect_true(
-    all(encoded$geo[[4]] %in% encode(multilinestring)[[1]])
-  )
-  
-  expect_true(
-    all(encoded$geo[[5]] %in% encode(polygon)[[1]])
-  )
-  
-  expect_true(
-    all(encoded$geo[[6]] %in% encode(multipolygon)[[1]])
-  )
-  
+  expect_true(encoded$geo[[1]] == encode(point))
+  expect_true(all(encoded$geo[[2]] %in% encode(multipoint)[[1]]))
+  expect_true(encoded$geo[[3]] == encode(linestring))
+  expect_true(all(encoded$geo[[4]] %in% encode(multilinestring)[[1]]))
+  expect_true(all(encoded$geo[[5]] %in% encode(polygon)[[1]]))
+  expect_true(all(encoded$geo[[6]] %in% encode(multipolygon)[[1]]))
 })
 
 
@@ -243,25 +192,15 @@ test_that("data.frames are encoded", {
     lon = c(-80.190, -66.118, -64.757, -80.190),
     lat = c(26.774, 18.466, 32.321, 26.774))
 
-  expect_true(
-    encode(df) == "ohlbDnbmhN~suq@am{tAw`qsAeyhGvkz`@fge}A"
-  )
+  expect_true(encode(df) == "ohlbDnbmhN~suq@am{tAw`qsAeyhGvkz`@fge}A")
 })
 
 test_that("default encoding method errors", {
   
   testthat::skip_on_cran()
   
-  expect_error(
-    encode(list()),
-    "I currently don't know how to encode list objects"
-  )
-  
-  expect_error(
-    encode(NULL),
-    "I currently don't know how to encode NULL objects"
-  )
-  
+  expect_error(encode(list()),"I currently don't know how to encode list objects")
+  expect_error(encode(NULL),"I currently don't know how to encode NULL objects")
 })
 
 test_that("GEOMETRYCOLLECTIONS error", {
@@ -283,10 +222,6 @@ test_that("GEOMETRYCOLLECTIONS error", {
   
   sf <- sf::st_sfc(geo = sf::st_geometrycollection(x = list(point, linestring, polygon)))
   
-  expect_error(
-    encode(sf),
-    "encoding this sf type is currently not supported"
-  )
-  
+  expect_error(encode(sf),"encoding this sf type is currently not supported")
 })
 
