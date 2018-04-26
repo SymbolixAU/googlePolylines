@@ -34,40 +34,22 @@ test_that("wkt generated for all geometries", {
   enc <- encode(sf)
   wkt <- polyline_wkt(enc)
   
-  expect_equal(
-    "POINT (-80.19 26.774)", 
-    as.character(wkt[1, 'geo']) 
-  )
-  
-  expect_equal(
-    "MULTIPOINT ((-80.19 26.774),(-66.118 18.466))",
-    as.character(wkt[2, 'geo'])
-  )
-  
-  expect_equal(
-    "LINESTRING (-70 22, -49 23, -51 22, -70 22)",
-    as.character(wkt[3, 'geo'])
-  )
-  
+  expect_equal("POINT (-80.19 26.774)", as.character(wkt[1, 'geo']) )
+  expect_equal("MULTIPOINT ((-80.19 26.774),(-66.118 18.466))",as.character(wkt[2, 'geo']))
+  expect_equal("LINESTRING (-70 22, -49 23, -51 22, -70 22)",as.character(wkt[3, 'geo']))
   expect_equal(
     "MULTILINESTRING ((-80.19 26.774, -66.118 18.466, -64.757 32.321, -80.19 26.774),(-70.579 28.745, -67.514 29.57, -66.668 27.339, -70.579 28.745))",
     as.character(wkt[4, 'geo'])
-  )
-  
+    )
   expect_equal(
     "POLYGON ((-80.19 26.774, -66.118 18.466, -64.757 32.321, -80.19 26.774),(-70.579 28.745, -67.514 29.57, -66.668 27.339, -70.579 28.745))",
     as.character(wkt[5, 'geo'])
   )
-  
   expect_equal(
     "MULTIPOLYGON (((-80.19 26.774, -66.118 18.466, -64.757 32.321, -80.19 26.774),(-70.579 28.745, -67.514 29.57, -66.668 27.339, -70.579 28.745)),((-70 22, -49 23, -51 22, -70 22)))",
     as.character(wkt[6, 'geo'])
   )
-  
-  expect_error(
-    polyline_wkt(sf),
-    "I was expecting an sfencoded object or an encoded_column"
-  )
+  expect_error(polyline_wkt(sf),"I was expecting an sfencoded object or an encoded_column")
 })
 
 
@@ -105,102 +87,32 @@ test_that("wkt converted back to encoded_column", {
   wkt <- polyline_wkt(enc)
   e <- wkt_polyline(wkt)
   
-  expect_true(
-    paste0("sfc_", attr(enc, "sfAttributes")$type ) == class(sf$geo)[1]
-  )
-  
-  expect_true(
-    paste0("sfc_", attr(e, "sfAttributes")$type ) == class(sf$geo)[1]
-  )
-    
-  expect_true(
-    all.equal(class(enc), class(e))
-  ) 
-  
-  expect_true(
-    attr(enc, "encoded_column") == attr(e, "encoded_column")
-  )
-  
+  expect_true(paste0("sfc_", attr(enc, "sfAttributes")$type ) == class(sf$geo)[1])
+  expect_true(paste0("sfc_", attr(e, "sfAttributes")$type ) == class(sf$geo)[1])
+  expect_true(all.equal(class(enc), class(e))) 
+  expect_true(attr(enc, "encoded_column") == attr(e, "encoded_column"))
   r <- 1
-  expect_true(
-    enc[r, 'geo'][[1]] == e[r, 'geo'][[1]]
-  )
-  
-  expect_true(
-    all.equal(
-      attr(enc[r, 'geo'][[1]], 'sfc'), attr(e[r, 'geo'][[1]], 'sfc')
-    )
-  )
-  
+  expect_true(enc[r, 'geo'][[1]] == e[r, 'geo'][[1]])
+  expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfc'), attr(e[r, 'geo'][[1]], 'sfc')))
   r <- 2
-  expect_true(
-    enc[r, 'geo'][[1]][1] == e[r, 'geo'][[1]][1]
-  )
-  
-  expect_true(
-    all.equal(
-      attr(enc[r, 'geo'][[1]], 'sfc'), attr(e[r, 'geo'][[1]], 'sfc')
-    )
-  )
-  
+  expect_true(enc[r, 'geo'][[1]][1] == e[r, 'geo'][[1]][1])
+  expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfc'), attr(e[r, 'geo'][[1]], 'sfc')))
   r <- 3
-  expect_true(
-    enc[r, 'geo'][[1]] == e[r, 'geo'][[1]]
-  )
-  
-  expect_true(
-    all.equal(
-      attr(enc[r, 'geo'][[1]], 'sfc'), attr(e[r, 'geo'][[1]], 'sfc')
-    )
-  )
-  
+  expect_true(enc[r, 'geo'][[1]] == e[r, 'geo'][[1]])
+  expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfc'), attr(e[r, 'geo'][[1]], 'sfc')))
   r <- 4
-  expect_true(
-    enc[r, 'geo'][[1]][1] == e[r, 'geo'][[1]][1]
-  )
-  
-  expect_true(
-    all.equal(
-      attr(enc[r, 'geo'][[1]], 'sfc'), attr(e[r, 'geo'][[1]], 'sfc')
-    )
-  )
-  
+  expect_true(enc[r, 'geo'][[1]][1] == e[r, 'geo'][[1]][1])  
+  expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfc'), attr(e[r, 'geo'][[1]], 'sfc')))
   r <- 5
-  expect_true(
-    enc[r, 'geo'][[1]][1] == e[r, 'geo'][[1]][1]
-  )
-  
-  expect_true(
-    all.equal(
-      attr(enc[r, 'geo'][[1]], 'sfc'), attr(e[r, 'geo'][[1]], 'sfc')
-    )
-  )
-  
+  expect_true(enc[r, 'geo'][[1]][1] == e[r, 'geo'][[1]][1])
+  expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfc'), attr(e[r, 'geo'][[1]], 'sfc')))
   r <- 6
-  expect_true(
-    enc[r, 'geo'][[1]][1] == e[r, 'geo'][[1]][1]
-  )
-  
-  expect_true(
-    all.equal(
-      attr(enc[r, 'geo'][[1]], 'sfc'), attr(e[r, 'geo'][[1]], 'sfc')
-    )
-  )
+  expect_true(enc[r, 'geo'][[1]][1] == e[r, 'geo'][[1]][1])  
+  expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfc'), attr(e[r, 'geo'][[1]], 'sfc')))
   
   ## test errors
-  expect_error(
-    wkt_polyline(enc),
-    "Can not find the wkt_column"
-  )
-  
-  expect_error(
-    polyline_wkt(wkt),
-    "Can not find the encoded_column"
-  )
-  
-  expect_error(
-    wkt_polyline(sf),
-    "I was expecting an sfencoded object with a wkt_column"
-  )
+  expect_error(wkt_polyline(enc),"Can not find the wkt_column")
+  expect_error(polyline_wkt(wkt),"Can not find the encoded_column")
+  expect_error(wkt_polyline(sf),"I was expecting an sfencoded object with a wkt_column")
 })
 

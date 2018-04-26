@@ -9,45 +9,14 @@ test_that("sf attributes are extracted", {
   
   sfAttrs <- sfAttributes(enc)
   
-  expect_equal(
-    sfAttrs$type,
-    "MULTIPOLYGON"
-  )
-  
-  expect_equal(
-    sfAttrs$dim,
-    "XY"
-  )
-  
-  expect_equal(
-    round(sfAttrs$bbox[[1]],3),
-    -84.324
-  )
-  
-  expect_equal(
-    round(sfAttrs$bbox[[2]], 3),
-    33.882
-  )
-  
-  expect_equal(
-    round(sfAttrs$bbox[[3]],3),
-    -75.457
-  )
-  
-  expect_equal(
-    round(sfAttrs$bbox[[4]],3),
-    36.59
-  )
-  
-  expect_equal(
-    sfAttrs$epsg,
-    4267
-  )
-  
-  expect_equal(
-    sfAttrs$proj,
-    "+proj=longlat +datum=NAD27 +no_defs"
-  )
+  expect_equal(sfAttrs$type,"MULTIPOLYGON")
+  expect_equal(sfAttrs$dim,"XY")
+  expect_equal(round(sfAttrs$bbox[[1]],3),-84.324)
+  expect_equal(round(sfAttrs$bbox[[2]], 3),33.882)
+  expect_equal(round(sfAttrs$bbox[[3]],3),-75.457)
+  expect_equal(round(sfAttrs$bbox[[4]],3),36.59)
+  expect_equal(sfAttrs$epsg,4267)
+  expect_equal(sfAttrs$proj,"+proj=longlat +datum=NAD27 +no_defs")
 })
 
 
@@ -56,95 +25,26 @@ test_that("sf attributes extracted", {
   testthat::skip_on_cran()
   
   nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
-  
   ## from sf obj
   sfAttrs <- googlePolylines:::sfGeometryAttributes(nc)
-  
   ## from sfc column
   sfcAttrs <- googlePolylines:::sfGeometryAttributes(nc[['geometry']])
-  
-  
-  expect_equal(
-    sfAttrs$type,
-    "MULTIPOLYGON"
-  )
-  
-  expect_equal(
-    sfcAttrs$type,
-    "MULTIPOLYGON"
-  )
-  
-  expect_equal(
-    sfAttrs$dim,
-    "XY"
-  )
-  
-  expect_equal(
-    sfcAttrs$dim,
-    "XY"
-  )
-  
-  expect_equal(
-    round(sfAttrs$bbox[[1]],3),
-    -84.324
-  )
-  
-  expect_equal(
-    round(sfcAttrs$bbox[[1]],3),
-    -84.324
-  )
-  
-  expect_equal(
-    round(sfAttrs$bbox[[2]], 3),
-    33.882
-  )
-  
-  expect_equal(
-    round(sfcAttrs$bbox[[2]], 3),
-    33.882
-  )
-  
-  expect_equal(
-    round(sfAttrs$bbox[[3]],3),
-    -75.457
-  )
-  
-  expect_equal(
-    round(sfcAttrs$bbox[[3]],3),
-    -75.457
-  )
-  
-  
-  expect_equal(
-    round(sfAttrs$bbox[[4]],3),
-    36.59
-  )
-  
-  expect_equal(
-    round(sfcAttrs$bbox[[4]],3),
-    36.59
-  )
-  
-  expect_equal(
-    sfAttrs$epsg,
-    4267
-  )
-  
-  expect_equal(
-    sfcAttrs$epsg,
-    4267
-  )
-  
-  expect_equal(
-    sfAttrs$proj,
-    "+proj=longlat +datum=NAD27 +no_defs"
-  )
-  
-  expect_equal(
-    sfcAttrs$proj,
-    "+proj=longlat +datum=NAD27 +no_defs"
-  )
-  
+  expect_equal(sfAttrs$type,"MULTIPOLYGON")
+  expect_equal(sfcAttrs$type,"MULTIPOLYGON")
+  expect_equal(sfAttrs$dim,"XY")
+  expect_equal(sfcAttrs$dim,"XY")
+  expect_equal(round(sfAttrs$bbox[[1]],3),-84.324)
+  expect_equal(round(sfcAttrs$bbox[[1]],3),-84.324)
+  expect_equal(round(sfAttrs$bbox[[2]], 3),33.882)
+  expect_equal(round(sfcAttrs$bbox[[2]], 3),33.882)
+  expect_equal(round(sfAttrs$bbox[[3]],3),-75.457)
+  expect_equal(round(sfcAttrs$bbox[[3]],3),-75.457)
+  expect_equal(round(sfAttrs$bbox[[4]],3),36.59)  
+  expect_equal(round(sfcAttrs$bbox[[4]],3),36.59)
+  expect_equal(sfAttrs$epsg,4267)
+  expect_equal(sfcAttrs$epsg,4267)
+  expect_equal(sfAttrs$proj,"+proj=longlat +datum=NAD27 +no_defs")
+  expect_equal(sfcAttrs$proj,"+proj=longlat +datum=NAD27 +no_defs")
 })
 
 
@@ -174,35 +74,13 @@ test_that("geometry rows extracted", {
     sf::st_sf(geo = linestring),
     sf::st_sf(geo = point)
   )
-  
-  encode(sf)
-  
   enc <- encode(sf)
-  
-  expect_equal(
-    geometryRow(enc, "POINT"),
-    4
-  )
-  
-  expect_true(
-    all(c(2,3) %in% geometryRow(enc, "LINESTRING"))
-  )
-  
-  expect_equal(
-    geometryRow(enc, "POLYGON"),
-    1
-  )
-  
-  expect_error(
-    geometryRow(sf),
-    "This function should be called on an sfencoded object"
-  )
-  
+  expect_equal(geometryRow(enc, "POINT"),4)
+  expect_true(all(c(2,3) %in% geometryRow(enc, "LINESTRING")))
+  expect_equal(geometryRow(enc, "POLYGON"),1)
+  expect_error(geometryRow(sf),"This function should be called on an sfencoded object")
   enc <- encode(sf, strip = TRUE)
-  expect_error(
-    polyline_wkt(enc),
-    "No geometry attribute found"
-  )
+  expect_error(polyline_wkt(enc),"No geometry attribute found")
   
 })
 
