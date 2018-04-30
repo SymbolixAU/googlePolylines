@@ -8,13 +8,15 @@
 
 # googlePolylines
 
-The goal of googlePolylines is to encode and decode coordinates using [Google's polyline encoding algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)
+A **fast** and light-weight implementation of [Google's polyline encoding algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm). 
+
 
 > Polyline encoding is a lossy compression algorithm that allows you to store a series of coordinates as a single string. 
 
+
 ## Installation
 
-Version 0.4.0 is on CRAN and can be installed through
+Version 0.6.0 is on CRAN and can be installed through
 
 ```
 install.packages("googlePolylines")
