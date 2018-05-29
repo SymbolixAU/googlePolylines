@@ -1,10 +1,14 @@
-# googlePolylines 0.6.0
+# v0.6.1
+
+* `polyline_wkt()` uses `std::setprecision(12)` in lon / lat stream
+
+# v0.6.0
 
 * Example converting to `sfc` and `sf`
 * `as.data.frame.sfencoded()` to convert back to `data.frame` class
 * `decode()` - decodes encoded polylines to lat/lon
 
-# googlePolylines 0.4.0
+# v0.4.0
 
 * `[.sfencoded` subset to keep encoded attributes
 * `print.sfencoded` to nicely print the encoded columns

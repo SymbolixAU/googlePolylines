@@ -16,7 +16,7 @@ namespace bgm = bg::model;
 
 
 void addLonLatToWKTStream(std::ostringstream& os, float lon, float lat ) {
-  os << lon << " " << lat;
+  os << std::setprecision(12) << lon << " " << lat;
 }
 
 void geom_type(const char *cls, int *tp = NULL) {
