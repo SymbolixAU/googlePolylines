@@ -54,6 +54,7 @@ polyline_wkt.sfencodedLite <- polyline_wkt.sfencoded
 #' @export
 polyline_wkt.encoded_column <- function(obj) polyline_to_wkt(obj)
 
+
 #' @export
 polyline_wkt.default <- function(obj) stop(paste0("I was expecting an sfencoded object or an encoded_column"))
 
