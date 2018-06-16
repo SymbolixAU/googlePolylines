@@ -1,6 +1,12 @@
 # v0.6.1
 
-* `polyline_wkt()` uses `std::setprecision(12)` in lon / lat stream
+* boost geometry objects now using geographic strategy
+* `[.wkt` method
+* `print.wkt` method
+* `geometryRow.wkt` method
+* `wkt` class
+* `polyline_wkt.character` and `polyline_wkt.factor` methods
+* `polyline_wkt()` uses `to_string(lon)` in lon / lat stream to keep precision
 
 # v0.6.0
 

@@ -13,10 +13,7 @@ using namespace Rcpp;
 namespace bg = boost::geometry;
 namespace bgm = bg::model;
 
-
-
 void addLonLatToWKTStream(std::ostringstream& os, float lon, float lat ) {
-  //Rcpp::Rcout << std::to_string(lon) << std::endl;
   os << std::to_string(lon) << " " << std::to_string(lat);
 }
 

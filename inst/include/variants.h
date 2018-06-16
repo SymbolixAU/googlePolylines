@@ -1,16 +1,10 @@
-#include <Rcpp.h>
-using namespace Rcpp;
-
 #ifndef GOOGLEVARIANTS_H
 #define GOOGLEVARIANTS_H
 
+#include <Rcpp.h>
+using namespace Rcpp;
+
 #include <boost/geometry.hpp>
-#include <boost/geometry/geometries/linestring.hpp>
-#include <boost/geometry/geometries/point_xy.hpp>
-#include <boost/geometry/geometries/multi_point.hpp>
-#include <boost/geometry/geometries/polygon.hpp>
-#include <boost/geometry/geometries/multi_linestring.hpp>
-#include <boost/geometry/geometries/multi_polygon.hpp>
 #include <iostream>
 
 namespace bg = boost::geometry;
@@ -81,7 +75,9 @@ namespace detail {
 
 //using point_type = bgm::d2::point_xy<double>;
 
-typedef bg::model::d2::point_xy<double> point_type;
+typedef bgm::point<double, 2, bg::cs::geographic<bg::degree> > point_type;
+
+//typedef bgm::d2::point_xy<double> point_type;
 //typedef bg::model::point <double , 2, bg::cs::geographic<bg::degree> > point_type;
 //typedef bg::model::point <double , 2, bg::cs::spherical_equatorial<bg::degree> > point_type;
 typedef bgm::multi_point<point_type> multi_point_type;

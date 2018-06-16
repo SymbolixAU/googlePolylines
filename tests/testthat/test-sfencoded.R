@@ -70,15 +70,15 @@ test_that("encoed objects printed", {
   expect_true(inherits(withVisible(googlePolylines:::print.sfencodedLite(enc))$value, "data.frame"))
   expect_true(inherits(withVisible(googlePolylines:::print.sfencoded(enc))$value, "data.frame"))
   
-  ## WKT attribute
-  enc <- data.frame(polyline = "abc", stringsAsFactors = F)
-  attr(enc, 'class') <- c('sfencoded', class(enc))
-  attr(enc, 'wkt_column') <- 'polyline'
-
-  expect_true(inherits(withVisible(enc)$value, "sfencoded"))
-  expect_true(inherits(withVisible(googlePolylines:::print.sfencoded(enc))$value, "data.frame"))
-  expect_true(inherits(withVisible(googlePolylines:::print.sfencodedLite(enc))$value, "data.frame"))
-  expect_true(inherits(withVisible(googlePolylines:::print.sfencoded(enc))$value, "data.frame"))
+  # ## WKT attribute
+  # enc <- data.frame(polyline = "abc", stringsAsFactors = F)
+  # attr(enc, 'class') <- c('sfencoded', class(enc))
+  # attr(enc, 'wkt_column') <- 'polyline'
+  # 
+  # expect_true(inherits(withVisible(enc)$value, "sfencoded"))
+  # expect_true(inherits(withVisible(googlePolylines:::print.sfencoded(enc))$value, "data.frame"))
+  # expect_true(inherits(withVisible(googlePolylines:::print.sfencodedLite(enc))$value, "data.frame"))
+  # expect_true(inherits(withVisible(googlePolylines:::print.sfencoded(enc))$value, "data.frame"))
   
   ## NO attribute column
   enc <- data.frame(polyline = "abc", stringsAsFactors = F)

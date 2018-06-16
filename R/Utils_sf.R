@@ -130,13 +130,15 @@ sfNEmpty.sfc <- function(sfc) attr(sfc, "n_empty")
 #' 	st_sf(geo = point)
 #' 	)
 #' 
-#' encode(sf)
-#' 
 #' enc <- encode(sf)
 #' geometryRow(enc, "POINT")
 #' geometryRow(enc, "LINESTRING")
 #' geometryRow(enc, "POLYGON")
 #' 
+#' wkt <- polyline_wkt(enc)
+#' geometryRow(wkt, "POINT")
+#' geometryRow(wkt, "LINESTRING")
+#' geometryRow(wkt, "POLYGON")
 #' }
 #' 
 #' @export
@@ -151,7 +153,13 @@ geometryRow.sfencoded <- function(x, geometry) {
 }
 
 #' @export
-geometryRow.default <- function(x, ... ){
+geometryRow.wkt <- function(x, geometry) {
+  col <- x[[attr(x, "wkt_column")]]
+  which(vapply(col, function(x) { grepl( paste0("*", geometry), x) } , T))
+}
+
+#' @export
+geometryRow.default <- function(x, ... ) {
   stop("This function should be called on an sfencoded object")
 }
 

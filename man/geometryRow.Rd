@@ -43,13 +43,15 @@ sf <- rbind(
 	st_sf(geo = point)
 	)
 
-encode(sf)
-
 enc <- encode(sf)
 geometryRow(enc, "POINT")
 geometryRow(enc, "LINESTRING")
 geometryRow(enc, "POLYGON")
 
+wkt <- polyline_wkt(enc)
+geometryRow(wkt, "POINT")
+geometryRow(wkt, "LINESTRING")
+geometryRow(wkt, "POLYGON")
 }
 
 }

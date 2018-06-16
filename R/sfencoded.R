@@ -6,6 +6,13 @@ as.data.frame.sfencoded <- function(x, ...) {
   NextMethod()
 }
 
+#' @export
+as.data.frame.wkt <- function(x, ...) {
+  x <- removeWktClass(x)
+  x <- removeWktAttributes(x)
+  NextMethod()
+}
+
 strSfEncoded <- function(object, ...) {
   n <- length(object)
   cat(paste0(class(object)[1], " of length ", n))
@@ -33,9 +40,14 @@ str.wkt_column <- strSfEncoded
   x <- attachEncodedAttribute(x, geomColumn, "encoded_column")
   x <- attachEncodedAttribute(x, wktColumn, "wkt_column")
 
-  if( is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column")) ){
+  if( is.null(attr(x, "encoded_column")) ) {
     x <- removeSfencodedClass(x)
   }
+  
+  if( is.null(attr(x, "wkt_column")) ) {
+    x <- removeWktClass(x)
+  }
+  
   return(x)
 }
 
@@ -61,7 +73,6 @@ removeSfencodedClass <- function(x) {
 removeSfEncodedAttributes <- function(x) {
 
   geomCol <- attr(x, "encoded_column")
-  wktCol <- attr(x, "wkt_column")
   
   if(!is.null(geomCol) && geomCol %in% names(x)) {
     x[[geomCol]] <- sapply(x[[geomCol]], function(y) { 
@@ -70,27 +81,20 @@ removeSfEncodedAttributes <- function(x) {
       })
     
     attr(x[[geomCol]], "class") <- NULL
-    
-  }
-  
-  if(!is.null(wktCol) && wktCol %in% names(x)) {
-    attr(x[[wktCol]], "class") <- NULL
   }
   
   attr(x, "encoded_column") <- NULL
-  attr(x, "wkt_column") <- NULL
   attr(x, "sfAttributes") <- NULL
   
-  # print("-- attributes removed --")
   return(x)
 }
 
 
 
 #' @export
-print.sfencoded <- function(x, ... ){
+print.sfencoded <- function(x, ... ) {
   
-  if(is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column"))) {
+  if(is.null(attr(x, "encoded_column")) ) {
     NextMethod()
     return()
   }
@@ -106,22 +110,24 @@ printSfEncoded <- function(x, ...) {
   encType <- ifelse(inherits(x, 'sfencoded'), 'sfencoded', 'sfencodedLite')
   
   encoded <- attr(x, "encoded_column")
-  wkt <- attr(x, "wkt_column")
+#  wkt <- attr(x, "wkt_column")
 
   if(!is.null(encoded)) {
-    e <- x[[encoded]]
-    e <- printSfEncodedPrefix(e, encType)
-    e <- stats::setNames(data.frame(e), encoded)
-    x[, encoded] <- e
+    for (i in encoded) {
+      e <- x[[i]]
+      e <- printSfEncodedPrefix(e, encType)
+      e <- stats::setNames(data.frame(e), i)
+      x[, i] <- e 
+    }
   }
 
-  if(!is.null(wkt)) {
-    w <- x[[wkt]]
-    w <- paste0(substr(w, 1, pmin(nchar(w), 30)), "...")
-    w <- stats::setNames(data.frame(w), wkt)
-    x[, wkt] <- w
-  }
-  
+  # if(!is.null(wkt)) {
+  #   w <- x[[wkt]]
+  #   w <- paste0(substr(w, 1, pmin(nchar(w), 30)), "...")
+  #   w <- stats::setNames(data.frame(w), wkt)
+  #   x[, wkt] <- w
+  # }
+  # 
   x <- removeSfencodedClass(x)
   
   print(x)
@@ -147,6 +153,5 @@ printSfEncodedPrefix <- function(e, encType) {
     }, "" )
   }
   return(e)
-  
 }
 

@@ -7,7 +7,8 @@
 wkt_polyline(obj)
 }
 \arguments{
-\item{obj}{\code{sfencoded} object or \code{wkt_column} of well-known text}
+\item{obj}{\code{sfencoded} object, \code{wkt_column} or character vector
+of well-known text}
 }
 \value{
 encoded polyline representation of geometries
@@ -33,6 +34,17 @@ wkt <- polyline_wkt(enc)
 
 ## convert well-known text back to polylines
 enc2 <- wkt_polyline(wkt)
+
+## data.frame column of well-known text
+df <- data.frame(
+  wkt = c("LINESTRING(0 0, 1 1, 1 2, 2 2)")
+)
+
+df$polyline <- wkt_polyline(df$wkt)
+
+## use \\code{unlist} to strip attributes
+df$polyline <- unlist(df$polyline)
+
 
 }
 
