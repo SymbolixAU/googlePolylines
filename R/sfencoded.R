@@ -112,7 +112,7 @@ printSfEncoded <- function(x, ...) {
   encoded <- attr(x, "encoded_column")
 #  wkt <- attr(x, "wkt_column")
 
-  if(!is.null(encoded)) {
+  if(!is.null(encoded) && nrow(x) > 0 ) {
     for (i in encoded) {
       e <- x[[i]]
       e <- printSfEncodedPrefix(e, encType)

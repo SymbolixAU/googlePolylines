@@ -78,7 +78,7 @@ printwkt <- function(x, ...) {
 
   wkt <- attr(x, "wkt_column")
 
-  if(!is.null(wkt)) {
+  if(!is.null(wkt) && nrow(x) > 0) {
     for (i in wkt) {
       w <- as.character( x[[i]] )
       w <- paste0(substr(w, 1, pmin(nchar(w), 30)), "...")
