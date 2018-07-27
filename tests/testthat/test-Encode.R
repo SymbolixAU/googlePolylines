@@ -5,12 +5,24 @@ context("encode")
 
 test_that("google's example encodes correctly", {
   
-  df <- data.frame(lat = c(38.5, 40.7, 43.252),
-                   lon = c(-120.2, -120.95, -126.453))
+  df <- data.frame(
+    lat = c(38.5, 40.7, 43.252)
+    , lon = c(-120.2, -120.95, -126.453)
+    )
   
   expect_true(encode(df) == "_p~iF~ps|U_ulLnnqC_mqNvxq`@")
 })
 
+test_that("encoding by row is accurate", {
+  
+  df <- data.frame(
+    lat = c(38, 40, 43)
+    , lon = c(-120, -120, -126)
+  )
+  expect_true(length(encode(df, byrow = T)) == 3)
+  expect_equal(df, do.call(rbind, decode( encode( df, byrow = T ) ) ))
+  
+})
 
 test_that("encode coordinates algorithim works", {
   

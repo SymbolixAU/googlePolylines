@@ -35,6 +35,10 @@
 #' ## on a data.frame, it will attemp to find the lon & lat columns
 #' encode(df)
 #' 
+#' ## use byrow = TRUE to convert each row individually
+#' encode(df, byrow = T)
+#' 
+#' 
 #' \dontrun{
 #' 
 #' ## sf objects
@@ -111,13 +115,17 @@ encode.sfc <- function(obj, strip = FALSE, ...) rcpp_encodeSfGeometry(obj, strip
 #' @rdname encode
 #' @param lon vector of longitudes
 #' @param lat vector of latitudes
+#' @param byrow logical indicating if the encoding should be done for each row
 #' @export
-encode.data.frame <- function(obj, lon = NULL, lat = NULL, ...) {
+encode.data.frame <- function(obj, lon = NULL, lat = NULL, byrow = FALSE, ...) {
 
   if(is.null(lat)) lat <- find_lat_column(names(obj))
   if(is.null(lon)) lon <- find_lon_column(names(obj))
 
-  rcpp_encode_polyline(obj[[lon]], obj[[lat]])
+  if ( byrow ) {
+    return( rcpp_encode_polyline_byrow( obj[[lon]], obj[[lat]] ) )
+  }
+  return( rcpp_encode_polyline(obj[[lon]], obj[[lat]]) )
 }
 
 

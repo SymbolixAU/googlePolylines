@@ -41,6 +41,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rcpp_encode_polyline_byrow
+Rcpp::StringVector rcpp_encode_polyline_byrow(Rcpp::NumericVector longitude, Rcpp::NumericVector latitude);
+RcppExport SEXP _googlePolylines_rcpp_encode_polyline_byrow(SEXP longitudeSEXP, SEXP latitudeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type longitude(longitudeSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type latitude(latitudeSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_encode_polyline_byrow(longitude, latitude));
+    return rcpp_result_gen;
+END_RCPP
+}
 // polyline_to_wkt
 Rcpp::StringVector polyline_to_wkt(Rcpp::List sfencoded);
 RcppExport SEXP _googlePolylines_polyline_to_wkt(SEXP sfencodedSEXP) {
@@ -68,6 +80,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_googlePolylines_rcpp_encodeSfGeometry", (DL_FUNC) &_googlePolylines_rcpp_encodeSfGeometry, 2},
     {"_googlePolylines_rcpp_decode_polyline", (DL_FUNC) &_googlePolylines_rcpp_decode_polyline, 1},
     {"_googlePolylines_rcpp_encode_polyline", (DL_FUNC) &_googlePolylines_rcpp_encode_polyline, 2},
+    {"_googlePolylines_rcpp_encode_polyline_byrow", (DL_FUNC) &_googlePolylines_rcpp_encode_polyline_byrow, 2},
     {"_googlePolylines_polyline_to_wkt", (DL_FUNC) &_googlePolylines_polyline_to_wkt, 1},
     {"_googlePolylines_wkt_to_polyline", (DL_FUNC) &_googlePolylines_wkt_to_polyline, 1},
     {NULL, NULL, 0}

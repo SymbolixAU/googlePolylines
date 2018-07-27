@@ -130,9 +130,30 @@ Rcpp::String encode_polyline(Rcpp::NumericVector longitude,
 }
 
 // [[Rcpp::export]]
-Rcpp::String rcpp_encode_polyline(Rcpp::NumericVector longitude,
-                                  Rcpp::NumericVector latitude){
+Rcpp::String rcpp_encode_polyline(
+    Rcpp::NumericVector longitude,
+    Rcpp::NumericVector latitude
+  ) {
+  return encode_polyline(longitude, latitude);
+}
 
-  return encode_polyline(longitude,latitude);
+// [[Rcpp::export]]
+Rcpp::StringVector rcpp_encode_polyline_byrow(
+    Rcpp::NumericVector longitude,
+    Rcpp::NumericVector latitude
+  ) { 
+  
+  size_t n = longitude.length();
+  Rcpp::StringVector res( n );
+  Rcpp::NumericVector lon(1);
+  Rcpp::NumericVector lat(1);
+  
+  for ( int i = 0; i < n; i++ ) {
+    
+    lon[0] = longitude[i];
+    lat[0] = latitude[i];
+    res[i] = encode_polyline( lon, lat );
+  }
+  return res;
 }
 

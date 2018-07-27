@@ -1,6 +1,6 @@
 # v0.6.1
 
-* `polyline_wkt()` uses `std::setprecision(12)` in lon / lat stream
+* `encode.data.frame` gets `byrow` argument
 
 # v0.6.0
 

@@ -13,6 +13,10 @@ rcpp_encode_polyline <- function(longitude, latitude) {
     .Call('_googlePolylines_rcpp_encode_polyline', PACKAGE = 'googlePolylines', longitude, latitude)
 }
 
+rcpp_encode_polyline_byrow <- function(longitude, latitude) {
+    .Call('_googlePolylines_rcpp_encode_polyline_byrow', PACKAGE = 'googlePolylines', longitude, latitude)
+}
+
 polyline_to_wkt <- function(sfencoded) {
     .Call('_googlePolylines_polyline_to_wkt', PACKAGE = 'googlePolylines', sfencoded)
 }

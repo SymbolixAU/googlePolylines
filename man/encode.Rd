@@ -10,7 +10,8 @@ encode(obj, ...)
 
 \method{encode}{sf}(obj, strip = FALSE, ...)
 
-\method{encode}{data.frame}(obj, lon = NULL, lat = NULL, ...)
+\method{encode}{data.frame}(obj, lon = NULL, lat = NULL, byrow = FALSE,
+  ...)
 }
 \arguments{
 \item{obj}{either an \code{sf} object or \code{data.frame}}
@@ -24,6 +25,8 @@ spatial attributes associated with the \code{sf} object}
 \item{lon}{vector of longitudes}
 
 \item{lat}{vector of latitudes}
+
+\item{byrow}{logical indicating if the encoding should be done for each row}
 }
 \value{
 \code{sfencoded} object
@@ -61,6 +64,10 @@ df <- data.frame(polygonId = c(1,1,1,1),
   
 ## on a data.frame, it will attemp to find the lon & lat columns
 encode(df)
+
+## use byrow = TRUE to convert each row individually
+encode(df, byrow = T)
+
 
 \dontrun{
 
