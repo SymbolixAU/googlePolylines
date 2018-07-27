@@ -4,7 +4,7 @@ context("sfencoded")
 test_that("sfencoded converted to data.frame",  {
   
   testthat::skip_on_cran()
-  
+  library(sf)
   nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
   enc <- encode(nc)
   x <- as.data.frame(enc)
@@ -21,7 +21,7 @@ test_that("sfencoded converted to data.frame",  {
 test_that("sfencoded attributes are removed", {
   
   testthat::skip_on_cran()
-  
+  library(sf)
   nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
   enc <- encode(nc)
   x <- googlePolylines:::removeSfencodedClass(enc)
@@ -38,7 +38,7 @@ test_that("sfencoded attributes are removed", {
 test_that("correct structure is printed", {
   
   testthat::skip_on_cran()
-  
+  library(sf)
   nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
   enc <- encode(nc)
   
@@ -49,9 +49,6 @@ test_that("correct structure is printed", {
 
 
 test_that("encoded attribute is attached", {
-  
-  testthat::skip_on_cran()
-  
   df <- data.frame(polyline = "abc")
   df <- googlePolylines:::attachEncodedAttribute(df, 'polyline', 'encoded_column')
   expect_true(attr(df, 'encoded_column') == 'polyline')
@@ -59,8 +56,6 @@ test_that("encoded attribute is attached", {
 
 test_that("encoed objects printed", {
   
-  testthat::skip_on_cran()
-    
   enc <- data.frame(polyline = "abc", stringsAsFactors = F)
   attr(enc, 'class') <- c('sfencoded', class(enc))
   attr(enc, 'encoded_column') <- 'polyline'
@@ -89,6 +84,7 @@ test_that("encoed objects printed", {
 test_that("prefix printed", {
   
   testthat::skip_on_cran()
+  library(sf)
   
   nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
   enc <- encode(nc)
@@ -101,7 +97,7 @@ test_that("prefix printed", {
 test_that("subsetting rows and columns works", {
   
   testthat::skip_on_cran()
-  
+  library(sf)
   nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
   enc <- encode(nc)
   encl <- encode(nc, strip = T)

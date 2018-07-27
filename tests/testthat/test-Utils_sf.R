@@ -3,12 +3,11 @@ context("sfattributes")
 test_that("sf attributes are extracted", {
   
   testthat::skip_on_cran()
-  
+  library(sf)
   nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
   enc <- encode(nc)
   
   sfAttrs <- sfAttributes(enc)
-  
   expect_equal(sfAttrs$type,"MULTIPOLYGON")
   expect_equal(sfAttrs$dim,"XY")
   expect_equal(round(sfAttrs$bbox[[1]],3),-84.324)
@@ -23,7 +22,7 @@ test_that("sf attributes are extracted", {
 test_that("sf attributes extracted", {
   
   testthat::skip_on_cran()
-  
+  library(sf)
   nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
   ## from sf obj
   sfAttrs <- googlePolylines:::sfGeometryAttributes(nc)
@@ -51,7 +50,7 @@ test_that("sf attributes extracted", {
 test_that("geometry rows extracted", {
   
   testthat::skip_on_cran()
-  
+  library(sf)
   df <- data.frame(myId = c(1,1,1,1,1,1,1,1,2,2,2,2),
     lineId = c(1,1,1,1,2,2,2,2,1,1,1,2),
     lon = c(-80.190, -66.118, -64.757, -80.190,  -70.579, -67.514, -66.668, -70.579, -70, -49, -51, -70),
@@ -81,7 +80,6 @@ test_that("geometry rows extracted", {
   expect_error(geometryRow(sf),"This function should be called on an sfencoded object")
   enc <- encode(sf, strip = TRUE)
   expect_error(polyline_wkt(enc),"No geometry attribute found")
-  
 })
 
 

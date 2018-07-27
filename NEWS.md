@@ -1,6 +1,7 @@
 # v0.6.1
 
 * `encode.data.frame` gets `byrow` argument
+* `polyline_wkt` gets `std::to_string()` around lon/lat to keep precision
 
 # v0.6.0
 

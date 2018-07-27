@@ -66,7 +66,7 @@ df <- data.frame(polygonId = c(1,1,1,1),
 encode(df)
 
 ## use byrow = TRUE to convert each row individually
-encode(df, byrow = T)
+encode(df, byrow = TRUE)
 
 
 \dontrun{

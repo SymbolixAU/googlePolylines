@@ -87,8 +87,6 @@ void addToStream(std::ostringstream& os, Rcpp::String encodedString ) {
 
 void encode_point( std::ostringstream& os, Rcpp::NumericVector point) {
   
-//  Rcpp::Rcout << point << std::endl;
-//  Rcpp::Rcout << "size: " << point.size() << " length: " << point.length() << std::endl;
   Rcpp::NumericVector lon(1);
   Rcpp::NumericVector lat(1);
   
@@ -170,23 +168,6 @@ void write_geometry(std::ostringstream& os, SEXP s) {
   
   write_data(os, s, cls_attr[1], 0);
 }
-
-//void write_geometrycollection(std::ostringstream& os, Rcpp::List lst) {
-//  
-//  SEXP geom;
-//  
-//  for (int i = 0; i < lst.length(); i++) {
-//    
-//    Rcpp::Rcout << i << std::endl;
-//    geom = lst[i];
-//    Rcpp::CharacterVector cls_attr = getSfClass(geom);
-//    
-//    Rcpp::Rcout << cls_attr[1] << std::endl;
-//    
-//    write_data(os, geom, cls_attr[1], 0);
-//  }
-//}
-
 
 void write_data(std::ostringstream& os, SEXP sfc,
                 const char *cls = NULL, int srid = 0) {
