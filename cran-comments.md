@@ -1,14 +1,13 @@
 
 ## Release summary
 
-* Updates v0.6.0 to v0.6.1
-* Removed dependencies on undeclared packages from unit tests, as per CRAN request - email "CRAN packages maintained by you" from Kurt Hornik, 2018-05-18
-
+* updates v0.6.1 to v0.6.2
+* two minor enhancements to existing functions
 
 ## Test Environments
 
 * local OS X 15.6.0 (High Sierra) install, R 3.5.0
-* travis-ci (ubuntu 14.04.5, R Under development r74781)
+* travis-ci (ubuntu 14.04.5, R Under development r74923)
 * win-builder (devel and release)
 
 ## R CMD check results
