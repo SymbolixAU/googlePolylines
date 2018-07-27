@@ -148,7 +148,7 @@ Rcpp::StringVector rcpp_encode_polyline_byrow(
   Rcpp::NumericVector lon(1);
   Rcpp::NumericVector lat(1);
   
-  for ( int i = 0; i < n; i++ ) {
+  for ( size_t i = 0; i < n; i++ ) {
     
     lon[0] = longitude[i];
     lat[0] = latitude[i];

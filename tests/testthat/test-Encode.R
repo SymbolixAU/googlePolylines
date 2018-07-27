@@ -9,6 +9,9 @@ test_that("google's example encodes correctly", {
 })
 
 test_that("encoding by row is accurate", {
+  
+  testthat::skip_on_cran()
+  
   df <- data.frame(lat = c(38, 40, 43),lon = c(-120, -120, -126))
   expect_true(length(encode(df, byrow = T)) == 3)
   expect_equal(df, do.call(rbind, decode( encode( df, byrow = T ) ) ))
@@ -128,6 +131,7 @@ test_that("sf_GEOMETRYs are encoded", {
 
 
 test_that("data.frames are encoded", {
+  testthat::skip_on_cran()
   df <- data.frame(polygonId = c(1,1,1,1),
     lineId = c(1,1,1,1),
     lon = c(-80.190, -66.118, -64.757, -80.190),
