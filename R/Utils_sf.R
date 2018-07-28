@@ -33,7 +33,6 @@ sfGeometryAttributes.sfc <- function(sfc) {
     prec = sfPrecision(sfc),
     n_em = sfNEmpty(sfc)
   )
-  
 }
 
 
@@ -41,7 +40,8 @@ sfGeometryAttributes.sfc <- function(sfc) {
 sfGeometryColumn <- function(sf) UseMethod("sfGeometryColumn")
 
 #' @export
-sfGeometryColumn.sf <- function(sf) attr(sf, "sf_column")
+sfGeometryColumn.sf <- function(sf) names( which( sapply( sf, function(x) inherits(x, "sfc") ) ) )
+# sfGeometryColumn.sf <- function(sf) attr(sf, "sf_column")
 
 
 ### GEOMETRY TYPE

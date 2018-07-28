@@ -84,7 +84,12 @@ encode <- function(obj, ...) UseMethod("encode")
 #' @export
 encode.sf <- function(obj, strip = FALSE, ...) {
 
-  geomCol <- sfGeometryColumn(obj)
+  geomCols <- googlePolylines:::sfGeometryColumn(obj)
+  
+  lst <- lapply(obj[, geomCols, drop = F], function(x){
+    googlePolylines:::rcpp_encodeSfGeometry( x , strip )
+  })
+  
   lst <- rcpp_encodeSfGeometry(obj[[geomCol]], strip)
   
   if(!strip) sfAttrs <- sfGeometryAttributes(obj)
