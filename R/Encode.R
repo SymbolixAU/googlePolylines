@@ -90,9 +90,9 @@ encode.sf <- function(obj, strip = FALSE, ...) {
     googlePolylines:::rcpp_encodeSfGeometry( x , strip )
   })
   
-  lst <- rcpp_encodeSfGeometry(obj[[geomCol]], strip)
+  #lst <- rcpp_encodeSfGeometry(obj[[geomCol]], strip)
   
-  if(!strip) sfAttrs <- sfGeometryAttributes(obj)
+  if(!strip) sfAttrs <- googlePolylines:::sfGeometryAttributes( obj )
 
   obj[[geomCol]] <- lst
   
