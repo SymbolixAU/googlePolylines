@@ -18,13 +18,13 @@ A **fast** and light-weight implementation of [Google's polyline encoding algori
 
 Version 0.6.1 is on CRAN and can be installed through
 
-```
+```r
 install.packages("googlePolylines")
 ```
 
 The development version can be installed from github with:
 
-```
+```r
 # install.packages("devtools")
 devtools::install_github("SymbolixAU/googlePolylines")
 ```
@@ -51,7 +51,7 @@ Supported `sf` types
 
 ### `encode`
 
-```
+```r
 library(googlePolylines)
 library(sf)
 
@@ -122,7 +122,7 @@ encode(df)
 
 ### Polyline to well-known text
 
-```
+```r
 
 enc <- encode(sf)
 wkt <- polyline_wkt(enc)
@@ -137,7 +137,7 @@ wkt
 
 ### Well-known text to polyline
 
-```
+```r
 enc2 <- wkt_polyline(wkt)
 ```
 
@@ -147,7 +147,7 @@ enc2 <- wkt_polyline(wkt)
 Encoding coordinates into polylines reduces the size of objects and can increase the speed in plotting Google Maps
 
 
-```
+```r
 library(sf)
 nc <- st_read(system.file("shape/nc.shp", package="sf"))
 
@@ -159,7 +159,7 @@ vapply(mget(c('nc', 'encoded', 'encodedLite') ), function(x) { format(object.siz
 # "132.2 Kb"  "83.3 Kb"   "50.5 Kb"
 ```
 
-```
+```r
 library(leaflet)
 library(microbenchmark)
 library(sf)
