@@ -18,6 +18,16 @@ test_that("sfencoded converted to data.frame",  {
   expect_true(class(x) == "data.frame")
 })
 
+test_that("subsetting retains all class attributes", {
+  
+  testthat::skip_on_cran()
+  library(sf)
+  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
+  enc <- encode(nc)
+  expect_true(all(attr(enc, 'class') == attr(enc[1, ], 'class')))
+
+})
+
 test_that("sfencoded attributes are removed", {
   
   testthat::skip_on_cran()
