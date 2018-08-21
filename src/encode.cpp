@@ -99,6 +99,8 @@ void encode_point( std::ostringstream& os, Rcpp::NumericVector point) {
 
 void encode_points( std::ostringstream& os, Rcpp::NumericMatrix point) {
   
+  Rcpp::Rcout << "points: " << point << std::endl;
+  
   int n = point.size() / 2;
   Rcpp::String encodedString;
   Rcpp::NumericVector pointLon;
@@ -113,16 +115,75 @@ void encode_points( std::ostringstream& os, Rcpp::NumericMatrix point) {
   
 }
 
+void fetch_geometries(Rcpp::List& sf, Rcpp::CharacterVector& sfg_attr) {
+  
+  Rcpp::CharacterVector geom_attr;
+  
+  for (Rcpp::List::iterator it = sf.begin(); it != sf.end(); it++) {
+    
+    switch( TYPEOF(*it) ) {
+    
+    case VECSXP: {
+      Rcpp::List tmp = as<Rcpp::List>(*it);
+      if(Rf_isNull(tmp.attr("class"))){
+        fetch_geometries(tmp, sfg_attr);
+      } else {
+        sfg_attr = tmp.attr("class");
+      }
+      break;
+    }
+    case REALSXP: {
+      Rcpp::NumericVector tmp = as<Rcpp::NumericVector>(*it);
+      if(Rf_isNull(tmp.attr("class"))){
+        Rcpp::stop("Geometry could not be determined");
+      } else {
+        sfg_attr = tmp.attr("class");
+      }
+      break;
+    }
+    case INTSXP: {
+      Rcpp::IntegerVector tmp = as<Rcpp::IntegerVector>(*it);
+      if(Rf_isNull(tmp.attr("class"))){
+        Rcpp::stop("Geometry could not be determined");
+      } else {
+        sfg_attr = tmp.attr("class");
+      }
+      break;
+    }
+    case STRSXP: {
+      Rcpp::StringVector tmp = as<Rcpp::StringVector>(*it);
+      if(Rf_isNull(tmp.attr("class"))){
+        Rcpp::stop("Geometry could not be determined");
+      } else {
+        sfg_attr = tmp.attr("class");
+      }
+      break;
+    }
+    default: {
+      Rcpp::stop("Geometry could not be determined");
+    }
+    }
+  }
+}
+
+
 void encode_vector( std::ostringstream& os, Rcpp::List vec ) {
   
-  int n = vec.size() / 2;
+  // TODO(Z/M elements)
   
+  int n = vec.size() / 2;  // 2 : just using lon & lat, not Z/M?
+  
+  Rcpp::Rcout << "vec size: " << vec.size() << std::endl;
+  Rcpp::Rcout << "vec length: " << vec.length() << std::endl;
+
   Rcpp::String encodedString;
 
   Rcpp::NumericVector lats(n);
   Rcpp::NumericVector lons(n);
+  Rcpp::NumericVector elev(n);
   
-  for (int i = 0; i < n; i++){
+  for (int i = 0; i < n; i++) {
+
     lons[i] = vec[i];
     lats[i] = vec[(i + n)];
   }
@@ -212,6 +273,10 @@ void write_data(std::ostringstream& os, SEXP sfc,
 Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
   
   Rcpp::CharacterVector cls_attr = sfc.attr("class");
+  Rcpp::Rcout << "cls_attr: " << cls_attr << std::endl;
+  
+  Rcpp::CharacterVector sfg_attr;
+  
   Rcpp::List output(sfc.size());
   int lastItem;
   
@@ -219,7 +284,15 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
 
     std::ostringstream os;
     Rcpp::checkUserInterrupt();
-
+    
+    // TODO(sfc[i] class will tell us if XY[ZM] dimensions)
+    Rcpp::List sfg(1);
+    sfg[0] = sfc[0];
+    fetch_geometries(sfg, sfg_attr);
+    Rcpp::Rcout << "geom_attr: " << sfg_attr << std::endl;
+    
+    // TODO(send in sfg_attr and use the ZM elements)
+    
     write_data(os, sfc[i], cls_attr[0], 0);
     
     std::string str = os.str();
@@ -234,7 +307,7 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
   
     Rcpp::CharacterVector sv = wrap(strs);
 
-    if(strip == FALSE){
+    if(strip == FALSE) {
       sv.attr("sfc") = getSfClass(sfc[i]);
     }
     output[i] = sv;
