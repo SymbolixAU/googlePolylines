@@ -14,6 +14,9 @@
 # lz <- sf::st_linestring(x = matrix(1:6, ncol = 3))
 # lzm <- sf::st_linestring(x = matrix(1:8, ncol = 4))
 # 
+# lz2 <- sf::st_linestring(x = matrix(1:15, ncol = 3))
+# lzm2 <- sf::st_linestring(x = matrix(1:36, ncol = 4))
+# 
 # ## MULTILINESTRING
 # mlz <- sf::st_multilinestring(x = list(lz,lz))
 # mlzm <- sf::st_multilinestring(x = list(lzm, lzm))
@@ -38,6 +41,9 @@
 # sflz <- sf::st_sf(geometry = sf::st_sfc(lz))
 # sflzm <- sf::st_sf(geometry = sf::st_sfc(lzm))
 # 
+# sflz2 <- sf::st_sf(geometry = sf::st_sfc(lz2))
+# sflzm2 <- sf::st_sf(geometry = sf::st_sfc(lzm2))
+# 
 # sfmlz <- sf::st_sf(geometry = sf::st_sfc(mlz))
 # sfmlzm <- sf::st_sf(geometry = sf::st_sfc(mlzm))
 # 
@@ -53,6 +59,14 @@
 # sf <- rbind(sfpz, sfpzm, sfmpz, sfmpzm, sflz, sflzm, sfmlz, sfmlzm, sfplz, sfplzm, sfmplz, sfmplzm)
 # 
 # sf <- rbind(sfpzm, sfmpz, sfmpzm, sflz, sflzm, sfmlz, sfmlzm, sfplz, sfplzm, sfmplz)
+# 
+# 
+# "XYZM == 4"
+# "XYZ == 3"
+# "XYM == 3"
+# "XY == 2"
+# 
+# ### LINESTRING ZM - 
 # 
 # 
 # ### Encoding POINT Z

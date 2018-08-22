@@ -86,41 +86,6 @@ void addToStream(std::ostringstream& os, Rcpp::String encodedString ) {
   os << strng << ' ';
 }
 
-
-void encode_point( std::ostringstream& os, Rcpp::NumericVector point, Rcpp::CharacterVector& sfg_dim) {
-  
-  Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
-  Rcpp::Rcout << "point size: " << point.size() << std::endl;
-  
-  Rcpp::NumericVector lon(1);
-  Rcpp::NumericVector lat(1);
-  
-  lon[0] = point[0];
-  lat[0] = point[1];
-  
-  Rcpp::String encodedString = encode_polyline(lon, lat);
-  addToStream(os, encodedString);
-}
-
-void encode_points( std::ostringstream& os, Rcpp::NumericMatrix point, Rcpp::CharacterVector& sfg_dim) {
-  
-  Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
-  Rcpp::Rcout << "points size: " << point.size() << std::endl;
-  
-  int n = point.size() / 2;
-  Rcpp::String encodedString;
-  Rcpp::NumericVector pointLon;
-  Rcpp::NumericVector pointLat;
-  
-  for (int i = 0; i < n; i++){
-    pointLon = point(i, 0);
-    pointLat = point(i, 1);
-    encodedString = encode_polyline( pointLon, pointLat);
-    addToStream(os, encodedString);
-  }
-  
-}
-
 void geometry_dim(Rcpp::List& sf, Rcpp::CharacterVector& sfg_dim) {
   
   Rcpp::CharacterVector geom_attr;
@@ -172,11 +137,50 @@ void geometry_dim(Rcpp::List& sf, Rcpp::CharacterVector& sfg_dim) {
   }
 }
 
+void encode_point( std::ostringstream& os, Rcpp::NumericVector point, Rcpp::CharacterVector& sfg_dim) {
+  
+  Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
+  Rcpp::Rcout << "point size: " << point.size() << std::endl;
+  
+  Rcpp::NumericVector lon(1);
+  Rcpp::NumericVector lat(1);
+  
+  lon[0] = point[0];
+  lat[0] = point[1];
+  
+  Rcpp::String encodedString = encode_polyline(lon, lat);
+  addToStream(os, encodedString);
+}
+
+void encode_points( std::ostringstream& os, Rcpp::NumericMatrix point, Rcpp::CharacterVector& sfg_dim) {
+  
+  Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
+  Rcpp::Rcout << "points size: " << point.size() << std::endl;
+  
+  int n = point.size() / 2;
+  Rcpp::String encodedString;
+  Rcpp::NumericVector pointLon;
+  Rcpp::NumericVector pointLat;
+  
+  for (int i = 0; i < n; i++){
+    pointLon = point(i, 0);
+    pointLat = point(i, 1);
+    encodedString = encode_polyline( pointLon, pointLat);
+    addToStream(os, encodedString);
+  }
+  
+}
 
 void encode_vector( std::ostringstream& os, Rcpp::List vec, Rcpp::CharacterVector& sfg_dim ) {
   
   // TODO(Z/M elements)
   Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
+  
+  // TODO:
+  // - XY == [0][1]
+  // - XYZ == [0][1][2]{3}
+  // - XYM == [0][1][2]{3}
+  // - XYZM == [0][1][2][3]
   
   int n = vec.size() / 2;  // 2 : just using lon & lat, not Z/M?
   
