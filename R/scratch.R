@@ -1,8 +1,74 @@
-
+# 
 # 
 # library(sf)
 # 
-# sf <- sf::st_sf(geometry = sf::st_sfc(sf::st_point(c(1,2,3))))
+# ## POINT
+# pz <- sf::st_point(c(1,2,3))
+# pzm <- sf::st_point(1:4)
+# 
+# ## MULTIPOINT
+# mpz <- sf::st_multipoint(x = matrix(1:6, ncol = 3))
+# mpzm <- sf::st_multipoint(x = matrix(1:8, ncol = 4))
+# 
+# ## LINESTRING
+# lz <- sf::st_linestring(x = matrix(1:6, ncol = 3))
+# lzm <- sf::st_linestring(x = matrix(1:8, ncol = 4))
+# 
+# ## MULTILINESTRING
+# mlz <- sf::st_multilinestring(x = list(lz,lz))
+# mlzm <- sf::st_multilinestring(x = list(lzm, lzm))
+# 
+# ## POLYGON
+# pl <- c(0,0,1,1,0,1,1,1,1,0,1,1,0,0,1)
+# plz <- sf::st_polygon(x = list(matrix(pl, ncol = 3, byrow = T)))
+# pl <- c(0,0,1,2,1,0,1,2,1,1,1,2,0,1,1,2,0,0,1,2)
+# plzm <- sf::st_polygon(x = list(matrix(pl, ncol = 4, byrow = T)))
+# 
+# ## MULTIPOLYGON
+# mplz <- sf::st_multipolygon(x = list(plz, plz))
+# mplzm <- sf::st_multipolygon(x = list(plzm, plzm))
+# 
+# ### Regular SF's
+# sfpz <- sf::st_sf(geometry = sf::st_sfc(pz))
+# sfpzm <- sf::st_sf(geometry = sf::st_sfc(pzm))
+# 
+# sfmpz <- sf::st_sf(geometry = sf::st_sfc(mpz))
+# sfmpzm <- sf::st_sf(geometry = sf::st_sfc(mpzm))
+# 
+# sflz <- sf::st_sf(geometry = sf::st_sfc(lz))
+# sflzm <- sf::st_sf(geometry = sf::st_sfc(lzm))
+# 
+# sfmlz <- sf::st_sf(geometry = sf::st_sfc(mlz))
+# sfmlzm <- sf::st_sf(geometry = sf::st_sfc(mlzm))
+# 
+# sfplz <- sf::st_sf(geometry = sf::st_sfc(plz))
+# sfplzm <- sf::st_sf(geometry = sf::st_sfc(plzm))
+# 
+# sfmplz <- sf::st_sf(geometry = sf::st_sfc(mplz))
+# sfmplzm <- sf::st_sf(geometry = sf::st_sfc(mplzm))
+# 
+# 
+# ### combinations
+# 
+# sf <- rbind(sfpz, sfpzm, sfmpz, sfmpzm, sflz, sflzm, sfmlz, sfmlzm, sfplz, sfplzm, sfmplz, sfmplzm)
+# 
+# sf <- rbind(sfpzm, sfmpz, sfmpzm, sflz, sflzm, sfmlz, sfmlzm, sfplz, sfplzm, sfmplz)
+# 
+# 
+# ### Encoding POINT Z
+# 
+# library(googlePolylines)
+# ## expecting
+# expected <- encodeCoordinates(lon = 1, lat = 2)
+# expected
+# 
+# encode(sfpz)
+# encode(sfpzm)
+# encode(sfmpz)
+# encode(sfmpzm)
+# encode(sflz)
+# 
+# encode( sf )
 # 
 # encode(sf)[, 'geometry']
 # 
@@ -39,9 +105,6 @@
 # 
 # sf::st_multilinestring(x = list(l1, l2))
 # ### NO!
-# 
-# 
-# 
 # 
 # 
 # 

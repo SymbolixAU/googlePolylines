@@ -38,10 +38,10 @@ std::vector<std::string> split(const std::string &s, char delim) {
 }
 
 
-void write_data(std::ostringstream& os, SEXP sfc,
+void write_data(std::ostringstream& os, Rcpp::CharacterVector& sfg_dim, SEXP sfc,
                 const char *cls, int srid);
 
-void write_matrix_list(std::ostringstream& os, Rcpp::List lst);
+void write_matrix_list(std::ostringstream& os, Rcpp::List lst, Rcpp::CharacterVector& sfg_dim);
 
 void make_type(const char *cls, int *tp = NULL,
                        int srid = 0) {
@@ -72,10 +72,12 @@ void make_type(const char *cls, int *tp = NULL,
   //return type;
 }
 
-void write_multipolygon(std::ostringstream& os, Rcpp::List lst) {
+void write_multipolygon(std::ostringstream& os, Rcpp::List lst, Rcpp::CharacterVector& sfg_dim) {
   
-  for (int i = 0; i < lst.length(); i++){
-    write_matrix_list(os, lst[i]);
+  Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
+  
+  for (int i = 0; i < lst.length(); i++) {
+    write_matrix_list(os, lst[i], sfg_dim);
   }
 }
 
@@ -85,7 +87,10 @@ void addToStream(std::ostringstream& os, Rcpp::String encodedString ) {
 }
 
 
-void encode_point( std::ostringstream& os, Rcpp::NumericVector point) {
+void encode_point( std::ostringstream& os, Rcpp::NumericVector point, Rcpp::CharacterVector& sfg_dim) {
+  
+  Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
+  Rcpp::Rcout << "point size: " << point.size() << std::endl;
   
   Rcpp::NumericVector lon(1);
   Rcpp::NumericVector lat(1);
@@ -97,9 +102,10 @@ void encode_point( std::ostringstream& os, Rcpp::NumericVector point) {
   addToStream(os, encodedString);
 }
 
-void encode_points( std::ostringstream& os, Rcpp::NumericMatrix point) {
+void encode_points( std::ostringstream& os, Rcpp::NumericMatrix point, Rcpp::CharacterVector& sfg_dim) {
   
-  Rcpp::Rcout << "points: " << point << std::endl;
+  Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
+  Rcpp::Rcout << "points size: " << point.size() << std::endl;
   
   int n = point.size() / 2;
   Rcpp::String encodedString;
@@ -115,7 +121,7 @@ void encode_points( std::ostringstream& os, Rcpp::NumericMatrix point) {
   
 }
 
-void fetch_geometries(Rcpp::List& sf, Rcpp::CharacterVector& sfg_attr) {
+void geometry_dim(Rcpp::List& sf, Rcpp::CharacterVector& sfg_dim) {
   
   Rcpp::CharacterVector geom_attr;
   
@@ -126,9 +132,9 @@ void fetch_geometries(Rcpp::List& sf, Rcpp::CharacterVector& sfg_attr) {
     case VECSXP: {
       Rcpp::List tmp = as<Rcpp::List>(*it);
       if(Rf_isNull(tmp.attr("class"))){
-        fetch_geometries(tmp, sfg_attr);
+        geometry_dim(tmp, sfg_dim);
       } else {
-        sfg_attr = tmp.attr("class");
+        sfg_dim = tmp.attr("class");
       }
       break;
     }
@@ -137,7 +143,7 @@ void fetch_geometries(Rcpp::List& sf, Rcpp::CharacterVector& sfg_attr) {
       if(Rf_isNull(tmp.attr("class"))){
         Rcpp::stop("Geometry could not be determined");
       } else {
-        sfg_attr = tmp.attr("class");
+        sfg_dim = tmp.attr("class");
       }
       break;
     }
@@ -146,7 +152,7 @@ void fetch_geometries(Rcpp::List& sf, Rcpp::CharacterVector& sfg_attr) {
       if(Rf_isNull(tmp.attr("class"))){
         Rcpp::stop("Geometry could not be determined");
       } else {
-        sfg_attr = tmp.attr("class");
+        sfg_dim = tmp.attr("class");
       }
       break;
     }
@@ -155,7 +161,7 @@ void fetch_geometries(Rcpp::List& sf, Rcpp::CharacterVector& sfg_attr) {
       if(Rf_isNull(tmp.attr("class"))){
         Rcpp::stop("Geometry could not be determined");
       } else {
-        sfg_attr = tmp.attr("class");
+        sfg_dim = tmp.attr("class");
       }
       break;
     }
@@ -167,9 +173,10 @@ void fetch_geometries(Rcpp::List& sf, Rcpp::CharacterVector& sfg_attr) {
 }
 
 
-void encode_vector( std::ostringstream& os, Rcpp::List vec ) {
+void encode_vector( std::ostringstream& os, Rcpp::List vec, Rcpp::CharacterVector& sfg_dim ) {
   
   // TODO(Z/M elements)
+  Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
   
   int n = vec.size() / 2;  // 2 : just using lon & lat, not Z/M?
   
@@ -192,16 +199,21 @@ void encode_vector( std::ostringstream& os, Rcpp::List vec ) {
   addToStream(os, encodedString);
 }
 
-void encode_vectors( std::ostringstream& os, Rcpp::List sfc ){
+void encode_vectors( std::ostringstream& os, Rcpp::List sfc, Rcpp::CharacterVector& sfg_dim ){
   
+  Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
   size_t n = sfc.size();
+  
   for (size_t i = 0; i < n; i++) {
-    encode_vector(os, sfc[i]);
+    encode_vector(os, sfc[i], sfg_dim);
   }
 }
 
-void encode_matrix(std::ostringstream& os, Rcpp::NumericMatrix mat ) {
-
+void encode_matrix(std::ostringstream& os, Rcpp::NumericMatrix mat, Rcpp::CharacterVector& sfg_dim ) {
+  
+  Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
+  Rcpp::Rcout << "mat size: " << mat.size() << std::endl;
+  
   Rcpp::String encodedString;
   
   Rcpp::NumericVector lats = mat(_, 1);
@@ -212,25 +224,28 @@ void encode_matrix(std::ostringstream& os, Rcpp::NumericMatrix mat ) {
   addToStream(os, encodedString);
 }
 
-void write_matrix_list(std::ostringstream& os, Rcpp::List lst) {
+void write_matrix_list(std::ostringstream& os, Rcpp::List lst, Rcpp::CharacterVector& sfg_dim ) {
+  
+  Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
   
   size_t len = lst.length();
 
   for (size_t j = 0; j < len; j++){
-    encode_matrix(os, lst[j]);
+    encode_matrix(os, lst[j], sfg_dim );
   }
   
   addToStream(os, SPLIT_CHAR);
 }
 
-void write_geometry(std::ostringstream& os, SEXP s) {
+void write_geometry(std::ostringstream& os, SEXP s, Rcpp::CharacterVector& sfg_dim) {
   
+  Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
   Rcpp::CharacterVector cls_attr = getSfClass(s);
   
-  write_data(os, s, cls_attr[1], 0);
+  write_data(os, sfg_dim, s, cls_attr[1], 0);
 }
 
-void write_data(std::ostringstream& os, SEXP sfc,
+void write_data(std::ostringstream& os, Rcpp::CharacterVector& sfg_dim, SEXP sfc,
                 const char *cls = NULL, int srid = 0) {
   
   int tp;
@@ -238,25 +253,25 @@ void write_data(std::ostringstream& os, SEXP sfc,
   
   switch(tp) {
   case SF_Point:
-    encode_point(os, sfc);
+    encode_point(os, sfc, sfg_dim);
     break;
   case SF_MultiPoint:
-    encode_points(os, sfc);
+    encode_points(os, sfc, sfg_dim);
     break;
   case SF_LineString:
-    encode_vector(os, sfc);
+    encode_vector(os, sfc, sfg_dim);
     break;
   case SF_MultiLineString:
-    encode_vectors(os, sfc);
+    encode_vectors(os, sfc, sfg_dim);
     break;
   case SF_Polygon:
-    write_matrix_list(os, sfc);
+    write_matrix_list(os, sfc, sfg_dim);
     break;
   case SF_MultiPolygon:
-    write_multipolygon(os, sfc);
+    write_multipolygon(os, sfc, sfg_dim);
     break;
   case SF_Geometry:
-    write_geometry(os, sfc);
+    write_geometry(os, sfc, sfg_dim);
     break;
 //  case SF_GeometryCollection:
 //  	write_geometrycollection(os, sfc);
@@ -275,7 +290,7 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
   Rcpp::CharacterVector cls_attr = sfc.attr("class");
   Rcpp::Rcout << "cls_attr: " << cls_attr << std::endl;
   
-  Rcpp::CharacterVector sfg_attr;
+  Rcpp::CharacterVector sfg_dim;
   
   Rcpp::List output(sfc.size());
   int lastItem;
@@ -283,21 +298,19 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
   for (int i = 0; i < sfc.size(); i++){
 
     std::ostringstream os;
+    std::ostringstream oszm;   // TODO(fill oszm stream)
     Rcpp::checkUserInterrupt();
     
     // TODO(sfc[i] class will tell us if XY[ZM] dimensions)
     Rcpp::List sfg(1);
-    sfg[0] = sfc[0];
-    fetch_geometries(sfg, sfg_attr);
-    Rcpp::Rcout << "geom_attr: " << sfg_attr << std::endl;
+    sfg[0] = sfc[i];
+    geometry_dim(sfg, sfg_dim);
     
-    // TODO(send in sfg_attr and use the ZM elements)
-    
-    write_data(os, sfc[i], cls_attr[0], 0);
+    write_data(os, sfg_dim, sfc[i], cls_attr[0], 0);
     
     std::string str = os.str();
 
-    std::vector<std::string> strs = split(str, ' ');;
+    std::vector< std::string > strs = split(str, ' ');;
 
     lastItem = strs.size() - 1;
     
