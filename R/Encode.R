@@ -89,7 +89,15 @@ encode.sf <- function(obj, strip = FALSE, ...) {
   
   if(!strip) sfAttrs <- sfGeometryAttributes(obj)
 
-  obj[[geomCol]] <- lst
+  #print( lst )
+  
+  obj[[geomCol]] <- lst[['XY']]
+  
+  #print( lst[['ZM']] )
+  
+  if (any(vapply(lst[['ZM']], length, 0L)) > 0) {
+    obj[['ZM']] = lst[['ZM']]
+  }
   
   ## strip attributes
   obj <- structure(obj, sf_column = NULL, agr = NULL, class = setdiff(class(obj), "sf"))
@@ -110,7 +118,17 @@ encode.sf <- function(obj, strip = FALSE, ...) {
 }
 
 #' @export
-encode.sfc <- function(obj, strip = FALSE, ...) rcpp_encodeSfGeometry(obj, strip)
+encode.sfc <- function(obj, strip = FALSE, ...) {
+  lst <- rcpp_encodeSfGeometry(obj, strip)
+  
+  if (all(vapply(lst[['ZM']], length, 0L)) == 0) {
+    
+    lst[['ZM']] <- NULL
+    lst <- lst[['XY']] ## to keep previous behaviour? 
+  }
+  
+  return( lst )
+}
 
 #' @rdname encode
 #' @param lon vector of longitudes

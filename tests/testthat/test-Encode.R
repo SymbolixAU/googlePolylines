@@ -163,3 +163,126 @@ test_that("GEOMETRYCOLLECTIONS error", {
   expect_error(encode(sf),"encoding this sf type is currently not supported")
 })
 
+
+test_that("Z and M attributes are encoded", {
+  
+  testthat::skip_on_cran()
+  library(sf)
+
+  z <- 1:21
+  zm <- 1:36
+  
+  ## POINT
+  pz <- sf::st_point(c(1,2,3))
+  pzm <- sf::st_point(1:4)
+  
+  ## MULTIPOINT
+  mpz <- sf::st_multipoint(x = matrix(z, ncol = 3))
+  mpzm <- sf::st_multipoint(x = matrix(zm, ncol = 4))
+  
+  ## LINESTRING
+  lz <- sf::st_linestring(x = matrix(z, ncol = 3))
+  lzm <- sf::st_linestring(x = matrix(zm, ncol = 4))
+  
+  lz2 <- sf::st_linestring(x = matrix(z, ncol = 3))
+  lzm2 <- sf::st_linestring(x = matrix(zm, ncol = 4))
+  
+  ## MULTILINESTRING
+  mlz <- sf::st_multilinestring(x = list(lz,lz))
+  mlzm <- sf::st_multilinestring(x = list(lzm, lzm))
+  
+  ## POLYGON
+  pl <- c(0,0,1,1,0,2,1,1,3,0,1,4,0,0,1)  ## start and end elevation must match
+  plz <- sf::st_polygon(x = list(matrix(pl, ncol = 3, byrow = T)))
+  pl <- c(0,0,1,2,1,0,1,3,1,1,1,6,0,1,1,9,0,0,1,2)
+  plzm <- sf::st_polygon(x = list(matrix(pl, ncol = 4, byrow = T)))
+  
+  ## MULTIPOLYGON
+  mplz <- sf::st_multipolygon(x = list(plz, plz))
+  mplzm <- sf::st_multipolygon(x = list(plzm, plzm))
+  
+  ### Regular SF's
+  sfcpz <- sf::st_sfc(pz)
+  sfpz <- sf::st_sf(geometry = sfcpz)
+  sfcpzm <- sf::st_sfc(pzm)
+  sfpzm <- sf::st_sf(geometry = sfcpzm)
+  
+  sfcmpz <- sf::st_sfc(mpz)
+  sfmpz <- sf::st_sf(geometry = sfcmpz)
+  
+  sfcmpzm <- sf::st_sfc(mpzm)
+  sfmpzm <- sf::st_sf(geometry = sfcmpzm)
+  
+  sfclz <- sf::st_sfc(lz)
+  sflz <- sf::st_sf(geometry = sfclz)
+  sfclzm <- sf::st_sfc(lzm)
+  sflzm <- sf::st_sf(geometry = sfclzm)
+  
+  sfclz2 <- sf::st_sfc(lz2)
+  sflz2 <- sf::st_sf(geometry = sfclz2)
+  sfclzm2 <- sf::st_sfc(lzm2)
+  sflzm2 <- sf::st_sf(geometry = sfclzm2)
+  
+  sfcmlz <- sf::st_sfc(mlz)
+  sfmlz <- sf::st_sf(geometry = sfcmlz)
+  sfcmlzm <- sf::st_sfc(mlzm)
+  sfmlzm <- sf::st_sf(geometry = sfcmlzm)
+  
+  sfcplz <- sf::st_sfc(plz)
+  sfplz <- sf::st_sf(geometry = sfcplz)
+  sfcplzm <- sf::st_sfc(plzm)
+  sfplzm <- sf::st_sf(geometry = sfcplzm)
+  
+  sfcmplz <- sf::st_sfc(mplz)
+  sfmplz <- sf::st_sf(geometry = sfcmplz)
+  sfcmplzm <- sf::st_sfc(mplzm)
+  sfmplzm <- sf::st_sf(geometry = sfcmplzm)
+  
+  ## TESTING the lon & lats, AND the Z and M are encoded
+  
+  ## POINT
+  ep <- encodeCoordinates(lon = 1, lat = 2)
+  epz <- encodeCoordinates(lon = 3, lat = 0)
+  epzm <- encodeCoordinates(lon = 3, lat = 4)
+  
+  expect_true( encode( sfcpz )[['XY']] == ep )
+  expect_true( encode( sfcpz )[['ZM']] == epz )
+  
+  expect_true( encode( sfpz )[, 'geometry'] == ep )
+  expect_true( encode( sfpz)[, 'ZM'] == epz )
+  
+  expect_true( encode( sfcpzm )[['XY']] == ep )
+  expect_true( encode( sfcpzm )[['ZM']] == epzm )
+  
+  expect_true( encode( sfpzm )[, 'geometry'] == ep )
+  expect_true( encode( sfpzm )[, 'ZM'] == epzm )
+  
+  ## MULTIPOINT
+  dfz <- stats::setNames( data.frame(matrix(z, ncol = 3)), c("lon", "lat", "Z"))
+  dfz$M <- 0
+  
+  dfzm <- stats::setNames( data.frame(matrix(zm, ncol = 4)), c("lon","lat","Z","M"))
+  
+  expect_true( all( encode( sfcmpz )[['XY']][[1]] == encode( dfz, byrow = T ) ) )
+  expect_true( all( encode( sfcmpz )[['ZM']][[1]] == encode( dfz, lon = "Z", lat = "M", byrow = T)))
+  
+  expect_true( all( encode( sfmpz )[, 'geometry'][[1]] == encode( dfz, byrow = T ) ))
+  expect_true( all( encode( sfmpz )[, 'ZM'][[1]] == encode( dfz, lon = "Z", lat = "M", byrow = T) ))
+  
+  expect_true( all( encode( sfcmpzm )[['XY']][[1]] == encode( dfzm, byrow = T )))
+  expect_true( all( encode( sfcmpzm )[['ZM']][[1]] == encode( dfzm, lon = "Z", lat = "M", byrow = T)))
+  
+  expect_true( all( encode( sfmpzm )[, 'geometry'][[1]] == encode( dfzm, byrow = T ) ))
+  expect_true( all( encode( sfmpzm )[, 'ZM'][[1]] == encode( dfzm, lon = "Z", lat = "M", byrow = T)))
+  
+  ## LINESTRING
+  expect_true( encode( sfclz )[['XY']] == encode( dfz ) )
+  expect_true( encode( sfclz )[['ZM']] == encode( dfz, lon = "Z", lat = "M"))
+  expect_true( encode( sflz )[, 'geometry'][[1]] == encode( dfz ) )
+  expect_true( encode( sflz )[, 'ZM'][[1]] == encode( dfz, lon = "Z", lat = "M"))
+  expect_true( encode( sfclzm )[['XY']][[1]] == encode( dfzm ) )
+  expect_true( encode( sfclzm )[['ZM']][[1]] == encode( dfzm, lon = "Z", lat = "M"))
+  
+})
+
+

@@ -7,14 +7,14 @@
 # pzm <- sf::st_point(1:4)
 # 
 # ## MULTIPOINT
-# mpz <- sf::st_multipoint(x = matrix(1:6, ncol = 3))
-# mpzm <- sf::st_multipoint(x = matrix(1:8, ncol = 4))
+# mpz <- sf::st_multipoint(x = matrix(1:21, ncol = 3))
+# mpzm <- sf::st_multipoint(x = matrix(1:36, ncol = 4))
 # 
 # ## LINESTRING
-# lz <- sf::st_linestring(x = matrix(1:6, ncol = 3))
-# lzm <- sf::st_linestring(x = matrix(1:8, ncol = 4))
+# lz <- sf::st_linestring(x = matrix(1:21, ncol = 3))
+# lzm <- sf::st_linestring(x = matrix(1:36, ncol = 4))
 # 
-# lz2 <- sf::st_linestring(x = matrix(1:15, ncol = 3))
+# lz2 <- sf::st_linestring(x = matrix(1:21, ncol = 3))
 # lzm2 <- sf::st_linestring(x = matrix(1:36, ncol = 4))
 # 
 # ## MULTILINESTRING
@@ -93,9 +93,12 @@
 # encode( sfpz )
 # encode( sfpzm )
 # 
-# 
 # encode( sfplz )
 # encode( sf::st_zm(sfplz) )
 # 
 # encode( sfplzm )
 # encode( sf::st_zm(sfplzm))
+# 
+# 
+# # pt <- sf::st_sf(geometry = sf::st_sfc(sf::st_point(1:2)))
+# # encode(pt)
