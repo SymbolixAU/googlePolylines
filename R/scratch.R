@@ -22,9 +22,9 @@
 # mlzm <- sf::st_multilinestring(x = list(lzm, lzm))
 # 
 # ## POLYGON
-# pl <- c(0,0,1,1,0,1,1,1,1,0,1,1,0,0,1)
+# pl <- c(0,0,1,1,0,2,1,1,3,0,1,4,0,0,1)  ## start and end elevation must match
 # plz <- sf::st_polygon(x = list(matrix(pl, ncol = 3, byrow = T)))
-# pl <- c(0,0,1,2,1,0,1,2,1,1,1,2,0,1,1,2,0,0,1,2)
+# pl <- c(0,0,1,2,1,0,1,3,1,1,1,6,0,1,1,9,0,0,1,2)
 # plzm <- sf::st_polygon(x = list(matrix(pl, ncol = 4, byrow = T)))
 # 
 # ## MULTIPOLYGON
@@ -52,7 +52,7 @@
 # 
 # sfmplz <- sf::st_sf(geometry = sf::st_sfc(mplz))
 # sfmplzm <- sf::st_sf(geometry = sf::st_sfc(mplzm))
-# 
+
 # 
 # ### combinations
 # 
@@ -85,8 +85,17 @@
 # encode(sflz2)
 # encode(sflzm2)
 # lz2
-
-## shoudl be true
-
+# 
+# tests
 # encode( sf::st_zm(sflzm2) )[, 'geometry'][[1]]
 # encode( sflzm2 )[, 'geometry'][[1]]
+# 
+# encode( sfpz )
+# encode( sfpzm )
+# 
+# 
+# encode( sfplz )
+# encode( sf::st_zm(sfplz) )
+# 
+# encode( sfplzm )
+# encode( sf::st_zm(sfplzm))

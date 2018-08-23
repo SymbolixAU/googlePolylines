@@ -163,8 +163,25 @@ void encode_point( std::ostringstream& os, std::ostringstream& oszm, Rcpp::Numer
   lon[0] = point[0];
   lat[0] = point[1];
   
-  Rcpp::String encodedString = encode_polyline(lon, lat);
+  Rcpp::String encodedString;
+  
+  encodedString = encode_polyline(lon, lat);
   addToStream(os, encodedString);
+  
+  if ( dim_divisor > 2 ) {
+    Rcpp::NumericVector elev(1);
+    Rcpp::NumericVector meas(1);
+    
+    elev[0] = point[2];
+    if (dim_divisor == 4 ) {
+      meas[0] = point[3];
+    }
+    
+    encodedString = encode_polyline(elev, meas);
+    addToStream(oszm, encodedString);
+    
+  }
+  
 }
 
 void encode_points( std::ostringstream& os, std::ostringstream& oszm, Rcpp::NumericMatrix point, Rcpp::CharacterVector& sfg_dim, int dim_divisor) {
@@ -278,8 +295,22 @@ void encode_matrix(std::ostringstream& os, std::ostringstream& oszm, Rcpp::Numer
   Rcpp::NumericVector lons = mat(_, 0);
 
   encodedString = encode_polyline(lons, lats);
-
   addToStream(os, encodedString);
+  
+  if (dim_divisor > 2 ) {
+    int n = mat.size() / dim_divisor;
+    Rcpp::NumericVector elev(n);
+    Rcpp::NumericVector meas(n);
+    if( dim_divisor == 3 ) {
+      elev = mat(_, 2);
+    } else if ( dim_divisor == 4 ) { 
+      elev = mat(_, 2);
+      meas = mat(_, 3);
+    }
+    encodedString = encode_polyline(elev, meas);
+    addToStream(oszm, encodedString);
+  }
+  
 }
 
 void write_matrix_list(std::ostringstream& os, std::ostringstream& oszm, Rcpp::List lst, 
@@ -293,6 +324,10 @@ void write_matrix_list(std::ostringstream& os, std::ostringstream& oszm, Rcpp::L
      encode_matrix(os, oszm, lst[j], sfg_dim, dim_divisor);
   }
   addToStream(os, SPLIT_CHAR);
+  
+  if (dim_divisor > 2) {
+    addToStream(oszm, SPLIT_CHAR);
+  }
 }
 
 void write_geometry(std::ostringstream& os, std::ostringstream& oszm, SEXP s, 
@@ -382,7 +417,9 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
     
     if (strs[lastItem] == "-") {
       strs.erase(strs.end() - 1);
-      //zmstrs.erase(zmstrs.end() - 1);
+      if (dim_divisor > 2 ) {
+        zmstrs.erase(zmstrs.end() - 1);
+      }
     }
 
     Rcpp::CharacterVector sv = wrap( strs );
