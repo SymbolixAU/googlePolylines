@@ -211,7 +211,7 @@ void encode_vector( std::ostringstream& os, std::ostringstream& oszm, Rcpp::List
   
   for (int i = 0; i < n; i++) {
     
-    int testInt = dim_divisor == 2 ? 1 : ( dim_divisor == 3 ? 2 : 3 );
+    //int testInt = dim_divisor == 2 ? 1 : ( dim_divisor == 3 ? 2 : 3 );
     //Rcpp::Rcout << "test string: " << testInt << std::endl;
 
     
@@ -265,35 +265,38 @@ void encode_vectors( std::ostringstream& os, std::ostringstream& oszm, Rcpp::Lis
   }
 }
 
-void encode_matrix(std::ostringstream& os, std::ostringstream& oszm, Rcpp::NumericMatrix mat, Rcpp::CharacterVector& sfg_dim, int dim_divisor ) {
+void encode_matrix(std::ostringstream& os, std::ostringstream& oszm, Rcpp::NumericMatrix mat, 
+                   Rcpp::CharacterVector& sfg_dim, int dim_divisor ) {
   
   Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
   Rcpp::Rcout << "mat size: " << mat.size() << std::endl;
+  Rcpp::Rcout << "matrix: " << mat << std::endl;
   
   Rcpp::String encodedString;
   
   Rcpp::NumericVector lats = mat(_, 1);
   Rcpp::NumericVector lons = mat(_, 0);
-  
+
   encodedString = encode_polyline(lons, lats);
-  
+
   addToStream(os, encodedString);
 }
 
-void write_matrix_list(std::ostringstream& os, std::ostringstream& oszm, Rcpp::List lst, Rcpp::CharacterVector& sfg_dim, int dim_divisor ) {
+void write_matrix_list(std::ostringstream& os, std::ostringstream& oszm, Rcpp::List lst, 
+                       Rcpp::CharacterVector& sfg_dim, int dim_divisor ) {
   
   Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
-  
+   
   size_t len = lst.length();
-
+   
   for (size_t j = 0; j < len; j++){
-    encode_matrix(os, oszm, lst[j], sfg_dim, dim_divisor);
+     encode_matrix(os, oszm, lst[j], sfg_dim, dim_divisor);
   }
-  
   addToStream(os, SPLIT_CHAR);
 }
 
-void write_geometry(std::ostringstream& os, std::ostringstream& oszm, SEXP s, Rcpp::CharacterVector& sfg_dim, int dim_divisor) {
+void write_geometry(std::ostringstream& os, std::ostringstream& oszm, SEXP s, 
+                    Rcpp::CharacterVector& sfg_dim, int dim_divisor) {
   
   Rcpp::Rcout << "sfg_dim: " << sfg_dim << std::endl;
   Rcpp::CharacterVector cls_attr = getSfClass(s);
@@ -366,22 +369,22 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
     Rcpp::Rcout << "dim divisor: " << dim_divisor << std::endl;
     
     write_data(os, oszm, sfg_dim, dim_divisor, sfc[i], cls_attr[0], 0);
-    
+
     std::string str = os.str();
     std::string zmstr = oszm.str();
     
     Rcpp::Rcout << "zm stream: " << zmstr << std::endl;
-
+    
     std::vector< std::string > strs = split(str, ' ');
     std::vector< std::string > zmstrs = split(zmstr, ' ');
-
+    
     lastItem = strs.size() - 1;
     
     if (strs[lastItem] == "-") {
       strs.erase(strs.end() - 1);
-      zmstrs.erase(zmstrs.end() - 1);
+      //zmstrs.erase(zmstrs.end() - 1);
     }
-  
+
     Rcpp::CharacterVector sv = wrap( strs );
     Rcpp::CharacterVector zmsv = wrap( zmstrs );
 
