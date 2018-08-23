@@ -26,6 +26,12 @@ using namespace Rcpp;
 
 #define SPLIT_CHAR "-"
 
+#define XYUNKNOWN 0
+#define XY        2
+#define XYZ       3
+#define XYM       3
+#define XYZM      4
+
 void addToStream(std::ostringstream& os, Rcpp::String encodedString ) ; 
 
 template<typename Out>
