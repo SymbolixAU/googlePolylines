@@ -283,6 +283,7 @@ test_that("Z and M attributes are encoded", {
   expect_true( encode( sfclzm )[['XY']][[1]] == encode( dfzm ) )
   expect_true( encode( sfclzm )[['ZM']][[1]] == encode( dfzm, lon = "Z", lat = "M"))
   
+  
 })
 
 
