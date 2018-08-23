@@ -89,11 +89,7 @@ encode.sf <- function(obj, strip = FALSE, ...) {
   
   if(!strip) sfAttrs <- sfGeometryAttributes(obj)
 
-  #print( lst )
-  
   obj[[geomCol]] <- lst[['XY']]
-  
-  #print( lst[['ZM']] )
   
   if (any(vapply(lst[['ZM']], length, 0L)) > 0) {
     obj[['ZM']] = lst[['ZM']]

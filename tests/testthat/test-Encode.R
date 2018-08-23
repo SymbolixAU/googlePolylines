@@ -292,29 +292,40 @@ test_that("Z and M attributes are encoded", {
   expect_true( all( encode( sfmlzm )[, 'ZM'][[1]] == rep( encode( dfzm, lon = "Z", lat = "M"), 2)))
   
   ## POLYGON
-  dfz <- stats::setNames( data.frame( matrix( pl1 , ncol = 3, byrow = T)), c("lon","lat","Z"))
-  dfz$M <- 0
-  dfzm <- stats::setNames( data.frame( matrix( pl2, ncol = 4, byrow = T)), c("lon","lat","Z","M"))
+  dfplz <- stats::setNames( data.frame( matrix( pl1 , ncol = 3, byrow = T)), c("lon","lat","Z"))
+  dfplz$M <- 0
+  dfplzm <- stats::setNames( data.frame( matrix( pl2, ncol = 4, byrow = T)), c("lon","lat","Z","M"))
   
-  expect_true( encode( sfcplz )[['XY']][[1]] == encode( dfz ) )
-  expect_true( encode( sfcplz )[['ZM']][[1]] == encode( dfz, lon = "Z", lat = "M") )
-  expect_true( encode( sfplz )[, 'geometry'][[1]] == encode( dfz ) )
-  expect_true( encode( sfplz )[, 'ZM'][[1]] == encode( dfz, lon = "Z", lat = "M"))
-  expect_true( encode( sfcplzm )[['XY']] == encode( dfzm ))
-  expect_true( encode( sfcplzm )[['ZM']][[1]] == encode( dfzm, lon = "Z", lat = "M"))
-  expect_true( encode( sfplzm )[, 'geometry'][[1]] == encode( dfzm ))
-  expect_true( encode( sfplzm )[, 'ZM'][[1]] == encode( dfzm, lon = "Z", lat = "M"))
+  expect_true( encode( sfcplz )[['XY']][[1]] == encode( dfplz ) )
+  expect_true( encode( sfcplz )[['ZM']][[1]] == encode( dfplz, lon = "Z", lat = "M") )
+  expect_true( encode( sfplz )[, 'geometry'][[1]] == encode( dfplz ) )
+  expect_true( encode( sfplz )[, 'ZM'][[1]] == encode( dfplz, lon = "Z", lat = "M"))
+  expect_true( encode( sfcplzm )[['XY']] == encode( dfplzm ))
+  expect_true( encode( sfcplzm )[['ZM']][[1]] == encode( dfplzm, lon = "Z", lat = "M"))
+  expect_true( encode( sfplzm )[, 'geometry'][[1]] == encode( dfplzm ))
+  expect_true( encode( sfplzm )[, 'ZM'][[1]] == encode( dfplzm, lon = "Z", lat = "M"))
   
   ## MULTIPOLYGON
-  expect_true( all( encode( sfcmplz )[['XY']][[1]] == c( encode( dfz ), "-", encode( dfz ))))
-  expect_true( all( encode( sfcmplz )[['ZM']][[1]] == c( encode( dfz, lon = "Z", lat = "M"), "-", encode( dfz, lon = "Z", lat = "M"))))
-  expect_true( all( encode( sfmplz )[, 'geometry'][[1]] == c(encode( dfz ), "-", encode( dfz ))))
-  expect_true( all( encode( sfmplz )[, 'ZM'][[1]] == c( encode( dfz, lon = "Z", lat = "M"), "-", encode( dfz, lon = "Z", lat = "M"))))
-  expect_true( all( encode( sfcmplzm )[['XY']][[1]] == c( encode( dfzm ), "-", encode( dfzm ) ) ))
-  expect_true( all( encode( sfcmplzm )[['ZM']][[1]] == c( encode( dfzm, lon = "Z", lat = "M"), "-", encode( dfzm, lon = "Z", lat = "M"))))
-  expect_true( all( encode( sfmplzm )[, 'geometry'][[1]] == c( encode( dfzm ), "-", encode( dfzm ))))
-  expect_true( all( encode( sfmplzm )[, 'ZM'][[1]] == c( encode( dfzm, lon = "Z", lat = "M"), "-", encode( dfzm, lon = "Z", lat = "M"))))
+  expect_true( all( encode( sfcmplz )[['XY']][[1]] == c( encode( dfplz ), "-", encode( dfplz ))))
+  expect_true( all( encode( sfcmplz )[['ZM']][[1]] == c( encode( dfplz, lon = "Z", lat = "M"), "-", encode( dfplz, lon = "Z", lat = "M"))))
+  expect_true( all( encode( sfmplz )[, 'geometry'][[1]] == c(encode( dfplz ), "-", encode( dfplz ))))
+  expect_true( all( encode( sfmplz )[, 'ZM'][[1]] == c( encode( dfplz, lon = "Z", lat = "M"), "-", encode( dfplz, lon = "Z", lat = "M"))))
+  expect_true( all( encode( sfcmplzm )[['XY']][[1]] == c( encode( dfplzm ), "-", encode( dfplzm ) ) ))
+  expect_true( all( encode( sfcmplzm )[['ZM']][[1]] == c( encode( dfplzm, lon = "Z", lat = "M"), "-", encode( dfplzm, lon = "Z", lat = "M"))))
+  expect_true( all( encode( sfmplzm )[, 'geometry'][[1]] == c( encode( dfplzm ), "-", encode( dfplzm ))))
+  expect_true( all( encode( sfmplzm )[, 'ZM'][[1]] == c( encode( dfplzm, lon = "Z", lat = "M"), "-", encode( dfplzm, lon = "Z", lat = "M"))))
 
+  ## Mixture of dimensions
+  sf <- rbind(sfpz, sfpzm, sflz, sflzm, sfmlz, sfmlzm, sfplz, sfmplzm)
+  enc <- encode( sf )
+  expect_true(enc[1, 'geometry'][[1]] == encode( sfpz )[['geometry']] )
+  expect_true(enc[2, 'geometry'][[1]] == encode( sfpzm )[['geometry']] )
+  expect_true(enc[3, 'geometry'][[1]] == encode( sflz )[['geometry']] )
+  expect_true(enc[4, 'geometry'][[1]] == encode( sflzm )[['geometry']] )
+  expect_true(all( enc[5, 'geometry'][[1]] == encode( sfmlz )[['geometry']][[1]] ) )
+  expect_true(all( enc[6, 'geometry'][[1]] == encode( sfmlzm )[['geometry']][[1]] ))
+  expect_true(all( enc[7, 'geometry'][[1]] == encode( sfplz )[['geometry']][[1]]))
+  expect_true(all( enc[8, 'geometry'][[1]] == encode( sfmplzm )[['geometry']][[1]] ) )
 })
 
 
