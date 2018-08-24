@@ -27,7 +27,8 @@ str.zm_column <- strSfEncoded
 
 #' @export
 `[.sfencoded` <- function(x, i, j, ..., drop = TRUE) {
-
+  
+  encodedClass <- attr(x, 'class')[1]
   geomColumn <- attr(x, "encoded_column")
   wktColumn <- attr(x, "wkt_column")
   attr(x, "sfAttributes") <- NULL
@@ -38,7 +39,11 @@ str.zm_column <- strSfEncoded
 
   if( is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column")) ){
     x <- removeSfencodedClass(x)
+  } else {
+    ## re-attach 'sfencoded' attribute?
+    attr(x, 'class') <- unique(c(encodedClass, attr(x, 'class')))
   }
+  
   return(x)
 }
 
