@@ -3,34 +3,63 @@
 
 using namespace Rcpp;
 
+// [[Rcpp::export]]
+Rcpp::List rcpp_decode_polyline_list( Rcpp::List encodedList, std::string attribute ) {
+
+  // If the DIM is just Z or just M, should the result return a vector, rather than
+  // a 2-column data.frame? 
+  // probably
+  
+  size_t n = encodedList.size();
+  Rcpp::List output(n);
+  Rcpp::CharacterVector sfg_dim;
+  std::string encoded_type;
+  
+  for (size_t i = 0; i < n; i++) {
+    
+    Rcpp::StringVector polylines = encodedList[i];
+    
+    sfg_dim = polylines.attr( attribute );
+    encoded_type = as< std::string>( sfg_dim[0] );
+    
+    size_t pn = polylines.size();
+    Rcpp::List polyline_output(pn);
+
+    for (size_t j = 0; j < pn; j++ ) {
+      
+      Rcpp::StringVector sv(1);
+      sv[0] = polylines[j];
+      
+      std::string s = Rcpp::as< std::string >(sv);
+      polyline_output[j] = decode_polyline(s, encoded_type );
+    }
+    output[i] = polyline_output;
+  }
+  return output;
+  
+}
 
 // [[Rcpp::export]]
-Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings) {
+Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, std::string encoded_type) {
 
   int encodedSize = encodedStrings.size();
-  //Rcpp::List resultLats(encodedSize);
-  //Rcpp::List resultLons(encodedSize);
   Rcpp::List results(encodedSize);
   
   for(int i = 0; i < encodedSize; i++){
     
     std::string encoded = Rcpp::as< std::string >(encodedStrings[i]);
     
-    Rcpp::DataFrame decoded = decode_polyline(encoded);
-    
-    //resultLons[i] = decoded["lon"];
-    //resultLats[i] = decoded["lat"];
+    Rcpp::DataFrame decoded = decode_polyline(encoded, encoded_type);
     
     results[i] = decoded;
   }
   
   return results;
-  //return Rcpp::List::create(resultLons, resultLats);
 }
 
 
-
-Rcpp::DataFrame decode_polyline(std::string encoded){
+// @param type the type of decoded object, coordinates or ZM Attribute
+Rcpp::DataFrame decode_polyline(std::string encoded, std::string encoded_type){
   
   int len = encoded.size();
   int index = 0;
@@ -66,20 +95,32 @@ Rcpp::DataFrame decode_polyline(std::string encoded){
     pointsLon.push_back(lng * (float)1e-5);
   }
   
+  //TODO(ZM attributes)
+
+    
+  if (encoded_type == "XYZ" ) {
+    return Rcpp::DataFrame::create(
+      Named("Z") = pointsLon,
+      Named("M") = pointsLat
+    );  
+  } else if (encoded_type == "XYM") {
+    return Rcpp::DataFrame::create(
+      Named("M") = pointsLon,
+      Named("Z") = pointsLat
+    );
+  } else if (encoded_type == "XYZM" ) {
+    return Rcpp::DataFrame::create(
+      Named("Z") = pointsLon,
+      Named("M") = pointsLat
+    );
+  }
+  
+ 
   // putting latitude first
   return Rcpp::DataFrame::create(
     Named("lat") = pointsLat,
     Named("lon") = pointsLon);
-  
-//  Rcpp::NumericMatrix mat(pointsLat.size(), 2);
-//  mat(_, 0) = pointsLon;
-//  mat(_, 1) = pointsLat;
-  
-//  return mat;
-  
-//  return Rcpp::List::create(
-//    _["lon"] = pointsLon,
-//    _["lat"] = pointsLat);
+
 }
 
 void EncodeNumber(std::ostringstream& os, int num){
