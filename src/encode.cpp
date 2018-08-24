@@ -99,57 +99,6 @@ void addToStream(std::ostringstream& os, Rcpp::String encodedString ) {
   os << strng << ' ';
 }
 
-void geometry_dim(Rcpp::List& sf, Rcpp::CharacterVector& sfg_dim) {
-  
-  Rcpp::CharacterVector geom_attr;
-  
-  for (Rcpp::List::iterator it = sf.begin(); it != sf.end(); it++) {
-    
-    switch( TYPEOF(*it) ) {
-    
-    case VECSXP: {
-      Rcpp::List tmp = as<Rcpp::List>(*it);
-      if(Rf_isNull(tmp.attr("class"))){
-        geometry_dim(tmp, sfg_dim);
-      } else {
-        sfg_dim = tmp.attr("class");
-      }
-      break;
-    }
-    case REALSXP: {
-      Rcpp::NumericVector tmp = as<Rcpp::NumericVector>(*it);
-      if(Rf_isNull(tmp.attr("class"))){
-        Rcpp::stop("Geometry could not be determined");
-      } else {
-        sfg_dim = tmp.attr("class");
-      }
-      break;
-    }
-    case INTSXP: {
-      Rcpp::IntegerVector tmp = as<Rcpp::IntegerVector>(*it);
-      if(Rf_isNull(tmp.attr("class"))){
-        Rcpp::stop("Geometry could not be determined");
-      } else {
-        sfg_dim = tmp.attr("class");
-      }
-      break;
-    }
-    case STRSXP: {
-      Rcpp::StringVector tmp = as<Rcpp::StringVector>(*it);
-      if(Rf_isNull(tmp.attr("class"))){
-        Rcpp::stop("Geometry could not be determined");
-      } else {
-        sfg_dim = tmp.attr("class");
-      }
-      break;
-    }
-    default: {
-      Rcpp::stop("Geometry could not be determined");
-    }
-    }
-  }
-}
-
 void encode_point( std::ostringstream& os, std::ostringstream& oszm, Rcpp::NumericVector point, Rcpp::CharacterVector& sfg_dim, int dim_divisor) {
   
   Rcpp::NumericVector lon(1);
@@ -364,9 +313,7 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
     std::ostringstream oszm;   
     Rcpp::checkUserInterrupt();
     
-    Rcpp::List sfg(1);
-    sfg[0] = sfc[i];
-    geometry_dim(sfg, sfg_dim);
+    sfg_dim = getSfClass(sfc[i]);
     
     make_dim_divisor(sfg_dim[0], &dim_divisor);
     
@@ -391,7 +338,8 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
     Rcpp::CharacterVector zmsv = wrap( zmstrs );
 
     if(strip == FALSE) {
-      sv.attr("sfc") = getSfClass(sfc[i]);
+      sv.attr("sfc") = as< Rcpp::CharacterVector >( sfg_dim[1] );
+      zmsv.attr("zm") = as< Rcpp::CharacterVector >( sfg_dim[0] );
     }
     output[i] = sv;
     output_zm[i] = zmsv;

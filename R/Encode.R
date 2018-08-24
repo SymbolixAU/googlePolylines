@@ -91,25 +91,30 @@ encode.sf <- function(obj, strip = FALSE, ...) {
 
   obj[[geomCol]] <- lst[['XY']]
   
-  if (any(vapply(lst[['ZM']], length, 0L)) > 0) {
-    obj[['ZM']] = lst[['ZM']]
-  }
-  
   ## strip attributes
   obj <- structure(obj, sf_column = NULL, agr = NULL, class = setdiff(class(obj), "sf"))
 
   attr(obj[[geomCol]], 'class') <- c('encoded_column', class(obj[[geomCol]]) )
   attr(obj, 'encoded_column') <- geomCol
   
-  if(!strip) {
+  if (any(vapply(lst[['ZM']], length, 0L)) > 0) {
+    obj[['ZM']] = lst[['ZM']]
+    
+    ## attach ZM attribute column
+    attr(obj, 'zm_column') <- 'ZM'
+    attr(obj[['ZM']], 'class') <- c('zm_column', class(obj[['ZM']]))
+  }
+  
+  if (!strip) {
     attr(obj, "sfAttributes") <- sfAttrs
     
     if(!inherits(obj, 'sfencoded'))
       attr(obj, 'class') <- c("sfencoded", attr(obj, 'class'))
-  }else{
+  } else {
     if(!inherits(obj, 'sfencodedLite'))
       attr(obj, 'class') <- c("sfencodedLite", attr(obj, 'class'))
   }
+  
   return(obj)
 }
 

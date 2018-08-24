@@ -10,6 +10,6 @@ test_that("decode works", {
   )
   expect_equal(round(decode(polylines)[[1]]$lon, 3),round(lst[[1]]$lon, 3))
   expect_equal(round(decode(polylines)[[1]]$lat, 3),round(lst[[1]]$lat, 3))
-  expect_error(decode(data.frame()),"I was expecting a vector of encoded polylines")
+  expect_error(decode(data.frame()),"I don't know how to decode this object")
 })
 

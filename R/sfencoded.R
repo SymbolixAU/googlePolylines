@@ -107,6 +107,7 @@ printSfEncoded <- function(x, ...) {
   
   encoded <- attr(x, "encoded_column")
   wkt <- attr(x, "wkt_column")
+  zm <- attr(x, 'zm_column')
 
   if(!is.null(encoded)) {
     e <- x[[encoded]]
@@ -122,10 +123,27 @@ printSfEncoded <- function(x, ...) {
     x[, wkt] <- w
   }
   
+  if(!is.null(zm) ) {
+    z <- x[[zm]]
+    z <- printZMattributes(z)
+    z <- stats::setNames(data.frame(z), zm)
+    x[, zm] <- z
+  }
+  
   x <- removeSfencodedClass(x)
   
   print(x)
   invisible(x)
+}
+
+printZMattributes <- function(zm) {
+  z <- vapply(zm, function(x) {
+    paste0(
+      substr(x[1], 1, pmin(nchar(x[1]), 20))
+      , "..."
+    )
+  }, "" )
+  return(z)
 }
 
 printSfEncodedPrefix <- function(e, encType) {
@@ -133,12 +151,12 @@ printSfEncodedPrefix <- function(e, encType) {
   if(encType == "sfencoded") {
     e <- vapply(e, function(z) {
       paste0(
-        attr(z, "sfc")[2], ": ",
+        attr(z, "sfc"), ": ",
         substr(z[1], 1, pmin(nchar(z[1]), 20)),
         "..."
       )
     }, "" )
-  }else{
+  } else {
     e <- vapply(e, function(z) {
       paste0(
         substr(z[1], 1, pmin(nchar(z[1]), 20)),
@@ -147,6 +165,5 @@ printSfEncodedPrefix <- function(e, encType) {
     }, "" )
   }
   return(e)
-  
 }
 

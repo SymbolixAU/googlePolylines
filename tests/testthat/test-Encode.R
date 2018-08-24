@@ -328,4 +328,47 @@ test_that("Z and M attributes are encoded", {
   expect_true(all( enc[8, 'geometry'][[1]] == encode( sfmplzm )[['geometry']][[1]] ) )
 })
 
+test_that("dimension attributes attached", {
+  
+  testthat::skip_on_cran()
+  library(sf)
+  
+  z <- 1:21
+  zm <- 1:36
+  
+  ## POINT
+  pz <- sf::st_point(c(1,2,3))
+  pzm <- sf::st_point(1:4)
+  
+  ## MULTIPOINT
+  mpz <- sf::st_multipoint(x = matrix(z, ncol = 3))
+  mpzm <- sf::st_multipoint(x = matrix(zm, ncol = 4))
+  
+  ## LINESTRING
+  lz <- sf::st_linestring(x = matrix(z, ncol = 3))
+  lzm <- sf::st_linestring(x = matrix(zm, ncol = 4))
+  
+  sfcpz <- sf::st_sfc(pz)
+  sfpz <- sf::st_sf(geometry = sfcpz)
+  sfcpzm <- sf::st_sfc(pzm)
+  sfpzm <- sf::st_sf(geometry = sfcpzm)
+  
+  sfcmpz <- sf::st_sfc(mpz)
+  sfmpz <- sf::st_sf(geometry = sfcmpz)
+  
+  sfcmpzm <- sf::st_sfc(mpzm)
+  sfmpzm <- sf::st_sf(geometry = sfcmpzm)
+  
+  sfclz <- sf::st_sfc(lz)
+  sflz <- sf::st_sf(geometry = sfclz)
+  sfclzm <- sf::st_sfc(lzm)
+  sflzm <- sf::st_sf(geometry = sfclzm)
+  
+  sf <- rbind(sfpz, sfpzm, sfmpz, sfmpzm, sflz, sflzm)
+  enc <- encode( sf )
+  
+  expect_true(attr(enc, 'zm_column') == 'ZM')
+  
+  
+})
 

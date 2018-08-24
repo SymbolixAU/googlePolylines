@@ -5,8 +5,12 @@ rcpp_encodeSfGeometry <- function(sfc, strip) {
     .Call('_googlePolylines_rcpp_encodeSfGeometry', PACKAGE = 'googlePolylines', sfc, strip)
 }
 
-rcpp_decode_polyline <- function(encodedStrings) {
-    .Call('_googlePolylines_rcpp_decode_polyline', PACKAGE = 'googlePolylines', encodedStrings)
+rcpp_decode_polyline_list <- function(encodedList, attribute) {
+    .Call('_googlePolylines_rcpp_decode_polyline_list', PACKAGE = 'googlePolylines', encodedList, attribute)
+}
+
+rcpp_decode_polyline <- function(encodedStrings, encoded_type) {
+    .Call('_googlePolylines_rcpp_decode_polyline', PACKAGE = 'googlePolylines', encodedStrings, encoded_type)
 }
 
 rcpp_encode_polyline <- function(longitude, latitude) {
@@ -17,8 +21,8 @@ rcpp_encode_polyline_byrow <- function(longitude, latitude) {
     .Call('_googlePolylines_rcpp_encode_polyline_byrow', PACKAGE = 'googlePolylines', longitude, latitude)
 }
 
-polyline_to_wkt <- function(sfencoded) {
-    .Call('_googlePolylines_polyline_to_wkt', PACKAGE = 'googlePolylines', sfencoded)
+rcpp_polyline_to_wkt <- function(sfencoded) {
+    .Call('_googlePolylines_rcpp_polyline_to_wkt', PACKAGE = 'googlePolylines', sfencoded)
 }
 
 wkt_to_polyline <- function(wkt) {
