@@ -3,28 +3,6 @@
 
 using namespace Rcpp;
 
-
-template <int RTYPE>
-Rcpp::CharacterVector zmAttribute(Vector<RTYPE> v) {
-  return v.attr("zm");
-}
-
-Rcpp::CharacterVector getZMAttribute(SEXP sf) {
-  
-  switch( TYPEOF(sf) ) {
-  case REALSXP: 
-    return zmAttribute<REALSXP>(sf);
-  case VECSXP: 
-    return zmAttribute<VECSXP>(sf);
-  case INTSXP: 
-    return zmAttribute<INTSXP>(sf);
-  default: Rcpp::stop("unknown zm attribute");
-  }
-  return "";
-}
-
-
-
 // [[Rcpp::export]]
 Rcpp::List rcpp_decode_polyline_list( Rcpp::List encodedList, std::string attribute ) {
 
@@ -41,16 +19,11 @@ Rcpp::List rcpp_decode_polyline_list( Rcpp::List encodedList, std::string attrib
     
     Rcpp::StringVector polylines = encodedList[i];
     
-    Rcpp::Rcout << "attribute: " << attribute << std::endl;
-
     sfg_dim = polylines.attr( attribute );
     encoded_type = as< std::string>( sfg_dim[0] );
     
-    
     size_t pn = polylines.size();
     Rcpp::List polyline_output(pn);
-    
-    Rcpp::Rcout << "n polylnes: " << pn << std::endl;
 
     for (size_t j = 0; j < pn; j++ ) {
       
@@ -137,8 +110,8 @@ Rcpp::DataFrame decode_polyline(std::string encoded, std::string encoded_type){
     );
   } else if (encoded_type == "XYZM" ) {
     return Rcpp::DataFrame::create(
-      Named("M") = pointsLon,
-      Named("Z") = pointsLat
+      Named("Z") = pointsLon,
+      Named("M") = pointsLat
     );
   }
   

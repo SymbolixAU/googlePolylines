@@ -371,4 +371,3 @@ test_that("dimension attributes attached", {
   
   
 })
-
