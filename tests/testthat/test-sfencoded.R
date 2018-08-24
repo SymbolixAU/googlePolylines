@@ -35,6 +35,28 @@ test_that("sfencoded attributes are removed", {
   expect_true(sum(c("encoded_column", "sfAttributes") %in% names(attributes(x))) == 0)
 })
 
+test_that("zm attributes are removed", {
+  
+  testthat::skip_on_cran()
+  library(sf)
+  
+  z <- 1:21
+  zm <- 1:36
+  pz <- sf::st_point(c(1,2,3))
+  pzm <- sf::st_point(1:4)
+  sf1 <- sf::st_sf(geometry = sf::st_sfc(pz))
+  sf2 <- sf::st_sf(geometry = sf::st_sfc(pzm))
+  sf <- rbind(sf1, sf2)
+  enc <- encode(sf)
+  
+  x <- googlePolylines:::removeSfEncodedAttributes(enc)
+  expect_true(sum(c("zm_column", "sfAttributes") %in% names(attributes(x))) == 0)
+  
+  df <- as.data.frame(x)
+  expect_null(attributes(df[, 'ZM']))
+  
+})
+
 test_that("correct structure is printed", {
   
   testthat::skip_on_cran()
@@ -54,7 +76,7 @@ test_that("encoded attribute is attached", {
   expect_true(attr(df, 'encoded_column') == 'polyline')
 })
 
-test_that("encoed objects printed", {
+test_that("encoded objects printed", {
   
   enc <- data.frame(polyline = "abc", stringsAsFactors = F)
   attr(enc, 'class') <- c('sfencoded', class(enc))

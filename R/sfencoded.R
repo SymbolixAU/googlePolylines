@@ -21,6 +21,9 @@ str.encoded_column <- strSfEncoded
 #' @export
 str.wkt_column <- strSfEncoded
 
+#' @export
+str.zm_column <- strSfEncoded
+
 
 #' @export
 `[.sfencoded` <- function(x, i, j, ..., drop = TRUE) {
@@ -62,6 +65,7 @@ removeSfEncodedAttributes <- function(x) {
 
   geomCol <- attr(x, "encoded_column")
   wktCol <- attr(x, "wkt_column")
+  zmCol <- attr(x, "zm_column")
   
   if(!is.null(geomCol) && geomCol %in% names(x)) {
     x[[geomCol]] <- sapply(x[[geomCol]], function(y) { 
@@ -77,11 +81,20 @@ removeSfEncodedAttributes <- function(x) {
     attr(x[[wktCol]], "class") <- NULL
   }
   
+  if(!is.null(zmCol) && zmCol %in% names(x)) {
+    x[[zmCol]] <- sapply(x[[zmCol]], function(y) { 
+      attr(y, "zm") <- NULL 
+      return(y) 
+    })
+    
+    attr(x[[zmCol]], "class") <- NULL
+  }
+  
   attr(x, "encoded_column") <- NULL
   attr(x, "wkt_column") <- NULL
+  attr(x, "zm_column") <- NULL
   attr(x, "sfAttributes") <- NULL
   
-  # print("-- attributes removed --")
   return(x)
 }
 
