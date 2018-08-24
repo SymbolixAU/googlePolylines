@@ -53,7 +53,7 @@ test_that("zm attributes are removed", {
   expect_true(sum(c("zm_column", "sfAttributes") %in% names(attributes(x))) == 0)
   
   df <- as.data.frame(x)
-  expect_null(attributes(df[, 'ZM']))
+  expect_null(attributes(df[, 'geometryZM']))
   
 })
 

@@ -61,7 +61,7 @@ test_that("decoding ZM columns", {
   ## 5: Z
   ## 6: ZM
   
-  dec <- decode( enc$ZM )
+  dec <- decode( enc$geometryZM )
   expect_true( dec[[1]][[1]][['M']] == 0 )
   expect_true( dec[[2]][[1]][['Z']] == sf[2, ][[1]][[1]][3] )
   expect_true( dec[[2]][[1]][['M']] == sf[2, ][[1]][[1]][[4]] )

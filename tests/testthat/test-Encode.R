@@ -248,13 +248,13 @@ test_that("Z and M attributes are encoded", {
   expect_true( encode( sfcpz )[['ZM']] == epz )
   
   expect_true( encode( sfpz )[, 'geometry'] == ep )
-  expect_true( encode( sfpz)[, 'ZM'] == epz )
+  expect_true( encode( sfpz)[, 'geometryZM'] == epz )
   
   expect_true( encode( sfcpzm )[['XY']] == ep )
   expect_true( encode( sfcpzm )[['ZM']] == epzm )
   
   expect_true( encode( sfpzm )[, 'geometry'] == ep )
-  expect_true( encode( sfpzm )[, 'ZM'] == epzm )
+  expect_true( encode( sfpzm )[, 'geometryZM'] == epzm )
   
   ## MULTIPOINT
   dfz <- stats::setNames( data.frame(matrix(z, ncol = 3)), c("lon", "lat", "Z"))
@@ -265,31 +265,31 @@ test_that("Z and M attributes are encoded", {
   expect_true( all( encode( sfcmpz )[['XY']][[1]] == encode( dfz, byrow = T ) ) )
   expect_true( all( encode( sfcmpz )[['ZM']][[1]] == encode( dfz, lon = "Z", lat = "M", byrow = T)))
   expect_true( all( encode( sfmpz )[, 'geometry'][[1]] == encode( dfz, byrow = T ) ))
-  expect_true( all( encode( sfmpz )[, 'ZM'][[1]] == encode( dfz, lon = "Z", lat = "M", byrow = T) ))
+  expect_true( all( encode( sfmpz )[, 'geometryZM'][[1]] == encode( dfz, lon = "Z", lat = "M", byrow = T) ))
   expect_true( all( encode( sfcmpzm )[['XY']][[1]] == encode( dfzm, byrow = T )))
   expect_true( all( encode( sfcmpzm )[['ZM']][[1]] == encode( dfzm, lon = "Z", lat = "M", byrow = T)))
   expect_true( all( encode( sfmpzm )[, 'geometry'][[1]] == encode( dfzm, byrow = T ) ))
-  expect_true( all( encode( sfmpzm )[, 'ZM'][[1]] == encode( dfzm, lon = "Z", lat = "M", byrow = T)))
+  expect_true( all( encode( sfmpzm )[, 'geometryZM'][[1]] == encode( dfzm, lon = "Z", lat = "M", byrow = T)))
   
   ## LINESTRING
   expect_true( encode( sfclz )[['XY']] == encode( dfz ) )
   expect_true( encode( sfclz )[['ZM']] == encode( dfz, lon = "Z", lat = "M"))
   expect_true( encode( sflz )[, 'geometry'][[1]] == encode( dfz ) )
-  expect_true( encode( sflz )[, 'ZM'][[1]] == encode( dfz, lon = "Z", lat = "M"))
+  expect_true( encode( sflz )[, 'geometryZM'][[1]] == encode( dfz, lon = "Z", lat = "M"))
   expect_true( encode( sfclzm )[['XY']][[1]] == encode( dfzm ) )
   expect_true( encode( sfclzm )[['ZM']][[1]] == encode( dfzm, lon = "Z", lat = "M"))
   expect_true( encode( sflzm )[, 'geometry'][[1]] == encode( dfzm ) )
-  expect_true( encode( sflzm )[, 'ZM'][[1]] == encode( dfzm, lon = "Z", lat = "M"))
+  expect_true( encode( sflzm )[, 'geometryZM'][[1]] == encode( dfzm, lon = "Z", lat = "M"))
   
   ## MULTILINESTRING
   expect_true( all( encode( sfcmlz )[['XY']][[1]] == rep( encode( dfz ), 2) ) )
   expect_true( all( encode( sfcmlz )[['ZM']][[1]] == rep( encode( dfz, lon = "Z", lat = "M"), 2)))
   expect_true( all( encode( sfmlz )[, 'geometry'][[1]] == rep( encode( dfz ), 2)))
-  expect_true( all( encode( sfmlz )[, 'ZM'][[1]] == rep( encode( dfz, lon = "Z", lat = "M"), 2)))
+  expect_true( all( encode( sfmlz )[, 'geometryZM'][[1]] == rep( encode( dfz, lon = "Z", lat = "M"), 2)))
   expect_true( all( encode( sfcmlzm )[['XY']][[1]] == rep( encode( dfzm ), 2) ))
   expect_true( all( encode( sfcmlzm )[['ZM']][[1]] == rep( encode( dfzm, lon = "Z", lat = "M"), 2)))
   expect_true( all( encode( sfmlzm )[, 'geometry'][[1]] == rep( encode( dfzm ), 2)))
-  expect_true( all( encode( sfmlzm )[, 'ZM'][[1]] == rep( encode( dfzm, lon = "Z", lat = "M"), 2)))
+  expect_true( all( encode( sfmlzm )[, 'geometryZM'][[1]] == rep( encode( dfzm, lon = "Z", lat = "M"), 2)))
   
   ## POLYGON
   dfplz <- stats::setNames( data.frame( matrix( pl1 , ncol = 3, byrow = T)), c("lon","lat","Z"))
@@ -299,21 +299,21 @@ test_that("Z and M attributes are encoded", {
   expect_true( encode( sfcplz )[['XY']][[1]] == encode( dfplz ) )
   expect_true( encode( sfcplz )[['ZM']][[1]] == encode( dfplz, lon = "Z", lat = "M") )
   expect_true( encode( sfplz )[, 'geometry'][[1]] == encode( dfplz ) )
-  expect_true( encode( sfplz )[, 'ZM'][[1]] == encode( dfplz, lon = "Z", lat = "M"))
+  expect_true( encode( sfplz )[, 'geometryZM'][[1]] == encode( dfplz, lon = "Z", lat = "M"))
   expect_true( encode( sfcplzm )[['XY']] == encode( dfplzm ))
   expect_true( encode( sfcplzm )[['ZM']][[1]] == encode( dfplzm, lon = "Z", lat = "M"))
   expect_true( encode( sfplzm )[, 'geometry'][[1]] == encode( dfplzm ))
-  expect_true( encode( sfplzm )[, 'ZM'][[1]] == encode( dfplzm, lon = "Z", lat = "M"))
+  expect_true( encode( sfplzm )[, 'geometryZM'][[1]] == encode( dfplzm, lon = "Z", lat = "M"))
   
   ## MULTIPOLYGON
   expect_true( all( encode( sfcmplz )[['XY']][[1]] == c( encode( dfplz ), "-", encode( dfplz ))))
   expect_true( all( encode( sfcmplz )[['ZM']][[1]] == c( encode( dfplz, lon = "Z", lat = "M"), "-", encode( dfplz, lon = "Z", lat = "M"))))
   expect_true( all( encode( sfmplz )[, 'geometry'][[1]] == c(encode( dfplz ), "-", encode( dfplz ))))
-  expect_true( all( encode( sfmplz )[, 'ZM'][[1]] == c( encode( dfplz, lon = "Z", lat = "M"), "-", encode( dfplz, lon = "Z", lat = "M"))))
+  expect_true( all( encode( sfmplz )[, 'geometryZM'][[1]] == c( encode( dfplz, lon = "Z", lat = "M"), "-", encode( dfplz, lon = "Z", lat = "M"))))
   expect_true( all( encode( sfcmplzm )[['XY']][[1]] == c( encode( dfplzm ), "-", encode( dfplzm ) ) ))
   expect_true( all( encode( sfcmplzm )[['ZM']][[1]] == c( encode( dfplzm, lon = "Z", lat = "M"), "-", encode( dfplzm, lon = "Z", lat = "M"))))
   expect_true( all( encode( sfmplzm )[, 'geometry'][[1]] == c( encode( dfplzm ), "-", encode( dfplzm ))))
-  expect_true( all( encode( sfmplzm )[, 'ZM'][[1]] == c( encode( dfplzm, lon = "Z", lat = "M"), "-", encode( dfplzm, lon = "Z", lat = "M"))))
+  expect_true( all( encode( sfmplzm )[, 'geometryZM'][[1]] == c( encode( dfplzm, lon = "Z", lat = "M"), "-", encode( dfplzm, lon = "Z", lat = "M"))))
 
   ## Mixture of dimensions
   sf <- rbind(sfpz, sfpzm, sflz, sflzm, sfmlz, sfmlzm, sfplz, sfmplzm)
@@ -367,14 +367,18 @@ test_that("dimension attributes attached", {
   sf <- rbind(sfpz, sfpzm, sfmpz, sfmpzm, sflz, sflzm)
   enc <- encode( sf )
   
-  expect_true( attr(enc, 'zm_column') == 'ZM')
-  expect_true( attr(enc[1, 'ZM'][[1]], 'zm') == "XYZ" )
-  expect_true( attr(enc[2, 'ZM'][[1]], 'zm') == "XYZM")
+  expect_true( attr(enc, 'zm_column') == 'geometryZM')
+  expect_true( attr(enc[1, 'geometryZM'][[1]], 'zm') == "XYZ" )
+  expect_true( attr(enc[2, 'geometryZM'][[1]], 'zm') == "XYZM")
   
 })
 
 
 test_that("ZM column deconflicts existing columns", {
+  
+  testthat::skip_on_cran()
+  library(sf)
+  
   z <- 1:21
   zm <- 1:36
   pz <- sf::st_point(c(1,2,3))
@@ -383,8 +387,8 @@ test_that("ZM column deconflicts existing columns", {
   sf2 <- sf::st_sf(geometry = sf::st_sfc(pzm))
   sf <- rbind(sf1, sf2)
   
-  sf$ZM <- 1:2
+  sf$geometryZM <- 1:2
   
-  expect_true(all(names(encode( sf )) == c(names(sf), 'ZM.1')))
+  expect_true(all(names(encode( sf )) == c(names(sf), 'geometryZM.1')))
   
 })

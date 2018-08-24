@@ -99,8 +99,8 @@ encode.sf <- function(obj, strip = FALSE, ...) {
   
   ## TODO(remove this vapply step and return from rcpp a flag if the ZM attrs are attached)
   if (any(vapply(lst[['ZM']], length, 0L)) > 0) {
-    
-    zmCol <- make.names(c(names(obj), "ZM"), unique = T)
+    zmCol <- paste0(geomCol, "ZM")
+    zmCol <- make.names(c(names(obj), zmCol), unique = T)
     zmCol <- zmCol[length(zmCol)]
     
     obj[[zmCol]] = lst[['ZM']]
