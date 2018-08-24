@@ -131,7 +131,7 @@ encode.sfc <- function(obj, strip = FALSE, ...) {
   if (all(vapply(lst[['ZM']], length, 0L)) == 0) {
     
     lst[['ZM']] <- NULL
-    lst <- lst[['XY']] ## to keep previous behaviour? 
+    ##lst <- lst[['XY']] ## to keep previous behaviour? 
   }
   
   return( lst )
