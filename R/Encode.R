@@ -97,12 +97,17 @@ encode.sf <- function(obj, strip = FALSE, ...) {
   attr(obj[[geomCol]], 'class') <- c('encoded_column', class(obj[[geomCol]]) )
   attr(obj, 'encoded_column') <- geomCol
   
+  ## TODO(remove this vapply step and return from rcpp a flag if the ZM attrs are attached)
   if (any(vapply(lst[['ZM']], length, 0L)) > 0) {
-    obj[['ZM']] = lst[['ZM']]
+    
+    zmCol <- make.names(c(names(obj), "ZM"), unique = T)
+    zmCol <- zmCol[length(zmCol)]
+    
+    obj[[zmCol]] = lst[['ZM']]
     
     ## attach ZM attribute column
-    attr(obj, 'zm_column') <- 'ZM'
-    attr(obj[['ZM']], 'class') <- c('zm_column', class(obj[['ZM']]))
+    attr(obj, 'zm_column') <- zmCol
+    attr(obj[[zmCol]], 'class') <- c('zm_column', class(obj[[zmCol]]))
   }
   
   if (!strip) {
@@ -122,6 +127,7 @@ encode.sf <- function(obj, strip = FALSE, ...) {
 encode.sfc <- function(obj, strip = FALSE, ...) {
   lst <- rcpp_encodeSfGeometry(obj, strip)
   
+  ## TODO(remove this vapply step and return from rcpp a flag if the ZM attrs are attached)
   if (all(vapply(lst[['ZM']], length, 0L)) == 0) {
     
     lst[['ZM']] <- NULL

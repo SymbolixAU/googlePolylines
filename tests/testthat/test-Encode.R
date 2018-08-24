@@ -367,7 +367,24 @@ test_that("dimension attributes attached", {
   sf <- rbind(sfpz, sfpzm, sfmpz, sfmpzm, sflz, sflzm)
   enc <- encode( sf )
   
-  expect_true(attr(enc, 'zm_column') == 'ZM')
+  expect_true( attr(enc, 'zm_column') == 'ZM')
+  expect_true( attr(enc[1, 'ZM'][[1]], 'zm') == "XYZ" )
+  expect_true( attr(enc[2, 'ZM'][[1]], 'zm') == "XYZM")
   
+})
+
+
+test_that("ZM column deconflicts existing columns", {
+  z <- 1:21
+  zm <- 1:36
+  pz <- sf::st_point(c(1,2,3))
+  pzm <- sf::st_point(1:4)
+  sf1 <- sf::st_sf(geometry = sf::st_sfc(pz))
+  sf2 <- sf::st_sf(geometry = sf::st_sfc(pzm))
+  sf <- rbind(sf1, sf2)
+  
+  sf$ZM <- 1:2
+  
+  expect_true(all(names(encode( sf )) == c(names(sf), 'ZM.1')))
   
 })
