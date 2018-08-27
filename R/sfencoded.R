@@ -31,11 +31,13 @@ str.zm_column <- strSfEncoded
   encodedClass <- attr(x, 'class')[1]
   geomColumn <- attr(x, "encoded_column")
   wktColumn <- attr(x, "wkt_column")
+  zmColumn <- attr(x, "zm_column")
   attr(x, "sfAttributes") <- NULL
 
   x <- NextMethod()
   x <- attachEncodedAttribute(x, geomColumn, "encoded_column")
   x <- attachEncodedAttribute(x, wktColumn, "wkt_column")
+  x <- attachEncodedAttribute(x, zmColumn, "zm_column")
 
   if( is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column")) ){
     x <- removeSfencodedClass(x)

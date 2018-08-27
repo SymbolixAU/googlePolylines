@@ -139,6 +139,17 @@ test_that("subsetting rows and columns works", {
   expect_true(ncol(encl[1:5, ]) == ncol(enc))
   expect_true(ncol(encl[1:5, c("AREA","PERIMETER")]) == 2)
   expect_true(ncol(as.data.frame(encl[1:5, c("AREA","PERIMETER")])) == 2)
+  
+  ## elevation (zm) attributes
+  sf <- sf::st_sf(geometry = sf::st_sfc(sf::st_point(1:3)))
+  sf$id <- 1
+  enc <- encode( sf )
+  
+  ## subsetting removing the elevation
+  expect_true(!"geometryZM" %in% names(enc[1, c("geometry", "id")]))
+  ## subsetting keeping the elvation
+  expect_true(all(c("id", "geometryZM") %in% names(enc[1, c("id", "geometryZM")])))
+  
 })
 
 
