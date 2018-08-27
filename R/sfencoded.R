@@ -169,7 +169,7 @@ printSfEncodedPrefix <- function(e, encType) {
   if(encType == "sfencoded") {
     e <- vapply(e, function(z) {
       paste0(
-        attr(z, "sfc"), ": ",
+        attr(z, "sfc")[2], ": ",
         substr(z[1], 1, pmin(nchar(z[1]), 20)),
         "..."
       )

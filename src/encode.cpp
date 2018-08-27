@@ -338,7 +338,7 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
     Rcpp::CharacterVector zmsv = wrap( zmstrs );
 
     if(strip == FALSE) {
-      sv.attr("sfc") = as< Rcpp::CharacterVector >( sfg_dim[1] );
+      sv.attr("sfc") = as< Rcpp::CharacterVector >( sfg_dim );
       zmsv.attr("zm") = as< Rcpp::CharacterVector >( sfg_dim[0] );
     }
     output[i] = sv;

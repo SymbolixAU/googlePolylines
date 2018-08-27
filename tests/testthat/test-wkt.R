@@ -34,9 +34,6 @@ test_that("wkt converted back to encoded_column", {
   ), class = c("sfc_GEOMETRY", "sfc"))), row.names = c(NA, 6L), sf_column = "geo", agr = structure(integer(0), class = "factor", .Label = c("constant", 
   "aggregate", "identity"), .Names = character(0)), class = c("sf", "data.frame"))
 
-  enc <- encode(sf)
-  wkt <- polyline_wkt(enc)
-  
   expect_error(polyline_wkt(sf),"I was expecting an sfencoded object or an encoded_column")
   
   enc <- encode(sf)

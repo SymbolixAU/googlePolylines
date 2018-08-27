@@ -109,7 +109,7 @@ wkt_polyline.sfencoded <- function(obj) {
 }
 
 #' @export
-wkt_polyline.wkt_column <- function(obj) wkt_to_polyline(obj)
+wkt_polyline.wkt_column <- function(obj) rcpp_wkt_to_polyline(obj)
 
 #' @export
 wkt_polyline.default <- function(obj) stop(paste0("I was expecting an sfencoded object with a wkt_column"))
