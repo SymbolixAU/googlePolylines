@@ -371,6 +371,9 @@ test_that("dimension attributes attached", {
   expect_true( attr(enc[1, 'geometryZM'][[1]], 'zm') == "XYZ" )
   expect_true( attr(enc[2, 'geometryZM'][[1]], 'zm') == "XYZM")
   
+  encLite <- encode( sf, strip = T)
+  expect_null( attributes(encLite[['geometryZM']][[1]]))
+  
 })
 
 

@@ -1,4 +1,4 @@
-# v0.6.3
+# v0.7.0
 
 * `sf` Z and M [dimensions supported](https://github.com/SymbolixAU/googlePolylines/issues/27)
 * `tbl_df` [supported](https://github.com/SymbolixAU/googlePolylines/issues/16) in `[`
