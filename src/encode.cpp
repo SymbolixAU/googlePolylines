@@ -306,9 +306,8 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
   Rcpp::List output_zm(sfc.size());
   int lastItem;
   
-  for (int i = 0; i < sfc.size(); i++){
+  for (int i = 0; i < sfc.size(); i++) {
 
-    
     std::ostringstream os;
     std::ostringstream oszm;   
     Rcpp::checkUserInterrupt();

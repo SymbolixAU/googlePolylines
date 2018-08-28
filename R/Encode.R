@@ -94,7 +94,7 @@ encode.sf <- function(obj, strip = FALSE, ...) {
   ## strip attributes
   obj <- structure(obj, sf_column = NULL, agr = NULL, class = setdiff(class(obj), "sf"))
 
-  attr(obj[[geomCol]], 'class') <- c('encoded_column', class(obj[[geomCol]]) )
+  attr(obj[[geomCol]], 'class') <- c('encoded_column', class( obj[[geomCol]]) )
   attr(obj, 'encoded_column') <- geomCol
   
   ## TODO(remove this vapply step and return from rcpp a flag if the ZM attrs are attached)
