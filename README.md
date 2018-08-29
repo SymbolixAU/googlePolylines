@@ -144,7 +144,7 @@ enc2 <- wkt_polyline(wkt)
 
 ## Motivation
 
-Encoding coordinates into polylines reduces the size of objects and can increase the speed in plotting Google Maps
+Encoding coordinates into polylines reduces the size of objects and can increase the speed in plotting Google Maps and Mapdeck
 
 
 ```r
@@ -160,25 +160,31 @@ vapply(mget(c('nc', 'encoded', 'encodedLite') ), function(x) { format(object.siz
 ```
 
 ```r
-library(leaflet)
 library(microbenchmark)
 library(sf)
+library(geojsonsf)
+library(leaflet)
 library(googleway)
+library(mapdeck)
 
-nc <- st_read(system.file("shape/nc.shp", package="sf"))
+sf <- geojsonsf::geojson_sf("https://raw.githubusercontent.com/SymbolixAU/data/master/geojson/SA1_2016_VIC.json")
 
 microbenchmark(
 
   google = {
-    df <- encode(nc)
 
     ## you need a Google Map API key to use this function
     google_map(key = mapKey) %>%
-      add_polygons(data = df, polyline = "geometry")
+      add_polygons(data = sf)
+  },
+  
+  mapdeck = {
+    mapdeck(token = mapKey) %>%
+      add_polygon(data = sf)
   },
 
   leaflet = {
-    leaflet(nc) %>%
+    leaflet(sf) %>%
       addTiles() %>%
       addPolygons()
   },
@@ -186,9 +192,10 @@ microbenchmark(
 )
 
 # Unit: milliseconds
-#     expr      min        lq     mean    median       uq      max neval
-#   google  8.16810  9.164254 10.18863  9.776755 11.50545 13.22828    25
-#  leaflet 53.90745 58.151913 61.50368 60.217514 64.08792 74.51588    25
+#     expr       min        lq      mean    median        uq       max neval
+#   google  530.4193  578.3035  644.9472  606.3328  726.4577  897.9064    25
+#  mapdeck  527.7255  577.2322  628.5800  600.7449  682.2697  792.8950    25
+#  leaflet 3247.3318 3445.6265 3554.7433 3521.6720 3654.1177 4109.6708    25
  
 ```
 These benchmarks don't account for the time taken for the browswer to render the maps
