@@ -16,7 +16,7 @@ A **fast** and light-weight implementation of [Google's polyline encoding algori
 
 ## Installation
 
-Version 0.6.2 is on CRAN and can be installed through
+Version 0.6.3 is on CRAN and can be installed through
 
 ```r
 install.packages("googlePolylines")
