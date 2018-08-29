@@ -1,9 +1,9 @@
 
 ## Release summary
 
-* updates v0.6.2 to v0.7.0
-* fixes a bug for handling `sf` object inputs
-* support for `tbl_df` objects
+
+* updates v0.7.0 to v0.7.1
+* a patch for a bug introduced in v0.7
 
 ## Test Environments
 
