@@ -31,13 +31,13 @@ str.zm_column <- strSfEncoded
   encodedClass <- attr(x, 'class')[1]
   geomColumn <- attr(x, "encoded_column")
   wktColumn <- attr(x, "wkt_column")
-  zmColumn <- attr(x, "zm_column")
+  # zmColumn <- attr(x, "zm_column")
   attr(x, "sfAttributes") <- NULL
 
   x <- NextMethod()
   x <- attachEncodedAttribute(x, geomColumn, "encoded_column")
   x <- attachEncodedAttribute(x, wktColumn, "wkt_column")
-  x <- attachEncodedAttribute(x, zmColumn, "zm_column")
+  # x <- attachEncodedAttribute(x, zmColumn, "zm_column")
 
   if( is.null(attr(x, "encoded_column")) && is.null(attr(x, "wkt_column")) ){
     x <- removeSfencodedClass(x)
@@ -72,7 +72,7 @@ removeSfEncodedAttributes <- function(x) {
 
   geomCol <- attr(x, "encoded_column")
   wktCol <- attr(x, "wkt_column")
-  zmCol <- attr(x, "zm_column")
+  # zmCol <- attr(x, "zm_column")
   
   if(!is.null(geomCol) && geomCol %in% names(x)) {
     x[[geomCol]] <- sapply(x[[geomCol]], function(y) { 
@@ -88,18 +88,18 @@ removeSfEncodedAttributes <- function(x) {
     attr(x[[wktCol]], "class") <- NULL
   }
   
-  if(!is.null(zmCol) && zmCol %in% names(x)) {
-    x[[zmCol]] <- sapply(x[[zmCol]], function(y) { 
-      attr(y, "zm") <- NULL 
-      return(y) 
-    })
-    
-    attr(x[[zmCol]], "class") <- NULL
-  }
+  # if(!is.null(zmCol) && zmCol %in% names(x)) {
+  #   x[[zmCol]] <- sapply(x[[zmCol]], function(y) { 
+  #     attr(y, "zm") <- NULL 
+  #     return(y) 
+  #   })
+  #   
+  #   attr(x[[zmCol]], "class") <- NULL
+  # }
   
   attr(x, "encoded_column") <- NULL
   attr(x, "wkt_column") <- NULL
-  attr(x, "zm_column") <- NULL
+  # attr(x, "zm_column") <- NULL
   attr(x, "sfAttributes") <- NULL
   
   return(x)
@@ -127,7 +127,7 @@ printSfEncoded <- function(x, ...) {
   
   encoded <- attr(x, "encoded_column")
   wkt <- attr(x, "wkt_column")
-  zm <- attr(x, 'zm_column')
+  # zm <- attr(x, 'zm_column')
 
   if(!is.null(encoded)) {
     e <- x[[encoded]]
@@ -143,12 +143,12 @@ printSfEncoded <- function(x, ...) {
     x[, wkt] <- w
   }
   
-  if(!is.null(zm) ) {
-    z <- x[[zm]]
-    z <- printZMattributes(z)
-    z <- stats::setNames(data.frame(z), zm)
-    x[, zm] <- z
-  }
+  # if(!is.null(zm) ) {
+  #   z <- x[[zm]]
+  #   z <- printZMattributes(z)
+  #   z <- stats::setNames(data.frame(z), zm)
+  #   x[, zm] <- z
+  # }
   
   x <- removeSfencodedClass(x)
   
@@ -156,15 +156,15 @@ printSfEncoded <- function(x, ...) {
   invisible(x)
 }
 
-printZMattributes <- function(zm) {
-  z <- vapply(zm, function(x) {
-    paste0(
-      substr(x[1], 1, pmin(nchar(x[1]), 20))
-      , "..."
-    )
-  }, "" )
-  return(z)
-}
+# printZMattributes <- function(zm) {
+#   z <- vapply(zm, function(x) {
+#     paste0(
+#       substr(x[1], 1, pmin(nchar(x[1]), 20))
+#       , "..."
+#     )
+#   }, "" )
+#   return(z)
+# }
 
 printSfEncodedPrefix <- function(e, encType) {
   

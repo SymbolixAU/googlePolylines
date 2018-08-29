@@ -308,7 +308,6 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
   
   for (int i = 0; i < sfc.size(); i++){
 
-    
     std::ostringstream os;
     std::ostringstream oszm;   
     Rcpp::checkUserInterrupt();
@@ -320,35 +319,35 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
     write_data(os, oszm, sfg_dim, dim_divisor, sfc[i], cls_attr[0], 0);
 
     std::string str = os.str();
-    std::string zmstr = oszm.str();
+    // std::string zmstr = oszm.str();
     
     std::vector< std::string > strs = split(str, ' ');
-    std::vector< std::string > zmstrs = split(zmstr, ' ');
+    // std::vector< std::string > zmstrs = split(zmstr, ' ');
     
     lastItem = strs.size() - 1;
     
     if (strs[lastItem] == "-") {
       strs.erase(strs.end() - 1);
-      if (dim_divisor > 2 ) {
-        zmstrs.erase(zmstrs.end() - 1);
-      }
+      // if (dim_divisor > 2 ) {
+      //   zmstrs.erase(zmstrs.end() - 1);
+      // }
     }
 
     Rcpp::CharacterVector sv = wrap( strs );
-    Rcpp::CharacterVector zmsv = wrap( zmstrs );
+    // Rcpp::CharacterVector zmsv = wrap( zmstrs );
 
     if(strip == FALSE) {
       sv.attr("sfc") = as< Rcpp::CharacterVector >( sfg_dim );
-      zmsv.attr("zm") = as< Rcpp::CharacterVector >( sfg_dim[0] );
+      // zmsv.attr("zm") = as< Rcpp::CharacterVector >( sfg_dim[0] );
     }
     output[i] = sv;
-    output_zm[i] = zmsv;
+    // output_zm[i] = zmsv;
   }
   
   // TODO(only return zm stream IFF there are dim attributes?)
-  return Rcpp::List::create(
-    _["XY"] = output,
-    _["ZM"] = output_zm
-  );
-  //return output;
+  // return Rcpp::List::create(
+  //   _["XY"] = output
+  //   _["ZM"] = output_zm
+  // );
+  return output;
 }
