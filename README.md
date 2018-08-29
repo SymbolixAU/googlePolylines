@@ -16,7 +16,7 @@ A **fast** and light-weight implementation of [Google's polyline encoding algori
 
 ## Installation
 
-Version 0.6.3 is on CRAN and can be installed through
+Version 0.7.0 is on CRAN and can be installed through
 
 ```r
 install.packages("googlePolylines")
@@ -149,14 +149,15 @@ Encoding coordinates into polylines reduces the size of objects and can increase
 
 ```r
 library(sf)
-nc <- st_read(system.file("shape/nc.shp", package="sf"))
+library(geojsonsf)
+sf <- geojsonsf::geojson_sf("https://raw.githubusercontent.com/SymbolixAU/data/master/geojson/SA1_2016_VIC.json")
 
-encoded <- encode(nc, FALSE)
-encodedLite <- encode(nc, TRUE)
+encoded <- encode(sf, FALSE)
+encodedLite <- encode(sf, TRUE)
 
-vapply(mget(c('nc', 'encoded', 'encodedLite') ), function(x) { format(object.size(x), units = "Kb") }, '')
-#         nc   encoded  encodedLite 
-# "132.2 Kb"  "83.3 Kb"   "50.5 Kb"
+vapply(mget(c('sf', 'encoded', 'encodedLite') ), function(x) { format(object.size(x), units = "Kb") }, '')
+#           sf      encoded  encodedLite 
+# "38750.7 Kb" "14707.9 Kb"  "9649.8 Kb"
 ```
 
 ```r
