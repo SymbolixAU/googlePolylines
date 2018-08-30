@@ -298,39 +298,51 @@ void write_data(std::ostringstream& os, std::ostringstream& oszm, Rcpp::Characte
 Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
   
   Rcpp::CharacterVector cls_attr = sfc.attr("class");
-  
+
   Rcpp::CharacterVector sfg_dim;
   int dim_divisor;
   
   Rcpp::List output(sfc.size());
   Rcpp::List output_zm(sfc.size());
   int lastItem;
+  Rcpp::List thisSfc;
+  
+  // TODO(empty geometries should not enter this list and return something?)
   
   for (int i = 0; i < sfc.size(); i++){
 
     std::ostringstream os;
-    std::ostringstream oszm;   
+    std::ostringstream oszm;
     Rcpp::checkUserInterrupt();
-    
+
     sfg_dim = getSfClass(sfc[i]);
+    thisSfc = sfc[i];
     
-    make_dim_divisor(sfg_dim[0], &dim_divisor);
-    
-    write_data(os, oszm, sfg_dim, dim_divisor, sfc[i], cls_attr[0], 0);
+    if (thisSfc.size() > 0 ) {
+      
+      make_dim_divisor(sfg_dim[0], &dim_divisor);
+      
+      write_data(os, oszm, sfg_dim, dim_divisor, sfc[i], cls_attr[0], 0);
+    }
 
     std::string str = os.str();
     // std::string zmstr = oszm.str();
-    
+
     std::vector< std::string > strs = split(str, ' ');
     // std::vector< std::string > zmstrs = split(zmstr, ' ');
+
     
+    // MULTI* objects
     lastItem = strs.size() - 1;
     
-    if (strs[lastItem] == "-") {
-      strs.erase(strs.end() - 1);
-      // if (dim_divisor > 2 ) {
-      //   zmstrs.erase(zmstrs.end() - 1);
-      // }
+    if (lastItem >= 0) {
+
+      if (strs[lastItem] == "-") {
+        strs.erase(strs.end() - 1);
+        // if (dim_divisor > 2 ) {
+        //   zmstrs.erase(zmstrs.end() - 1);
+        // }
+      }
     }
 
     Rcpp::CharacterVector sv = wrap( strs );
