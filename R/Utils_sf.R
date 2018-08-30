@@ -12,9 +12,6 @@ sfAttributes <- function(x) UseMethod("sfAttributes")
 #' @export
 sfAttributes.sfencoded <- function(x) attr(x, "sfAttributes")
 
-
-
-
 ### SF ATTRIBUTES
 sfGeometryAttributes <- function(sf) UseMethod("sfGeometryAttributes")
 
@@ -33,9 +30,7 @@ sfGeometryAttributes.sfc <- function(sfc) {
     prec = sfPrecision(sfc),
     n_em = sfNEmpty(sfc)
   )
-  
 }
-
 
 ### GEOMETRY COLUMN
 sfGeometryColumn <- function(sf) UseMethod("sfGeometryColumn")
@@ -43,10 +38,8 @@ sfGeometryColumn <- function(sf) UseMethod("sfGeometryColumn")
 #' @export
 sfGeometryColumn.sf <- function(sf) attr(sf, "sf_column")
 
-
 ### GEOMETRY TYPE
 sfGeometryType <- function(sf) UseMethod("sfGeometryType")
-
 
 #' @export
 sfGeometryType.sfc <- function(sfc) substr(class(sfc)[1], 5, nchar(class(sfc)[1]))
@@ -57,20 +50,16 @@ sfDimension <- function(sf) UseMethod("sfDimension")
 #' @export
 sfDimension.sfc <- function(sfc) class(sfc[[1]])[1]
 
-
 ### BBOX
 sfBbox <- function(sf) UseMethod("sfBbox")
 
 sfBbox.sfc <- function(sfc) attr(sfc, "bbox")
 
-
 ### EPSG
 sfEpsg <- function(sf) UseMethod("sfEpsg") 
 
-
 #' @export
 sfEpsg.sfc <- function(sfc) attr(sfc, "crs")$epsg
-
 
 ### PROJ4STRINg
 sfProj <- function(sf) UseMethod("sfProj")
@@ -78,13 +67,11 @@ sfProj <- function(sf) UseMethod("sfProj")
 #' @export
 sfProj.sfc <- function(sfc) attr(sfc, "crs")$proj4string
 
-
 ### PRECISION
 sfPrecision <- function(sf) UseMethod("sfPrecision")
 
 #' @export
 sfPrecision.sfc <- function(sfc) attr(sfc, "precision")
-
 
 ### N_EMPTY
 sfNEmpty <- function(sf) UseMethod("sfNEmpty")
@@ -93,14 +80,13 @@ sfNEmpty <- function(sf) UseMethod("sfNEmpty")
 sfNEmpty.sfc <- function(sfc) attr(sfc, "n_empty")
 
 
-
-
 #' Geometry Row
 #' 
 #' Extracts specific geometry rows of an \code{sfencoded} object
 #' 
 #' @param x \code{sfencoded} object
 #' @param geometry the specific geometry to extract
+#' @param multi logical indicating if MULTI geometry objects are included
 #' 
 #' @return the row indeces for the requested geometry
 #' 
@@ -140,21 +126,20 @@ sfNEmpty.sfc <- function(sfc) attr(sfc, "n_empty")
 #' }
 #' 
 #' @export
-geometryRow <- function(x, geometry = c("POINT", "LINESTRING", "POLYGON")){
+geometryRow <- function(x, geometry = c("POINT", "LINESTRING", "POLYGON"), multi = TRUE) {
   geometry <- match.arg(geometry)
   UseMethod("geometryRow")
 }
 
 #' @export
-geometryRow.sfencoded <- function(x, geometry) {
-  encodedColumnType(x, paste0("*", geometry))
+geometryRow.sfencoded <- function(x, geometry, multi = TRUE) {
+  encodedColumnType(x, ifelse(multi, paste0("*", geometry), paste0("^",geometry,"$")))
 }
 
 #' @export
 geometryRow.default <- function(x, ... ){
   stop("This function should be called on an sfencoded object")
 }
-
 
 encodedColumnType <- function(encoded, type) which(grepl(type, encodedColumnTypes(encoded)))
 

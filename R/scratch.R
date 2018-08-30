@@ -1,4 +1,10 @@
+# library(sf)
+# nc <- st_read(system.file("shape/nc.shp", package="sf"))
 # 
+# enc <- encode(nc)
+# 
+# geometryRow(enc, "POLYGON")
+
 # 
 # 
 # library(sf)

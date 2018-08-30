@@ -4,12 +4,14 @@
 \alias{geometryRow}
 \title{Geometry Row}
 \usage{
-geometryRow(x, geometry = c("POINT", "LINESTRING", "POLYGON"))
+geometryRow(x, geometry = c("POINT", "LINESTRING", "POLYGON"), multi = TRUE)
 }
 \arguments{
 \item{x}{\code{sfencoded} object}
 
 \item{geometry}{the specific geometry to extract}
+
+\item{multi}{logical indicating if MULTI geometry objects are included}
 }
 \value{
 the row indeces for the requested geometry
