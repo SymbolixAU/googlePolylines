@@ -395,3 +395,54 @@ test_that("Z and M attributes are encoded", {
 #   # expect_true(all(names(encode( sf )) == c(names(sf), 'geometryZM.1')))
 #   
 # })
+
+test_that("emptry geometries are handled", {
+  
+  testthat::skip_on_cran()
+  testthat::skip_on_travis()
+  
+  library(sf)
+  
+  ept <- sf::st_sfc(sf::st_point())
+  sfept <- sf::st_sf(geometry = ept)
+  emp <- sf::st_sfc(sf::st_multipoint())
+  sfemp <- sf::st_sf(geometry = emp)
+  el <- sf::st_sfc(sf::st_linestring())
+  sfel <- sf::st_sf(geometry = el )
+  eml <- sf::st_sfc(sf::st_multilinestring())
+  sfeml <- sf::st_sf(geometry = eml )
+  epl <- sf::st_sfc(sf::st_polygon())
+  sfepl <- sf::st_sf(geometry = epl)
+  empl <- sf::st_sfc(sf::st_multipolygon())
+  sfempl <- sf::st_sf(geometry = empl)
+  
+  enc <- encode(ept)
+  expect_true(enc[[1]] == ">>")
+  enc <- encode(sfept)
+  expect_true(enc$geometry[[1]] == ">>")
+  
+  enc <- encode(emp)
+  expect_true(length(enc[[1]]) == 0)
+  enc <- encode( sfemp )
+  expect_true(length(enc$geometry[[1]]) == 0)
+  
+  enc <- encode(el)
+  expect_true(length(enc[[1]]) == 0)
+  enc <- encode( sfel )
+  expect_true(length(enc$geometry[[1]]) == 0)
+  
+  enc <- encode(eml)
+  expect_true(length(enc[[1]]) == 0)
+  enc <- encode( sfeml )
+  expect_true(length(enc$geometry[[1]]) == 0)
+  
+  enc <- encode(epl)
+  expect_true(length(enc[[1]]) == 0)
+  enc <- encode( sfepl )
+  expect_true(length(enc$geometry[[1]]) == 0)
+  
+  enc <- encode(empl)
+  expect_true(length(enc[[1]]) == 0)
+  enc <- encode( sfempl )
+  expect_true(length(enc$geometry[[1]]) == 0)
+})
