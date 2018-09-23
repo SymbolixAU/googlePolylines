@@ -31,13 +31,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // rcpp_decode_polyline
-Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, std::string encoded_type);
+Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String encoded_type);
 RcppExport SEXP _googlePolylines_rcpp_decode_polyline(SEXP encodedStringsSEXP, SEXP encoded_typeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type encodedStrings(encodedStringsSEXP);
-    Rcpp::traits::input_parameter< std::string >::type encoded_type(encoded_typeSEXP);
+    Rcpp::traits::input_parameter< Rcpp::String >::type encoded_type(encoded_typeSEXP);
     rcpp_result_gen = Rcpp::wrap(rcpp_decode_polyline(encodedStrings, encoded_type));
     return rcpp_result_gen;
 END_RCPP

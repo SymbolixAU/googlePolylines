@@ -13,6 +13,11 @@ test_that("decode works", {
   expect_error(decode(data.frame()),"I don't know how to decode this object")
 })
 
+test_that("NA inputs handled properly", {
+  expect_equal(decode(NA_character_), 
+               list(data.frame("lat" = NA_real_, "lon" = NA_real_)))
+})
+
 
 # test_that("decoding ZM columns", {
 #   

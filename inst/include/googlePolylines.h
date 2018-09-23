@@ -41,7 +41,11 @@ std::vector<std::string> split(const std::string &s, char delim);
 
 Rcpp::CharacterVector getSfClass(SEXP sf);
 
-Rcpp::DataFrame decode_polyline(std::string encoded, std::string encoded_type);
+Rcpp::DataFrame decode_polyline(std::string encoded, std::vector<std::string>& col_headers);
+
+std::vector<std::string> get_col_headers(Rcpp::String sfg_dim);
+
+Rcpp::DataFrame na_dataframe(std::vector<std::string>& col_headers);
 
 Rcpp::String EncodeNumber(int num);
 
