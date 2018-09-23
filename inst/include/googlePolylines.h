@@ -50,9 +50,9 @@ std::vector<std::string> get_col_headers(Rcpp::String sfg_dim);
 
 Rcpp::List na_dataframe(std::vector<std::string>& col_headers);
 
-Rcpp::String EncodeNumber(int num);
+void EncodeNumber(std::ostringstream& os, int num);
 
-Rcpp::String EncodeSignedNumber(int num);
+void EncodeSignedNumber(std::ostringstream& os, int num);
 
 Rcpp::String encode_polyline(Rcpp::NumericVector latitude,
                              Rcpp::NumericVector longitude);
