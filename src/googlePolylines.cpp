@@ -13,6 +13,8 @@ Rcpp::List rcpp_decode_polyline_list( Rcpp::List encodedList, std::string attrib
   size_t n = encodedList.size();
   Rcpp::List output(n);
   Rcpp::CharacterVector sfg_dim;
+  std::vector<double> pointsLat;
+  std::vector<double> pointsLon;
   std::vector<std::string> col_headers;
   
   for (size_t i = 0; i < n; i++) {
@@ -37,7 +39,7 @@ Rcpp::List rcpp_decode_polyline_list( Rcpp::List encodedList, std::string attrib
       sv[0] = polylines[j];
       
       std::string s = Rcpp::as< std::string >(sv);
-      polyline_output[j] = decode_polyline(s, col_headers );
+      polyline_output[j] = decode_polyline(s, col_headers, pointsLat, pointsLon);
     }
     output[i] = polyline_output;
   }
@@ -50,6 +52,8 @@ Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String 
 
   int encodedSize = encodedStrings.size();
   Rcpp::List results(encodedSize);
+  std::vector<double> pointsLat;
+  std::vector<double> pointsLon;
   std::vector<std::string> col_headers = get_col_headers(encoded_type);
   
   for(int i = 0; i < encodedSize; i++){
@@ -62,7 +66,7 @@ Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String 
     
     std::string encoded = Rcpp::as< std::string >(encodedStrings[i]);
     
-    Rcpp::DataFrame decoded = decode_polyline(encoded, col_headers);
+    Rcpp::List decoded = decode_polyline(encoded, col_headers, pointsLat, pointsLon);
     
     results[i] = decoded;
   }
@@ -72,15 +76,18 @@ Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String 
 
 
 // @param type the type of decoded object, coordinates or ZM Attribute
-Rcpp::DataFrame decode_polyline(std::string encoded, std::vector<std::string>& col_headers) {
+Rcpp::List decode_polyline(std::string encoded, 
+                           std::vector<std::string>& col_headers, 
+                           std::vector<double>& pointsLat, 
+                           std::vector<double>& pointsLon) {
   
   int len = encoded.size();
   int index = 0;
   float lat = 0;
   float lng = 0;
   
-  Rcpp::NumericVector pointsLat;
-  Rcpp::NumericVector pointsLon;
+  pointsLat.clear();
+  pointsLon.clear();
   
   while (index < len){
     char b;
@@ -110,10 +117,17 @@ Rcpp::DataFrame decode_polyline(std::string encoded, std::vector<std::string>& c
   
   //TODO(ZM attributes)
   
-  return Rcpp::DataFrame::create(
+  // Create List output that has the necessary attributes to make it a 
+  // data.frame object.
+  Rcpp::List out = Rcpp::List::create(
     Named(col_headers[0]) = pointsLat, 
     Named(col_headers[1]) = pointsLon
   );
+  
+  out.attr("class") = "data.frame";
+  out.attr("row.names") = seq(1, pointsLat.size());
+
+  return out;
 }
 
 std::vector<std::string> get_col_headers(Rcpp::String sfg_dim) {
@@ -132,11 +146,18 @@ std::vector<std::string> get_col_headers(Rcpp::String sfg_dim) {
   return out;
 }
 
-Rcpp::DataFrame na_dataframe(std::vector<std::string>& col_headers) {
-  return Rcpp::DataFrame::create(
+Rcpp::List na_dataframe(std::vector<std::string>& col_headers) {
+  // Create List output that has the necessary attributes to make it a 
+  // data.frame object.
+  Rcpp::List out = Rcpp::List::create(
     Named(col_headers[0]) = NA_REAL, 
     Named(col_headers[1]) = NA_REAL
   );
+  
+  out.attr("class") = "data.frame";
+  out.attr("row.names") = 1;
+
+  return out;
 }
 
 void EncodeNumber(std::ostringstream& os, int num){
