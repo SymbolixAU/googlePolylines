@@ -78,7 +78,7 @@ void make_type(const char *cls, int *tp = NULL,
   else if (strcmp(cls, "GEOMETRY") == 0)
     type = SF_Geometry;
   else if (strcmp(cls, "GEOMETRYCOLLECTION") == 0)
-  	type = SF_GeometryCollection;
+    type = SF_GeometryCollection;
   else
     type = SF_Unknown;
   if (tp != NULL)
@@ -135,8 +135,8 @@ void encode_points( std::ostringstream& os, std::ostringstream& oszm, Rcpp::Nume
   Rcpp::NumericVector pointLon;
   Rcpp::NumericVector pointLat;
   
-  Rcpp::NumericVector elev(1);
-  Rcpp::NumericVector meas(1);
+  //Rcpp::NumericVector elev(1);
+  //Rcpp::NumericVector meas(1);
   
   for (int i = 0; i < n; i++){
     pointLon = point(i, 0);
