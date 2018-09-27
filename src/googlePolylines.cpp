@@ -3,6 +3,13 @@
 
 using namespace Rcpp;
 
+namespace global_vars {
+  std::vector<double> lons;
+  std::vector<double> lats;
+  std::string encodedString;
+  std::vector<std::string> elems;
+}
+
 // [[Rcpp::export]]
 Rcpp::List rcpp_decode_polyline_list( Rcpp::List encodedList, std::string attribute ) {
 
@@ -181,20 +188,19 @@ void EncodeSignedNumber(std::ostringstream& os, int num){
   EncodeNumber(os, ui);
 }
 
-Rcpp::String encode_polyline(Rcpp::NumericVector longitude,
-                             Rcpp::NumericVector latitude){
+std::string encode_polyline(){
   
   int plat = 0;
   int plon = 0;
-  int num_coords = latitude.size();
+  int late5;
+  int lone5;
   
   std::ostringstream os;
-  Rcpp::String output_str;
-  
-  for(int i = 0; i < num_coords; i++){
+
+  for(unsigned int i = 0; i < global_vars::lats.size(); i++){
     
-    int late5 = latitude[i] * 1e5;
-    int lone5 = longitude[i] * 1e5;
+    late5 = global_vars::lats[i] * 1e5;
+    lone5 = global_vars::lons[i] * 1e5;
     
     EncodeSignedNumber(os, late5 - plat);
     EncodeSignedNumber(os, lone5 - plon);
@@ -203,35 +209,38 @@ Rcpp::String encode_polyline(Rcpp::NumericVector longitude,
     plon = lone5;
   }
   
-  output_str = os.str();
-  return output_str;
+  return os.str();
 }
 
 // [[Rcpp::export]]
-Rcpp::String rcpp_encode_polyline(
-    Rcpp::NumericVector longitude,
-    Rcpp::NumericVector latitude
-  ) {
-  return encode_polyline(longitude, latitude);
+std::string rcpp_encode_polyline(
+    std::vector<double> longitude,
+    std::vector<double> latitude
+) {
+  global_vars::lons = longitude;
+  global_vars::lats = latitude;
+  return encode_polyline();
 }
 
 // [[Rcpp::export]]
-Rcpp::StringVector rcpp_encode_polyline_byrow(
+std::vector<std::string> rcpp_encode_polyline_byrow(
     Rcpp::NumericVector longitude,
     Rcpp::NumericVector latitude
   ) { 
   
   size_t n = longitude.length();
-  Rcpp::StringVector res( n );
-  Rcpp::NumericVector lon(1);
-  Rcpp::NumericVector lat(1);
+  std::vector<std::string> res;
+  global_vars::lons.clear();
+  global_vars::lons.resize(1);
+  global_vars::lats.clear();
+  global_vars::lats.resize(1);
   
   for ( size_t i = 0; i < n; i++ ) {
-    
-    lon[0] = longitude[i];
-    lat[0] = latitude[i];
 
-    res[i] = encode_polyline( lon, lat );
+    global_vars::lons[0] = longitude[i];
+    global_vars::lats[0] = latitude[i];
+
+    res.push_back(encode_polyline());
   }
   return res;
 }

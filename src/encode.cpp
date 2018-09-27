@@ -31,10 +31,9 @@ void split(const std::string &s, char delim, Out result) {
   }
 }
 
-std::vector<std::string> split(const std::string &s, char delim) {
-  std::vector<std::string> elems;
-  split(s, delim, std::back_inserter(elems));
-  return elems;
+void split(const std::string &s, char delim) {
+  global_vars::elems.clear();
+  split(s, delim, std::back_inserter(global_vars::elems));
 }
 
 
@@ -94,23 +93,19 @@ void write_multipolygon(std::ostringstream& os, std::ostringstream& oszm, Rcpp::
   }
 }
 
-void addToStream(std::ostringstream& os, Rcpp::String encodedString ) {
-  std::string strng = encodedString;
-  os << strng << ' ';
+void addToStream(std::ostringstream& os) {
+  os << global_vars::encodedString << ' ';
 }
 
 void encode_point( std::ostringstream& os, std::ostringstream& oszm, Rcpp::NumericVector point, Rcpp::CharacterVector& sfg_dim, int dim_divisor) {
   
-  Rcpp::NumericVector lon(1);
-  Rcpp::NumericVector lat(1);
+  global_vars::lons.clear();
+  global_vars::lats.clear();
+  global_vars::lons.push_back(point[0]);
+  global_vars::lats.push_back(point[1]);
   
-  lon[0] = point[0];
-  lat[0] = point[1];
-  
-  Rcpp::String encodedString;
-  
-  encodedString = encode_polyline(lon, lat);
-  addToStream(os, encodedString);
+  global_vars::encodedString = encode_polyline();
+  addToStream(os);
   
   // if ( dim_divisor > 2 ) {
   //   Rcpp::NumericVector elev(1);
@@ -131,18 +126,19 @@ void encode_points( std::ostringstream& os, std::ostringstream& oszm, Rcpp::Nume
                     Rcpp::CharacterVector& sfg_dim, int dim_divisor) {
   
   int n = point.size() / dim_divisor;
-  Rcpp::String encodedString;
-  Rcpp::NumericVector pointLon;
-  Rcpp::NumericVector pointLat;
+  global_vars::lons.clear();
+  global_vars::lons.resize(1);
+  global_vars::lats.clear();
+  global_vars::lats.resize(1);
   
   //Rcpp::NumericVector elev(1);
   //Rcpp::NumericVector meas(1);
   
   for (int i = 0; i < n; i++){
-    pointLon = point(i, 0);
-    pointLat = point(i, 1);
-    encodedString = encode_polyline( pointLon, pointLat );
-    addToStream(os, encodedString);
+    global_vars::lons[0] = point(i, 0);
+    global_vars::lats[0] = point(i, 1);
+    global_vars::encodedString = encode_polyline();
+    addToStream(os);
     
     // if ( dim_divisor > 2 ) {
     //   elev[0] = point(i, 2);
@@ -165,20 +161,17 @@ void encode_vector( std::ostringstream& os, std::ostringstream& oszm, Rcpp::List
   // - XYZM == [0][1][2][3]
   
   int n = vec.size() / dim_divisor;
-
-  Rcpp::String encodedString;
-
-  Rcpp::NumericVector lats(n);
-  Rcpp::NumericVector lons(n);
+  
+  global_vars::lats.clear();
+  global_vars::lons.clear();
   
   for (int i = 0; i < n; i++) {
-    lons[i] = vec[i];
-    lats[i] = vec[(i + n)]; 
+    global_vars::lons.push_back(vec[i]);
+    global_vars::lats.push_back(vec[(i + n)]);
   }
   
-  
-  encodedString = encode_polyline(lons, lats);
-  addToStream(os, encodedString);
+  global_vars::encodedString = encode_polyline();
+  addToStream(os);
   
   // if (dim_divisor > 2) {
   //   // there are Z and M attributes to encode
@@ -209,13 +202,16 @@ void encode_vectors( std::ostringstream& os, std::ostringstream& oszm, Rcpp::Lis
 void encode_matrix(std::ostringstream& os, std::ostringstream& oszm, Rcpp::NumericMatrix mat, 
                    Rcpp::CharacterVector& sfg_dim, int dim_divisor ) {
   
-  Rcpp::String encodedString;
+  global_vars::lons.clear();
+  global_vars::lats.clear();
+  int nrow = mat.nrow();
+  for (int i = 0; i < nrow; ++i) {
+    global_vars::lats.push_back(mat(i, 1));
+    global_vars::lons.push_back(mat(i, 0));
+  }
   
-  Rcpp::NumericVector lats = mat(_, 1);
-  Rcpp::NumericVector lons = mat(_, 0);
-
-  encodedString = encode_polyline(lons, lats);
-  addToStream(os, encodedString);
+  global_vars::encodedString = encode_polyline();
+  addToStream(os);
   
   // if (dim_divisor > 2 ) {
   //   int n = mat.size() / dim_divisor;
@@ -241,7 +237,8 @@ void write_matrix_list(std::ostringstream& os, std::ostringstream& oszm, Rcpp::L
   for (size_t j = 0; j < len; j++){
      encode_matrix(os, oszm, lst[j], sfg_dim, dim_divisor);
   }
-  addToStream(os, SPLIT_CHAR);
+  global_vars::encodedString = SPLIT_CHAR;
+  addToStream(os);
   
   // if (dim_divisor > 2) {
   //   addToStream(oszm, SPLIT_CHAR);
@@ -303,9 +300,11 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
   int dim_divisor;
   
   Rcpp::List output(sfc.size());
-  Rcpp::List output_zm(sfc.size());
+  //Rcpp::List output_zm(sfc.size());
   int lastItem;
   Rcpp::List thisSfc;
+  std::string str;
+  Rcpp::CharacterVector sv;
   
   // TODO(empty geometries should not enter this list and return something?)
   
@@ -325,31 +324,31 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
       write_data(os, oszm, sfg_dim, dim_divisor, sfc[i], cls_attr[0], 0);
     }
 
-    std::string str = os.str();
+    str = os.str();
     // std::string zmstr = oszm.str();
 
-    std::vector< std::string > strs = split(str, ' ');
+    split(str, ' ');
     // std::vector< std::string > zmstrs = split(zmstr, ' ');
 
     
     // MULTI* objects
-    lastItem = strs.size() - 1;
+    lastItem = global_vars::elems.size() - 1;
     
     if (lastItem >= 0) {
 
-      if (strs[lastItem] == "-") {
-        strs.erase(strs.end() - 1);
+      if (global_vars::elems[lastItem] == "-") {
+        global_vars::elems.erase(global_vars::elems.end() - 1);
         // if (dim_divisor > 2 ) {
         //   zmstrs.erase(zmstrs.end() - 1);
         // }
       }
     }
 
-    Rcpp::CharacterVector sv = wrap( strs );
+    sv = wrap( global_vars::elems );
     // Rcpp::CharacterVector zmsv = wrap( zmstrs );
 
     if(strip == FALSE) {
-      sv.attr("sfc") = as< Rcpp::CharacterVector >( sfg_dim );
+      sv.attr("sfc") = sfg_dim;
       // zmsv.attr("zm") = as< Rcpp::CharacterVector >( sfg_dim[0] );
     }
     output[i] = sv;
