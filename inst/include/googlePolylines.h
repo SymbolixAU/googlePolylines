@@ -41,11 +41,18 @@ std::vector<std::string> split(const std::string &s, char delim);
 
 Rcpp::CharacterVector getSfClass(SEXP sf);
 
-Rcpp::DataFrame decode_polyline(std::string encoded, std::string encoded_type);
+Rcpp::List decode_polyline(std::string encoded, 
+                           std::vector<std::string>& col_headers, 
+                           std::vector<double>& pointsLat, 
+                           std::vector<double>& pointsLon);
 
-Rcpp::String EncodeNumber(int num);
+std::vector<std::string> get_col_headers(Rcpp::String sfg_dim);
 
-Rcpp::String EncodeSignedNumber(int num);
+Rcpp::List na_dataframe(std::vector<std::string>& col_headers);
+
+void EncodeNumber(std::ostringstream& os, int num);
+
+void EncodeSignedNumber(std::ostringstream& os, int num);
 
 Rcpp::String encode_polyline(Rcpp::NumericVector latitude,
                              Rcpp::NumericVector longitude);
