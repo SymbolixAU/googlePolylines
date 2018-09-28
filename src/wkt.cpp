@@ -109,15 +109,17 @@ Rcpp::StringVector rcpp_polyline_to_wkt(Rcpp::List sfencoded) {
   
   unsigned int nrow = sfencoded.size();
   Rcpp::StringVector res(nrow);
-  
+  std::string stdspl;
+  Rcpp::CharacterVector cls;
+  Rcpp::StringVector pl;
+  Rcpp::String spl;
+
   for (size_t i = 0; i < nrow; i++ ){
     
     std::ostringstream os;
-    Rcpp::String wkt;
-    std::string stdspl;
-    Rcpp::CharacterVector cls;
-      
-    Rcpp::StringVector pl = sfencoded[i];
+    stdspl.clear();
+
+    pl = sfencoded[i];
 
     if(!Rf_isNull(pl.attr("sfc"))){
       cls = pl.attr("sfc"); 
@@ -130,7 +132,7 @@ Rcpp::StringVector rcpp_polyline_to_wkt(Rcpp::List sfencoded) {
   
     for(size_t j = 0; j < n; j ++ ) {
   
-      Rcpp::String spl = pl[j];
+      spl = pl[j];
       
       if(spl == SPLIT_CHAR){
         os << "),(";
@@ -220,13 +222,15 @@ std::string geomFromWKT(std::string& pl) {
 template <typename Point>
 void encode_wkt_point(Point const& p, std::ostringstream& os) {
   
-  Rcpp::NumericVector lon(1);
-  Rcpp::NumericVector lat(1);
+  global_vars::lons.clear();
+  global_vars::lats.clear();
+
+  global_vars::lons.push_back(bg::get<0>(p));
+  global_vars::lats.push_back(bg::get<1>(p));
   
-  lon[0] = bg::get<0>(p);
-  lat[0] = bg::get<1>(p);
+  global_vars::encodedString = encode_polyline();
   
-  addToStream(os, encode_polyline(lon, lat));
+  addToStream(os);
 }
 
 
@@ -252,10 +256,6 @@ void encode_wkt_linestring(LineString const& ls, std::ostringstream& os) {
   
   // works for RINGS (because it's templated)
   
-  size_t n = bg::num_points(ls);
-  Rcpp::NumericVector lon(n);
-  Rcpp::NumericVector lat(n);
-  
   typedef typename boost::range_iterator
     <
       linestring_type const
@@ -266,11 +266,12 @@ void encode_wkt_linestring(LineString const& ls, std::ostringstream& os) {
        it != boost::end(ls);
        ++it)
   {
-    lon[i] = bg::get<0>(*it);
-    lat[i] = bg::get<1>(*it);
+    global_vars::lons.push_back(bg::get<0>(*it));
+    global_vars::lats.push_back(bg::get<1>(*it));
     i++;
   }
-  addToStream(os, encode_polyline(lon, lat));
+  global_vars::encodedString = encode_polyline();
+  addToStream(os);
 }
 
 template <typename MultiLinestring>
@@ -310,12 +311,13 @@ void encode_wkt_multi_polygon(MultiPolygon const& mpl, std::ostringstream& os) {
     multi_polygon_type const
   >::type iterator_type;
   
+  global_vars::encodedString = SPLIT_CHAR;
   for (iterator_type it = boost::begin(mpl);
        it != boost::end(mpl);
        ++it)
   {
     encode_wkt_polygon(*it, os);
-    addToStream(os, SPLIT_CHAR);
+    addToStream(os);
   }
 }
 
@@ -326,6 +328,8 @@ Rcpp::List rcpp_wkt_to_polyline(Rcpp::StringVector wkt) {
   Rcpp::String r_wkt;
   std::string str_wkt;
   std::string geomType;
+  std::vector<std::string> cls;
+  Rcpp::CharacterVector sv;
   
   Rcpp::List resultPolylines(n);
   int lastItem;
@@ -340,10 +344,10 @@ Rcpp::List rcpp_wkt_to_polyline(Rcpp::StringVector wkt) {
     geomType = geomFromWKT(str_wkt);
     
     
-    Rcpp::CharacterVector cls(3);
-    cls[0] = "XY";
-    cls[1] = geomType;
-    cls[2] = "sfg";
+    cls.clear();
+    cls.push_back("XY");
+    cls.push_back(geomType);
+    cls.push_back("sfg");
     
     //Rcpp::CharacterVector cls(1);
     //cls[0] = geomType;
@@ -386,17 +390,17 @@ Rcpp::List rcpp_wkt_to_polyline(Rcpp::StringVector wkt) {
     }
     
     std::string str = os.str();
-    std::vector<std::string> strs = split(str, ' ');;
+    split(str, ' ');
     
-    if(strs.size() > 1) {
-      lastItem = strs.size() - 1;
+    if(global_vars::elems.size() > 1) {
+      lastItem = global_vars::elems.size() - 1;
       
-      if (strs[lastItem] == "-") {
-        strs.erase(strs.end() - 1);
+      if (global_vars::elems[lastItem] == "-") {
+        global_vars::elems.erase(global_vars::elems.end() - 1);
       }
     }
     
-    Rcpp::CharacterVector sv = wrap(strs);
+    sv = wrap(global_vars::elems);
     sv.attr("sfc") = cls;
     resultPolylines[i] = sv;
   }

@@ -32,12 +32,12 @@ using namespace Rcpp;
 #define XYM       3
 #define XYZM      4
 
-void addToStream(std::ostringstream& os, Rcpp::String encodedString ) ; 
+void addToStream(std::ostringstream& os) ; 
 
 template<typename Out>
 void split(const std::string &s, char delim, Out result);
 
-std::vector<std::string> split(const std::string &s, char delim);
+void split(const std::string &s, char delim);
 
 Rcpp::CharacterVector getSfClass(SEXP sf);
 
@@ -54,10 +54,17 @@ void EncodeNumber(std::ostringstream& os, int num);
 
 void EncodeSignedNumber(std::ostringstream& os, int num);
 
-Rcpp::String encode_polyline(Rcpp::NumericVector latitude,
-                             Rcpp::NumericVector longitude);
+std::string encode_polyline();
 
 Rcpp::List decode_data(Rcpp::StringVector pl,
                  const char *cls = NULL);
+
+
+namespace global_vars {
+  extern std::vector<double> lons;
+  extern std::vector<double> lats;
+  extern std::string encodedString;
+  extern std::vector<std::string> elems;
+}
 
 #endif
