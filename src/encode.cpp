@@ -1,40 +1,9 @@
-#include <Rcpp.h>
-using namespace Rcpp;
+#include "encode/encode.hpp"
+#include "utils/utils.hpp"
 #include "googlePolylines.h"
 
-template <int RTYPE>
-Rcpp::CharacterVector sfClass(Vector<RTYPE> v) {
-  return v.attr("class");
-}
-
-Rcpp::CharacterVector getSfClass(SEXP sf) {
-  
-  switch( TYPEOF(sf) ) {
-    case REALSXP: 
-      return sfClass<REALSXP>(sf);
-    case VECSXP: 
-      return sfClass<VECSXP>(sf);
-    case INTSXP: 
-      return sfClass<INTSXP>(sf);
-  default: Rcpp::stop("unknown sf type");
-  }
-  return "";
-}
-
-
-template<typename Out>
-void split(const std::string &s, char delim, Out result) {
-  std::stringstream ss(s);
-  std::string item;
-  while (std::getline(ss, item, delim)) {
-    *(result++) = item;
-  }
-}
-
-void split(const std::string &s, char delim) {
-  global_vars::elems.clear();
-  split(s, delim, std::back_inserter(global_vars::elems));
-}
+#include <Rcpp.h>
+using namespace Rcpp;
 
 
 void write_data(std::ostringstream& os, std::ostringstream& oszm, Rcpp::CharacterVector& sfg_dim, int dim_divisor, 
@@ -104,7 +73,7 @@ void encode_point( std::ostringstream& os, std::ostringstream& oszm, Rcpp::Numer
   global_vars::lons.push_back(point[0]);
   global_vars::lats.push_back(point[1]);
   
-  global_vars::encodedString = encode_polyline();
+  global_vars::encodedString = googlepolylines::encode::encode_polyline();
   addToStream(os);
   
   // if ( dim_divisor > 2 ) {
@@ -137,7 +106,7 @@ void encode_points( std::ostringstream& os, std::ostringstream& oszm, Rcpp::Nume
   for (int i = 0; i < n; i++){
     global_vars::lons[0] = point(i, 0);
     global_vars::lats[0] = point(i, 1);
-    global_vars::encodedString = encode_polyline();
+    global_vars::encodedString = googlepolylines::encode::encode_polyline();
     addToStream(os);
     
     // if ( dim_divisor > 2 ) {
@@ -170,7 +139,7 @@ void encode_vector( std::ostringstream& os, std::ostringstream& oszm, Rcpp::List
     global_vars::lats.push_back(vec[(i + n)]);
   }
   
-  global_vars::encodedString = encode_polyline();
+  global_vars::encodedString = googlepolylines::encode::encode_polyline();
   addToStream(os);
   
   // if (dim_divisor > 2) {
@@ -210,7 +179,7 @@ void encode_matrix(std::ostringstream& os, std::ostringstream& oszm, Rcpp::Numer
     global_vars::lons.push_back(mat(i, 0));
   }
   
-  global_vars::encodedString = encode_polyline();
+  global_vars::encodedString = googlepolylines::encode::encode_polyline();
   addToStream(os);
   
   // if (dim_divisor > 2 ) {
@@ -248,7 +217,7 @@ void write_matrix_list(std::ostringstream& os, std::ostringstream& oszm, Rcpp::L
 void write_geometry(std::ostringstream& os, std::ostringstream& oszm, SEXP s, 
                     Rcpp::CharacterVector& sfg_dim, int dim_divisor) {
   
-  Rcpp::CharacterVector cls_attr = getSfClass(s);
+  Rcpp::CharacterVector cls_attr = googlepolylines::utils::getSfClass(s);
   
   write_data(os, oszm, sfg_dim, dim_divisor, s, cls_attr[1], 0);
 }
@@ -314,7 +283,7 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
     std::ostringstream oszm;
     Rcpp::checkUserInterrupt();
 
-    sfg_dim = getSfClass(sfc[i]);
+    sfg_dim = googlepolylines::utils::getSfClass(sfc[i]);
     thisSfc = sfc[i];
     
     if (thisSfc.size() > 0 ) {
@@ -327,7 +296,7 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
     str = os.str();
     // std::string zmstr = oszm.str();
 
-    split(str, ' ');
+    googlepolylines::utils::split(str, ' ');
     // std::vector< std::string > zmstrs = split(zmstr, ' ');
 
     

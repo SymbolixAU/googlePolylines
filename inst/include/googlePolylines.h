@@ -34,27 +34,27 @@ using namespace Rcpp;
 
 void addToStream(std::ostringstream& os) ; 
 
-template<typename Out>
-void split(const std::string &s, char delim, Out result);
-
-void split(const std::string &s, char delim);
+// template<typename Out>
+// void split(const std::string &s, char delim, Out result);
+// 
+// void split(const std::string &s, char delim);
 
 Rcpp::CharacterVector getSfClass(SEXP sf);
 
-Rcpp::List decode_polyline(std::string encoded, 
-                           std::vector<std::string>& col_headers, 
-                           std::vector<double>& pointsLat, 
-                           std::vector<double>& pointsLon);
+// Rcpp::List decode_polyline(std::string encoded, 
+//                            std::vector<std::string>& col_headers, 
+//                            std::vector<double>& pointsLat, 
+//                            std::vector<double>& pointsLon);
 
 std::vector<std::string> get_col_headers(Rcpp::String sfg_dim);
 
 Rcpp::List na_dataframe(std::vector<std::string>& col_headers);
 
-void EncodeNumber(std::ostringstream& os, int num);
+//void EncodeNumber(std::ostringstream& os, int num);
 
-void EncodeSignedNumber(std::ostringstream& os, int num);
+//void EncodeSignedNumber(std::ostringstream& os, int num);
 
-std::string encode_polyline();
+//std::string encode_polyline();
 
 Rcpp::List decode_data(Rcpp::StringVector pl,
                  const char *cls = NULL);

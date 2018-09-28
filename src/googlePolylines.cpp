@@ -1,5 +1,7 @@
 #include <Rcpp.h>
 #include "googlePolylines.h"
+#include "encode/encode.hpp"
+#include "decode/decode.hpp"
 
 using namespace Rcpp;
 
@@ -46,7 +48,7 @@ Rcpp::List rcpp_decode_polyline_list( Rcpp::List encodedList, std::string attrib
       sv[0] = polylines[j];
       
       std::string s = Rcpp::as< std::string >(sv);
-      polyline_output[j] = decode_polyline(s, col_headers, pointsLat, pointsLon);
+      polyline_output[j] = googlepolylines::decode::decode_polyline(s, col_headers, pointsLat, pointsLon);
     }
     output[i] = polyline_output;
   }
@@ -73,7 +75,7 @@ Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String 
     
     std::string encoded = Rcpp::as< std::string >(encodedStrings[i]);
     
-    Rcpp::List decoded = decode_polyline(encoded, col_headers, pointsLat, pointsLon);
+    Rcpp::List decoded = googlepolylines::decode::decode_polyline(encoded, col_headers, pointsLat, pointsLon);
     
     results[i] = decoded;
   }
@@ -82,60 +84,7 @@ Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String 
 }
 
 
-// @param type the type of decoded object, coordinates or ZM Attribute
-Rcpp::List decode_polyline(std::string encoded, 
-                           std::vector<std::string>& col_headers, 
-                           std::vector<double>& pointsLat, 
-                           std::vector<double>& pointsLon) {
-  
-  int len = encoded.size();
-  int index = 0;
-  float lat = 0;
-  float lng = 0;
-  
-  pointsLat.clear();
-  pointsLon.clear();
-  
-  while (index < len){
-    char b;
-    unsigned int shift = 0;
-    int result = 0;
-    do {
-      b = encoded.at(index++) - 63;
-      result |= (b & 0x1f) << shift;
-      shift += 5;
-    } while (b >= 0x20);
-    float dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
-    lat += dlat;
-    
-    shift = 0;
-    result = 0;
-    do {
-      b = encoded.at(index++) - 63;
-      result |= (b & 0x1f) << shift;
-      shift += 5;
-    } while (b >= 0x20);
-    float dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
-    lng += dlng;
 
-    pointsLat.push_back(lat * (float)1e-5);
-    pointsLon.push_back(lng * (float)1e-5);
-  }
-  
-  //TODO(ZM attributes)
-  
-  // Create List output that has the necessary attributes to make it a 
-  // data.frame object.
-  Rcpp::List out = Rcpp::List::create(
-    Named(col_headers[0]) = pointsLat, 
-    Named(col_headers[1]) = pointsLon
-  );
-  
-  out.attr("class") = "data.frame";
-  out.attr("row.names") = seq(1, pointsLat.size());
-
-  return out;
-}
 
 std::vector<std::string> get_col_headers(Rcpp::String sfg_dim) {
   std::vector<std::string> out;
@@ -167,50 +116,7 @@ Rcpp::List na_dataframe(std::vector<std::string>& col_headers) {
   return out;
 }
 
-void EncodeNumber(std::ostringstream& os, int num){
-  
-  std::string out_str;
-  
-  while(num >= 0x20){
-    out_str += (char)(0x20 | (int)(num & 0x1f)) + 63;
-    num >>= 5;
-  }
-  
-  out_str += char(num + 63);
-  os << out_str;
-}
 
-void EncodeSignedNumber(std::ostringstream& os, int num){
-  
-  unsigned int ui = num;      //3
-  ui <<= 1;                   //4
-  ui = (num < 0) ? ~ui : ui;  //5
-  EncodeNumber(os, ui);
-}
-
-std::string encode_polyline(){
-  
-  int plat = 0;
-  int plon = 0;
-  int late5;
-  int lone5;
-  
-  std::ostringstream os;
-
-  for(unsigned int i = 0; i < global_vars::lats.size(); i++){
-    
-    late5 = global_vars::lats[i] * 1e5;
-    lone5 = global_vars::lons[i] * 1e5;
-    
-    EncodeSignedNumber(os, late5 - plat);
-    EncodeSignedNumber(os, lone5 - plon);
-
-    plat = late5;
-    plon = lone5;
-  }
-  
-  return os.str();
-}
 
 // [[Rcpp::export]]
 std::string rcpp_encode_polyline(
@@ -219,7 +125,7 @@ std::string rcpp_encode_polyline(
 ) {
   global_vars::lons = longitude;
   global_vars::lats = latitude;
-  return encode_polyline();
+  return googlepolylines::encode::encode_polyline();
 }
 
 // [[Rcpp::export]]
@@ -240,7 +146,7 @@ std::vector<std::string> rcpp_encode_polyline_byrow(
     global_vars::lons[0] = longitude[i];
     global_vars::lats[0] = latitude[i];
 
-    res.push_back(encode_polyline());
+    res.push_back( googlepolylines::encode::encode_polyline() );
   }
   return res;
 }

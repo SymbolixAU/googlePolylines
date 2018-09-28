@@ -1,108 +1,17 @@
 
-// [[Rcpp::depends(BH)]]
-
 #include <Rcpp.h>
-#include <boost/algorithm/string.hpp>
-#include <boost/geometry.hpp>
 
-#include "wkt.h"
 #include "googlePolylines.h"
+#include "wkt/wkt.h"
+#include "wkt/wkt_writers.hpp"
+#include "encode/encode.hpp"
+#include "utils/utils.hpp"
 #include "variants.h"
 
 using namespace Rcpp;
 namespace bg = boost::geometry;
 namespace bgm = bg::model;
 
-void addLonLatToWKTStream(std::ostringstream& os, float lon, float lat ) {
-  os << std::to_string(lon) << " " << std::to_string(lat);
-}
-
-void geom_type(const char *cls, int *tp = NULL) {
-  
-  int type = 0;
-  if (strcmp(cls, "POINT") == 0)
-    type = POINT;
-  else if (strcmp(cls, "MULTIPOINT") == 0)
-    type = MULTIPOINT;
-  else if (strcmp(cls, "LINESTRING") == 0)
-    type = LINESTRING;
-  else if (strcmp(cls, "POLYGON") == 0)
-    type = POLYGON;
-  else if (strcmp(cls, "MULTILINESTRING") == 0)
-    type = MULTILINESTRING;
-  else if (strcmp(cls, "MULTIPOLYGON") == 0)
-    type = MULTIPOLYGON;
-  else
-    type = UNKNOWN;
-  if (tp != NULL)
-    *tp = type;
-}
-
-void beginWKT(std::ostringstream& os, Rcpp::CharacterVector cls) {
-  
-  int tp;
-  geom_type(cls[1], &tp);
-  //geom_type(cls[0], &tp);  // iff removing XY and sfg attributs
-  
-  switch( tp ) {
-  case POINT:
-    os << "POINT ";
-    break;
-  case MULTIPOINT:
-    os << "MULTIPOINT (";
-    break;
-  case LINESTRING:
-    os << "LINESTRING ";
-    break;
-  case MULTILINESTRING:
-    os << "MULTILINESTRING (";
-    break;
-  case POLYGON:
-    os << "POLYGON (";
-    break;
-  case MULTIPOLYGON:
-    os << "MULTIPOLYGON ((";
-    break;
-  default: {
-      Rcpp::stop("Unknown geometry type");
-    }
-  }
-}
-
-void endWKT(std::ostringstream& os, Rcpp::CharacterVector cls) {
-  
-  int tp;
-  geom_type(cls[1], &tp);
-  //geom_type(cls[0], &tp);
-  
-  switch( tp ) {
-  case POINT:
-    os << "";
-    break;
-  case MULTIPOINT:
-    os << ")";
-    break;
-  case LINESTRING:
-    os << "";
-    break;
-  case MULTILINESTRING:
-    os << ")";
-    break;
-  case POLYGON:
-    os << ")";
-    break;
-  case MULTIPOLYGON:
-    os << "))";
-    break;
-  default: {
-      Rcpp::stop("Unknown geometry type");
-    }
-  }
-}
-
-void coordSeparateWKT(std::ostringstream& os) {
-  os << ", ";
-}
 
 // [[Rcpp::export]]
 Rcpp::StringVector rcpp_polyline_to_wkt(Rcpp::List sfencoded) {
@@ -127,7 +36,7 @@ Rcpp::StringVector rcpp_polyline_to_wkt(Rcpp::List sfencoded) {
       Rcpp::stop("No geometry attribute found");
     }
 
-    beginWKT(os, cls);
+    googlepolylines::wktwriters::beginWKT(os, cls);
     unsigned int n =  pl.size();
   
     for(size_t j = 0; j < n; j ++ ) {
@@ -139,7 +48,7 @@ Rcpp::StringVector rcpp_polyline_to_wkt(Rcpp::List sfencoded) {
       }else{
         stdspl = spl;
         os << "(";
-        polylineToWKT(os, stdspl);
+        googlepolylines::wkt::polylineToWKT(os, stdspl);
         os << ")";
         if(n > 1 && j < (n - 1)){
           if(pl[j+1] != SPLIT_CHAR){
@@ -149,7 +58,8 @@ Rcpp::StringVector rcpp_polyline_to_wkt(Rcpp::List sfencoded) {
       }
       
     }
-    endWKT(os, cls);
+    
+    googlepolylines::wktwriters::endWKT(os, cls);
     res[i] = os.str();
   }
   
@@ -158,42 +68,7 @@ Rcpp::StringVector rcpp_polyline_to_wkt(Rcpp::List sfencoded) {
 }
 
 
-void polylineToWKT(std::ostringstream& os, std::string encoded){
-  
-  int len = encoded.size();
-  int index = 0;
-  float lat = 0;
-  float lng = 0;
-  
-  while (index < len){
-    char b;
-    unsigned int shift = 0;
-    int result = 0;
-    do {
-      b = encoded.at(index++) - 63;
-      result |= (b & 0x1f) << shift;
-      shift += 5;
-    } while (b >= 0x20);
-    float dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
-    lat += dlat;
-    
-    shift = 0;
-    result = 0;
-    do {
-      b = encoded.at(index++) - 63;
-      result |= (b & 0x1f) << shift;
-      shift += 5;
-    } while (b >= 0x20);
-    float dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
-    lng += dlng;
 
-    addLonLatToWKTStream(os, lng* (float)1e-5, lat* (float)1e-5);
-    
-    if(index < len) {
-      coordSeparateWKT(os);
-    }
-  }
-}
 
 
 /*
@@ -207,17 +82,7 @@ void ReplaceStringInPlace(std::string& subject, const std::string& search,
 }
 */
 
-/**
- * Finds the 'GEOMETRY' text
- */
-std::string geomFromWKT(std::string& pl) {
-  size_t s = pl.find_first_of("(");
-  std::string geom = pl.substr(0, s);
-  boost::trim(geom);
-//  pl.replace(0, s, "");
-  
-  return geom;
-}
+
 
 template <typename Point>
 void encode_wkt_point(Point const& p, std::ostringstream& os) {
@@ -228,7 +93,7 @@ void encode_wkt_point(Point const& p, std::ostringstream& os) {
   global_vars::lons.push_back(bg::get<0>(p));
   global_vars::lats.push_back(bg::get<1>(p));
   
-  global_vars::encodedString = encode_polyline();
+  global_vars::encodedString = googlepolylines::encode::encode_polyline();
   
   addToStream(os);
 }
@@ -270,7 +135,7 @@ void encode_wkt_linestring(LineString const& ls, std::ostringstream& os) {
     global_vars::lats.push_back(bg::get<1>(*it));
     i++;
   }
-  global_vars::encodedString = encode_polyline();
+  global_vars::encodedString = googlepolylines::encode::encode_polyline();
   addToStream(os);
 }
 
@@ -341,7 +206,7 @@ Rcpp::List rcpp_wkt_to_polyline(Rcpp::StringVector wkt) {
     
     r_wkt = wkt[i];
     str_wkt = r_wkt;
-    geomType = geomFromWKT(str_wkt);
+    geomType = googlepolylines::wkt::geomFromWKT(str_wkt);
     
     
     cls.clear();
@@ -390,7 +255,7 @@ Rcpp::List rcpp_wkt_to_polyline(Rcpp::StringVector wkt) {
     }
     
     std::string str = os.str();
-    split(str, ' ');
+    googlepolylines::utils::split(str, ' ');
     
     if(global_vars::elems.size() > 1) {
       lastItem = global_vars::elems.size() - 1;
