@@ -1,3 +1,8 @@
+
+# v0.7.1+
+
+* [`decode()`](https://github.com/SymbolixAU/googlePolylines/pull/35) and [`encode()`](https://github.com/SymbolixAU/googlePolylines/pull/37) refactored for speed. Thanks [ChrisMuir](https://github.com/ChrisMuir)
+
 # v0.7.1
 
 * `sf` Z and M [dimensions correctly handled (ignored)](https://github.com/SymbolixAU/googlePolylines/issues/27)
