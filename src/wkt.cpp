@@ -4,13 +4,7 @@
 #include "googlePolylines.h"
 #include "wkt/wkt.h"
 #include "wkt/wkt_writers.hpp"
-#include "encode/encode.hpp"
-#include "utils/utils.hpp"
-#include "variants.h"
-
-using namespace Rcpp;
-namespace bg = boost::geometry;
-namespace bgm = bg::model;
+#include "boostgeometries.hpp"
 
 
 // [[Rcpp::export]]
@@ -67,125 +61,6 @@ Rcpp::StringVector rcpp_polyline_to_wkt(Rcpp::List sfencoded) {
   
 }
 
-
-
-
-
-/*
-void ReplaceStringInPlace(std::string& subject, const std::string& search,
-                          const std::string& replace) {
-  size_t pos = 0;
-  while ((pos = subject.find(search, pos)) != std::string::npos) {
-    subject.replace(pos, search.length(), replace);
-    pos += replace.length();
-  }
-}
-*/
-
-
-
-template <typename Point>
-void encode_wkt_point(Point const& p, std::ostringstream& os) {
-  
-  global_vars::lons.clear();
-  global_vars::lats.clear();
-
-  global_vars::lons.push_back(bg::get<0>(p));
-  global_vars::lats.push_back(bg::get<1>(p));
-  
-  global_vars::encodedString = googlepolylines::encode::encode_polyline();
-  
-  addToStream(os);
-}
-
-
-template <typename MultiPoint>
-void encode_wkt_multipoint(MultiPoint const& mp, std::ostringstream& os) {
-  
-  typedef typename boost::range_iterator
-  <
-    multi_point_type const
-  >::type iterator_type;
-  
-  for (iterator_type it = boost::begin(mp); 
-       it != boost::end(mp);
-       ++it) 
-  {
-    encode_wkt_point(*it, os);
-  }
-  
-}
-
-template <typename LineString>
-void encode_wkt_linestring(LineString const& ls, std::ostringstream& os) {
-  
-  // works for RINGS (because it's templated)
-  
-  typedef typename boost::range_iterator
-    <
-      linestring_type const
-    >::type iterator_type;
-  
-  int i = 0;
-  for (iterator_type it = boost::begin(ls);
-       it != boost::end(ls);
-       ++it)
-  {
-    global_vars::lons.push_back(bg::get<0>(*it));
-    global_vars::lats.push_back(bg::get<1>(*it));
-    i++;
-  }
-  global_vars::encodedString = googlepolylines::encode::encode_polyline();
-  addToStream(os);
-}
-
-template <typename MultiLinestring>
-void encode_wkt_multi_linestring(MultiLinestring const& mls, std::ostringstream& os) {
-  
-  typedef typename boost::range_iterator
-  <
-    multi_linestring_type const
-  >::type iterator_type;
-  
-  for (iterator_type it = boost::begin(mls);
-       it != boost::end(mls);
-       ++it)
-  {
-    encode_wkt_linestring(*it, os);
-  }
-}
-
-template <typename Polygon>
-void encode_wkt_polygon(Polygon const& pl, std::ostringstream& os) {
-  
-  encode_wkt_linestring(pl.outer(), os);
-  
-  // perhaps use
-  // https://stackoverflow.com/questions/7722087/getting-the-coordinates-of-points-from-a-boost-geometry-polygon/7748091#7748091
-  // https://stackoverflow.com/questions/37071031/how-to-get-a-polygon-from-boostgeometrymodelpolygon
-  for (auto& i: pl.inners() ) {
-    encode_wkt_linestring(i, os);
-  }
-}
-
-template <typename MultiPolygon>
-void encode_wkt_multi_polygon(MultiPolygon const& mpl, std::ostringstream& os) {
-  
-  typedef typename boost::range_iterator
-  <
-    multi_polygon_type const
-  >::type iterator_type;
-  
-  global_vars::encodedString = SPLIT_CHAR;
-  for (iterator_type it = boost::begin(mpl);
-       it != boost::end(mpl);
-       ++it)
-  {
-    encode_wkt_polygon(*it, os);
-    addToStream(os);
-  }
-}
-
 // [[Rcpp::export]]
 Rcpp::List rcpp_wkt_to_polyline(Rcpp::StringVector wkt) {
   
@@ -220,52 +95,52 @@ Rcpp::List rcpp_wkt_to_polyline(Rcpp::StringVector wkt) {
     if (geomType == "POINT" ) {
       
       point_type pt;
-      bg::read_wkt(str_wkt, pt);
-      encode_wkt_point(pt, os);
+      boost::geometry::read_wkt(str_wkt, pt);
+      googlepolylines::boostgeometries::encode_wkt_point(pt, os);
       
     }else if (geomType == "MULTIPOINT" ) {
       
       multi_point_type mp;
-      bg::read_wkt(str_wkt, mp);
-      encode_wkt_multipoint(mp, os);
+      boost::geometry::read_wkt(str_wkt, mp);
+      googlepolylines::boostgeometries::encode_wkt_multipoint(mp, os);
       
     }else if (geomType == "LINESTRING" ) {
       
       linestring_type ls;
-      bg::read_wkt(str_wkt, ls);
-      encode_wkt_linestring(ls, os);
+      boost::geometry::read_wkt(str_wkt, ls);
+      googlepolylines::boostgeometries::encode_wkt_linestring(ls, os);
       
     }else if (geomType == "MULTILINESTRING" ) {
       
       multi_linestring_type mls;
-      bg::read_wkt(str_wkt, mls);
-      encode_wkt_multi_linestring(mls, os);
+      boost::geometry::read_wkt(str_wkt, mls);
+      googlepolylines::boostgeometries::encode_wkt_multi_linestring(mls, os);
       
     }else if (geomType == "POLYGON" ) { 
       
       polygon_type pl;
-      bg::read_wkt(str_wkt, pl);
-      encode_wkt_polygon(pl, os);
+      boost::geometry::read_wkt(str_wkt, pl);
+      googlepolylines::boostgeometries::encode_wkt_polygon(pl, os);
       
     }else if (geomType == "MULTIPOLYGON" ) {
       
       multi_polygon_type mpl;
-      bg::read_wkt(str_wkt, mpl);
-      encode_wkt_multi_polygon(mpl, os);
+      boost::geometry::read_wkt(str_wkt, mpl);
+      googlepolylines::boostgeometries::encode_wkt_multi_polygon(mpl, os);
     }
     
     std::string str = os.str();
     googlepolylines::utils::split(str, ' ');
     
-    if(global_vars::elems.size() > 1) {
-      lastItem = global_vars::elems.size() - 1;
+    if( googlepolylines::global_vars::elems.size() > 1 ) {
+      lastItem = googlepolylines::global_vars::elems.size() - 1;
       
-      if (global_vars::elems[lastItem] == "-") {
-        global_vars::elems.erase(global_vars::elems.end() - 1);
+      if ( googlepolylines::global_vars::elems[lastItem] == "-") {
+        googlepolylines::global_vars::elems.erase(googlepolylines::global_vars::elems.end() - 1 );
       }
     }
     
-    sv = wrap(global_vars::elems);
+    sv = Rcpp::wrap( googlepolylines::global_vars::elems );
     sv.attr("sfc") = cls;
     resultPolylines[i] = sv;
   }

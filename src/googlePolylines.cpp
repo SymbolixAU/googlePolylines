@@ -2,14 +2,17 @@
 #include "googlePolylines.h"
 #include "encode/encode.hpp"
 #include "decode/decode.hpp"
+#include "decode/decode_constructors.hpp"
 
 using namespace Rcpp;
 
+namespace googlepolylines {
 namespace global_vars {
   std::vector<double> lons;
   std::vector<double> lats;
   std::string encodedString;
   std::vector<std::string> elems;
+}
 }
 
 // [[Rcpp::export]]
@@ -31,7 +34,7 @@ Rcpp::List rcpp_decode_polyline_list( Rcpp::List encodedList, std::string attrib
     Rcpp::StringVector polylines = encodedList[i];
     
     sfg_dim = polylines.attr( attribute );
-    col_headers = get_col_headers(sfg_dim[0]);
+    col_headers = googlepolylines::decodeconstuctors::get_col_headers(sfg_dim[0]);
     
     size_t pn = polylines.size();
     Rcpp::List polyline_output(pn);
@@ -40,7 +43,7 @@ Rcpp::List rcpp_decode_polyline_list( Rcpp::List encodedList, std::string attrib
       
       // If polylines[j] is NA, assign a data frame of NA values
       if (Rcpp::StringVector::is_na(polylines[j])) {
-        polyline_output[j] = na_dataframe(col_headers);
+        polyline_output[j] = googlepolylines::decodeconstuctors::na_dataframe(col_headers);
         continue;
       }
       
@@ -63,13 +66,13 @@ Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String 
   Rcpp::List results(encodedSize);
   std::vector<double> pointsLat;
   std::vector<double> pointsLon;
-  std::vector<std::string> col_headers = get_col_headers(encoded_type);
+  std::vector<std::string> col_headers = googlepolylines::decodeconstuctors::get_col_headers(encoded_type);
   
   for(int i = 0; i < encodedSize; i++){
     
     // If encodedStrings[i] is NA, assign a data frame of NA values
     if (Rcpp::StringVector::is_na(encodedStrings[i])) {
-      results[i] = na_dataframe(col_headers);
+      results[i] = googlepolylines::decodeconstuctors::na_dataframe(col_headers);
       continue;
     }
     
@@ -86,35 +89,6 @@ Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String 
 
 
 
-std::vector<std::string> get_col_headers(Rcpp::String sfg_dim) {
-  std::vector<std::string> out;
-  if (sfg_dim == "XYZ" || sfg_dim == "XYZM") {
-    out.push_back("Z");
-    out.push_back("M");
-  } else if (sfg_dim == "XYM") {
-    out.push_back("M");
-    out.push_back("Z");
-  } else {
-    out.push_back("lat");
-    out.push_back("lon");
-  }
-  
-  return out;
-}
-
-Rcpp::List na_dataframe(std::vector<std::string>& col_headers) {
-  // Create List output that has the necessary attributes to make it a 
-  // data.frame object.
-  Rcpp::List out = Rcpp::List::create(
-    Named(col_headers[0]) = NA_REAL, 
-    Named(col_headers[1]) = NA_REAL
-  );
-  
-  out.attr("class") = "data.frame";
-  out.attr("row.names") = 1;
-
-  return out;
-}
 
 
 
@@ -123,8 +97,8 @@ std::string rcpp_encode_polyline(
     std::vector<double> longitude,
     std::vector<double> latitude
 ) {
-  global_vars::lons = longitude;
-  global_vars::lats = latitude;
+  googlepolylines::global_vars::lons = longitude;
+  googlepolylines::global_vars::lats = latitude;
   return googlepolylines::encode::encode_polyline();
 }
 
@@ -136,15 +110,15 @@ std::vector<std::string> rcpp_encode_polyline_byrow(
   
   size_t n = longitude.length();
   std::vector<std::string> res;
-  global_vars::lons.clear();
-  global_vars::lons.resize(1);
-  global_vars::lats.clear();
-  global_vars::lats.resize(1);
+  googlepolylines::global_vars::lons.clear();
+  googlepolylines::global_vars::lons.resize(1);
+  googlepolylines::global_vars::lats.clear();
+  googlepolylines::global_vars::lats.resize(1);
   
   for ( size_t i = 0; i < n; i++ ) {
 
-    global_vars::lons[0] = longitude[i];
-    global_vars::lats[0] = latitude[i];
+    googlepolylines::global_vars::lons[0] = longitude[i];
+    googlepolylines::global_vars::lats[0] = latitude[i];
 
     res.push_back( googlepolylines::encode::encode_polyline() );
   }

@@ -50,12 +50,12 @@ namespace decode {
     // Create List output that has the necessary attributes to make it a 
     // data.frame object.
     Rcpp::List out = Rcpp::List::create(
-      Named(col_headers[0]) = pointsLat, 
-      Named(col_headers[1]) = pointsLon
+      Rcpp::Named(col_headers[0]) = pointsLat, 
+      Rcpp::Named(col_headers[1]) = pointsLon
     );
     
     out.attr("class") = "data.frame";
-    out.attr("row.names") = seq(1, pointsLat.size());
+    out.attr("row.names") = Rcpp::seq(1, pointsLat.size());
     
     return out;
   }

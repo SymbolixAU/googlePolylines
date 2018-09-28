@@ -36,8 +36,8 @@ namespace utils {
   }
   
   inline void split(const std::string &s, char delim) {
-    global_vars::elems.clear();
-    split(s, delim, std::back_inserter(global_vars::elems));
+    googlepolylines::global_vars::elems.clear();
+    split(s, delim, std::back_inserter( googlepolylines::global_vars::elems) );
   }
   
   inline void addLonLatToWKTStream(std::ostringstream& os, float lon, float lat ) {
@@ -46,6 +46,10 @@ namespace utils {
   
   inline void coordSeparateWKT(std::ostringstream& os) {
     os << ", ";
+  }
+  
+  inline void addToStream(std::ostringstream& os) {
+    os << googlepolylines::global_vars::encodedString << ' ';
   }
 
 }

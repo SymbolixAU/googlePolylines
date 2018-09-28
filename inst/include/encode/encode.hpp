@@ -37,10 +37,10 @@ namespace encode {
     
     std::ostringstream os;
     
-    for(unsigned int i = 0; i < global_vars::lats.size(); i++) {
+    for(unsigned int i = 0; i < googlepolylines::global_vars::lats.size(); i++) {
       
-      late5 = global_vars::lats[i] * 1e5;
-      lone5 = global_vars::lons[i] * 1e5;
+      late5 = googlepolylines::global_vars::lats[i] * 1e5;
+      lone5 = googlepolylines::global_vars::lons[i] * 1e5;
       
       EncodeSignedNumber(os, late5 - plat);
       EncodeSignedNumber(os, lone5 - plon);
