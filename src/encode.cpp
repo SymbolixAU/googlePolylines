@@ -2,6 +2,8 @@
 using namespace Rcpp;
 #include "googlePolylines.h"
 
+// test edit
+
 template <int RTYPE>
 Rcpp::CharacterVector sfClass(Vector<RTYPE> v) {
   return v.attr("class");
