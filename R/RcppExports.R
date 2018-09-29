@@ -5,6 +5,22 @@ rcpp_encodeSfGeometry <- function(sfc, strip) {
     .Call('_googlePolylines_rcpp_encodeSfGeometry', PACKAGE = 'googlePolylines', sfc, strip)
 }
 
+rcpp_encoded_column_types <- function(sfencoded) {
+    .Call('_googlePolylines_rcpp_encoded_column_types', PACKAGE = 'googlePolylines', sfencoded)
+}
+
+rcpp_get_geometry_types <- function(sfencoded, type) {
+    .Call('_googlePolylines_rcpp_get_geometry_types', PACKAGE = 'googlePolylines', sfencoded, type)
+}
+
+rcpp_get_geometry_types_multi <- function(sfencoded, type1, type2) {
+    .Call('_googlePolylines_rcpp_get_geometry_types_multi', PACKAGE = 'googlePolylines', sfencoded, type1, type2)
+}
+
+subset_df <- function(x, row_indices, column_indices) {
+    .Call('_googlePolylines_subset_df', PACKAGE = 'googlePolylines', x, row_indices, column_indices)
+}
+
 rcpp_decode_polyline_list <- function(encodedList, attribute) {
     .Call('_googlePolylines_rcpp_decode_polyline_list', PACKAGE = 'googlePolylines', encodedList, attribute)
 }

@@ -3,10 +3,10 @@
 
 #include <Rcpp.h>
 #include <boost/geometry.hpp>
-#include "googlePolylines.h"
-#include "encode/encode.hpp"
-#include "utils/utils.hpp"
-#include "variants.h"
+#include "googlePolylines/googlePolylines.h"
+#include "googlePolylines/encode/encode.hpp"
+#include "googlePolylines/utils/utils.hpp"
+#include "googlePolylines/variants.h"
 
 namespace bg = boost::geometry;
 

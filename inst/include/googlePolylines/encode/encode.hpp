@@ -1,8 +1,8 @@
 #ifndef GOOGLEPOLYLINES_ENCODE_H
 #define GOOGLEPOLYLINES_ENCODE_H
 
-#include "googlePolylines.h"
 #include <Rcpp.h>
+#include "googlePolylines/googlePolylines.h"
 
 namespace googlepolylines {
 namespace encode {

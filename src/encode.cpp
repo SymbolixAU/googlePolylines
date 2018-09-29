@@ -1,9 +1,9 @@
 
-#include "googlePolylines.h"
-#include "encode/encode.hpp"
-#include "encode/encode_writers.hpp"
-#include "encode/encode_api.hpp"
-#include "utils/utils.hpp"
+#include "googlePolylines/googlePolylines.h"
+#include "googlePolylines/encode/encode.hpp"
+#include "googlePolylines/encode/encode_writers.hpp"
+#include "googlePolylines/encode/encode_api.hpp"
+#include "googlePolylines/utils/utils.hpp"
 
 #include <Rcpp.h>
 

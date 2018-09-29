@@ -1,7 +1,7 @@
 #ifndef GOOGLEPOLYLINES_UTILS_H
 #define GOOGLEPOLYLINES_UTILS_H
 
-#include "googlePolylines.h"
+#include "googlePolylines/googlePolylines.h"
 #include <Rcpp.h>
 
 namespace googlepolylines {

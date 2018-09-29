@@ -1,10 +1,10 @@
 
 #include <Rcpp.h>
 
-#include "googlePolylines.h"
-#include "wkt/wkt.h"
-#include "wkt/wkt_writers.hpp"
-#include "boostgeometries.hpp"
+#include "googlePolylines/googlePolylines.h"
+#include "googlePolylines/wkt/wkt.h"
+#include "googlePolylines/wkt/wkt_writers.hpp"
+#include "googlePolylines/boostgeometries.hpp"
 
 
 // [[Rcpp::export]]

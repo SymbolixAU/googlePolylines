@@ -4,9 +4,9 @@
 // [[Rcpp::depends(BH)]]
 
 #include <Rcpp.h>
-#include "utils/utils.hpp"
 #include <boost/algorithm/string.hpp>
 #include <boost/geometry.hpp>
+#include "googlePolylines/utils/utils.hpp"
 
 #define UNKNOWN           0
 #define POINT             1

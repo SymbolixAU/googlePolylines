@@ -2,7 +2,7 @@
 #define GOOGLEPOLYLINES_WKT_WRITERS_H
 
 #include <Rcpp.h>
-#include "wkt.h"
+#include "googlePolylines/wkt/wkt.h"
 
 namespace googlepolylines {
 namespace wktwriters {

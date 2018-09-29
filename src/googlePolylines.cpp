@@ -1,8 +1,8 @@
 #include <Rcpp.h>
-#include "googlePolylines.h"
-#include "encode/encode.hpp"
-#include "decode/decode.hpp"
-#include "decode/decode_constructors.hpp"
+#include "googlePolylines/googlePolylines.h"
+#include "googlePolylines/encode/encode.hpp"
+#include "googlePolylines/decode/decode.hpp"
+#include "googlePolylines/decode/decode_constructors.hpp"
 
 using namespace Rcpp;
 

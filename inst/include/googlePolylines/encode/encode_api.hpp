@@ -2,9 +2,9 @@
 #define GOOGLEPOLYLINES_ENCODE_API_H
 
 #include <Rcpp.h>
-#include "googlePolylines.h"
-#include "encode/encode.hpp"
-#include "encode/encode_writers.hpp"
+#include "googlePolylines/googlePolylines.h"
+#include "googlePolylines/encode/encode.hpp"
+#include "googlePolylines/encode/encode_writers.hpp"
 
 
 namespace googlepolylines {
