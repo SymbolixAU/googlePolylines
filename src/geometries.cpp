@@ -21,7 +21,6 @@ Rcpp::StringVector rcpp_encoded_column_types( Rcpp::List sfencoded ) {
   for ( int i = 0; i < n; i++ ) {
     Rcpp::StringVector thisElem = sfencoded[i];
     cls = thisElem.attr("sfc");
-    //Rcpp::Rcout << "is: " << is_multipolygon(cls[1]) << std::endl;
     res[i] = cls[1];
   }
   return res;
@@ -41,7 +40,9 @@ Rcpp::IntegerVector rcpp_get_geometry_types( Rcpp::List sfencoded, const char* t
       success_counter++;
     }
   }
-  return res;
+  success_counter--;
+  Rcpp::IntegerVector idx = Rcpp::seq(0, success_counter);
+  return res[idx];
 }
 
 // [[Rcpp::export]]
@@ -57,8 +58,10 @@ Rcpp::IntegerVector rcpp_get_geometry_types_multi( Rcpp::List sfencoded, const c
       res[success_counter] = i;
       success_counter++;
     }
-  }
-  return res;
+  }  
+  success_counter--;
+  Rcpp::IntegerVector idx = Rcpp::seq(0, success_counter);
+  return res[idx];
 }
 
 //http://kevinushey.github.io/blog/2015/01/24/understanding-data-frame-subsetting/
