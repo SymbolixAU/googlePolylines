@@ -10,8 +10,8 @@ encode(obj, ...)
 
 \method{encode}{sf}(obj, strip = FALSE, ...)
 
-\method{encode}{data.frame}(obj, lon = NULL, lat = NULL, byrow = FALSE,
-  ...)
+\method{encode}{data.frame}(obj, lon = NULL, lat = NULL,
+  byrow = FALSE, ...)
 }
 \arguments{
 \item{obj}{either an \code{sf} object or \code{data.frame}}

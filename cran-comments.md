@@ -2,14 +2,8 @@
 ## Release summary
 
 
-* updates v0.7.0 to v0.7.1
-* a patch for a bug introduced in v0.7
-
-## Test Environments
-
-* local OS X 15.6.0 (High Sierra) install, R 3.5.0
-* travis-ci (ubuntu 14.04.5, R Under development r74923)
-* win-builder (devel and release)
+* updates v0.7.1 to v0.7.2
+* performance improvements
 
 ## R CMD check results
 

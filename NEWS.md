@@ -1,5 +1,5 @@
 
-# v0.7.1+
+# v0.7.2
 
 * [`decode()`](https://github.com/SymbolixAU/googlePolylines/pull/35) and [`encode()`](https://github.com/SymbolixAU/googlePolylines/pull/37) refactored for speed. Thanks [ChrisMuir](https://github.com/ChrisMuir)
 

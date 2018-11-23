@@ -1,8 +1,8 @@
 Package: googlePolylines
 Type: Package
 Title: Encoding Coordinates into 'Google' Polylines
-Version: 0.7.1004
-Date: 2018-09-28
+Version: 0.7.2
+Date: 2018-11-23
 Authors@R: c(
     person("David", "Cooley", ,"dcooley@symbolix.com.au", role = c("aut", "cre")),
     person("Paulo", "Barcelos", role = "ctb", comment = "Author of c++ decode_polyline"),
@@ -16,7 +16,7 @@ Depends: R (>= 3.3.0)
 Imports:
   Rcpp (>= 0.12.13)
 LinkingTo: Rcpp, BH
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Suggests:
     covr,
     knitr,
