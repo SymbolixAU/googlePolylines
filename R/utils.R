@@ -4,7 +4,7 @@
 # @param names string of column names
 find_lat_column <- function(names) {
   
-  lat = names[grep("^(lat|lats|latitude|latitudes|stop_lat|shape_pt_lon)$", names, ignore.case = TRUE)]
+  lat = names[grep("^(lat|lats|latitude|latitudes|stop_lat|shape_pt_lat)$", names, ignore.case = TRUE)]
   
   if (length(lat) == 1) {
     return(lat)
