@@ -306,6 +306,9 @@ Rcpp::List rcpp_encode_sfc(
     Rcpp::List& sfc,
     bool strip
 ) {
+  
+  //Rcpp::CharacterVector cls_attr = sfc.attr("class");
+  
   // R_xlen_t n = sfc.size();
   // Rcpp::List res( n );
   // R_xlen_t i;
@@ -314,7 +317,7 @@ Rcpp::List rcpp_encode_sfc(
   //   res[ i ] = googlepolylines::encode::encode_sfc( sfg );
   // }
   //return res;
-  return googlepolylines::encode::encode_sfc( sfc );
+  return googlepolylines::encode::encode_sfc( sfc, strip );
 }
 
 // // [[Rcpp::export]]

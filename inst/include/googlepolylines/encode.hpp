@@ -5,6 +5,7 @@
 #include "googlepolylines/googlepolylines.h"
 
 #include "sfheaders/df/sfg.hpp"
+#include "sfheaders/sfg/sfg_attributes.hpp"
 
 namespace googlepolylines {
 namespace encode {
@@ -75,7 +76,7 @@ namespace encode {
   ) {
     std::ostringstream os;
     encode( lons, lats, os );
-    Rcpp::Rcout << "os" << os.str() <<  std::endl;
+    // Rcpp::Rcout << "os" << os.str() <<  std::endl;
     return os.str();
   }
 
@@ -85,16 +86,14 @@ namespace encode {
     if( mat.ncol() < 2 ) {
       Rcpp::stop("googlepolylines - expecting at least 2 columns in a matrix");
     }
-    
-    Rcpp::Rcout << "n_row: " << mat.nrow() << std::endl;
-    
+
     Rcpp::NumericVector lons = mat( Rcpp::_, 0 );
     Rcpp::NumericVector lats = mat( Rcpp::_, 1 );
     return encode( lons, lats );
   }
 
   // encode sfg objects
-  inline std::string encode_point(
+  inline Rcpp::StringVector encode_point(
     Rcpp::NumericVector& sfg
   ) {
     
@@ -108,7 +107,9 @@ namespace encode {
     Rcpp::NumericVector lats(1);
     lons[0] = sfg[0];
     lats[0] = sfg[1];
-    return encode( lons, lats );
+    Rcpp::StringVector res(1);
+    res[0] = encode( lons, lats );
+    return res;
   }
 
   inline Rcpp::StringVector encode_multipoint(
@@ -119,9 +120,14 @@ namespace encode {
       Rcpp::stop("googlepolylines - not enough columns in the matrix");
     }
     R_xlen_t n = sfg.nrow();
-    Rcpp::Rcout << "n: " << n << std::endl;
     R_xlen_t i;
     Rcpp::StringVector res( n );
+    
+    if( n == 0 ) {
+      // empty geometry - return empty string
+      return res;
+    }
+    
     for( i = 0; i < n; ++i ) {
       double lon = sfg( i, 0 );
       double lat = sfg( i, 1 );
@@ -140,7 +146,8 @@ namespace encode {
     
     R_xlen_t n = sfg.nrow();
     if( n == 0 ) {
-      return Rcpp::StringVector::create();
+      Rcpp::StringVector res(0);
+      return res;
     }
     return encode( sfg );
   }
@@ -174,6 +181,11 @@ namespace encode {
     Rcpp::List polygons( n ); 
     int line_counter = 0;
     
+    if( n == 0 ) {
+      Rcpp::StringVector sv(0);
+      return sv;
+    }
+    
     for( i = 0; i < n; ++i ) {
       Rcpp::List polygon = sfg[ i ];
       polygons[ i ] = encode_polygon( polygon );
@@ -202,7 +214,8 @@ namespace encode {
   }
 
   inline Rcpp::List encode_sfc(
-    Rcpp::List& sfc
+    Rcpp::List& sfc,
+    bool& strip
   ) {
     // Rcpp::Rcout << "encode_sfc " << std::endl;
     R_xlen_t n = sfc.size();
@@ -221,27 +234,39 @@ namespace encode {
       
       // Rcpp::Rcout << "geometry: " << geometry << std::endl;
       
+      Rcpp::StringVector sv;
+      
       if( geometry == "POINT" ) {
         Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( sfg );
-        res[i] = encode_point( nv );
+        sv = encode_point( nv );
       } else if ( geometry == "MULTIPOINT" ) {
         Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( sfg );
-        res[i] = encode_multipoint( nm );
+        sv = encode_multipoint( nm );
       } else if ( geometry == "LINESTRING" ) {
         Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( sfg );
-        res[i] = encode_linestring( nm );
+        sv = encode_linestring( nm );
       } else if ( geometry == "MULTILINESTRING" ) {
         Rcpp::List mls = Rcpp::as< Rcpp::List >( sfg );
-        res[i] = encode_multilinestring( mls );
+        sv = encode_multilinestring( mls );
       } else if ( geometry == "POLYGON" ) {
         Rcpp::List pl = Rcpp::as< Rcpp::List >( sfg );
-        res[i] = encode_polygon( pl );
+        sv = encode_polygon( pl );
       } else if ( geometry == "MULTIPOLYGON" ) {
         Rcpp::List mpl = Rcpp::as< Rcpp::List >( sfg );
-        res[i] = encode_multipolygon( mpl );
+        sv = encode_multipolygon( mpl );
       } else {
         Rcpp::stop("googlepolylines - unknown sfg type");
       }
+      
+      if( !strip ) {
+        //Rcpp::Rcout << "setting sfg attr" << std::endl;
+        std::string dim = "XY";
+        sv.attr("sfg") = sfheaders::sfg::sfg_attributes(dim, geometry);
+        //sv = sfheaders::sfg::attach_sfg_attribute(sv, dim, geometry);
+      }
+      
+      res[i] = sv;
+      
     }
     return res;
   }
