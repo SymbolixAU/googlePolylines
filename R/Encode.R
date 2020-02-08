@@ -85,8 +85,8 @@ encode <- function(obj, ...) UseMethod("encode")
 encode.sf <- function(obj, strip = FALSE, ...) {
 
   geomCol <- sfGeometryColumn(obj)
-  lst <- rcpp_encodeSfGeometry(obj[[geomCol]], strip)
-  
+  ##lst <- rcpp_encodeSfGeometry(obj[[geomCol]], strip)
+  lst <- rcpp_encode_sfc( obj[[geomCol]], strip)
   if(!strip) sfAttrs <- sfGeometryAttributes(obj)
 
   # obj[[geomCol]] <- lst[['XY']]
@@ -126,8 +126,8 @@ encode.sf <- function(obj, strip = FALSE, ...) {
 
 #' @export
 encode.sfc <- function(obj, strip = FALSE, ...) {
-  lst <- rcpp_encodeSfGeometry(obj, strip)
-  
+  ##lst <- rcpp_encodeSfGeometry(obj, strip)
+  lst <- rcpp_encode_sfc( obj, strip )
   # ## TODO(remove this vapply step and return from rcpp a flag if the ZM attrs are attached)
   # if (all(vapply(lst[['ZM']], length, 0L)) == 0) {
   #   
