@@ -121,8 +121,8 @@ Rcpp::StringVector rcpp_polyline_to_wkt(Rcpp::List sfencoded) {
 
     pl = sfencoded[i];
 
-    if(!Rf_isNull(pl.attr("sfc"))){
-      cls = pl.attr("sfc"); 
+    if(!Rf_isNull(pl.attr("sfg"))){
+      cls = pl.attr("sfg"); 
     }else{
       Rcpp::stop("No geometry attribute found");
     }
