@@ -76,7 +76,7 @@ removeSfEncodedAttributes <- function(x) {
   
   if(!is.null(geomCol) && geomCol %in% names(x)) {
     x[[geomCol]] <- sapply(x[[geomCol]], function(y) { 
-      attr(y, "sfc") <- NULL 
+      attr(y, "sfg") <- NULL 
       return(y) 
       })
     
@@ -171,7 +171,7 @@ printSfEncodedPrefix <- function(e, encType) {
   if(encType == "sfencoded") {
     e <- vapply(e, function(z) {
       m <- pmin(nchar(z[1]), 20)
-      a <- attr(z, "sfc")[2]
+      a <- attr(z, "sfg")[2]
       ifelse(is.na(m), paste0(a, ": EMPTY"), 
         paste0(
           a, ": ",

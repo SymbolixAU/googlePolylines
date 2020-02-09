@@ -5,6 +5,7 @@
 #include "googlepolylines/googlepolylines.h"
 
 #include "sfheaders/df/sfg.hpp"
+#include "sfheaders/df/sfc.hpp"
 #include "sfheaders/sfg/sfg_attributes.hpp"
 
 namespace googlepolylines {
@@ -176,6 +177,10 @@ namespace encode {
     Rcpp::List& sfg
   ) {
 
+    Rcpp::NumericMatrix n_coords = sfheaders::df::sfc_n_coordinates( sfg );
+    Rcpp::Rcout << "n_coords: " << n_coords << std::endl;
+    // line_counter will be 
+    
     int n = sfg.length();
     int i, j;
     Rcpp::List polygons( n ); 
@@ -191,6 +196,8 @@ namespace encode {
       polygons[ i ] = encode_polygon( polygon );
       line_counter = line_counter + polygon.size() + 1; // to add the SPLIT_CHAR "-" to separate polygons
     }
+    
+    Rcpp::Rcout << "line_counter: " << line_counter << std::endl;
     
     Rcpp::StringVector res( line_counter );
     // unpack the polygon list 
