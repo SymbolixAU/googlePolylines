@@ -145,7 +145,7 @@ encodedColumnType <- function(encoded, type) which(grepl(type, encodedColumnType
 
 encodedColumn <- function(encoded) encoded[[attr(encoded, 'encoded_column')]]
 
-encodedColumnTypes <- function(encoded) vapply(encodedColumn(encoded), function(x) { attr(x, 'sfc')[2] }, '' )
+encodedColumnTypes <- function(encoded) vapply(encodedColumn(encoded), function(x) { attr(x, 'sfg')[2] }, '' )
 
 
 

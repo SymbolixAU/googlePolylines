@@ -5,18 +5,10 @@
 #include "googlepolylines/googlepolylines.h"
 
 #include "sfheaders/df/sfg.hpp"
-#include "sfheaders/df/sfc.hpp"
 #include "sfheaders/sfg/sfg_attributes.hpp"
 
 namespace googlepolylines {
 namespace encode {
-
-  // inline void add_to_stream(
-  //     std::ostringstream& os, 
-  //     std::string& encoded_string
-  // ) {
-  //   os << encoded_string << ' ';
-  // }
 
   inline void encode_number(
       std::ostringstream& os, 
@@ -177,10 +169,6 @@ namespace encode {
     Rcpp::List& sfg
   ) {
 
-    Rcpp::NumericMatrix n_coords = sfheaders::df::sfc_n_coordinates( sfg );
-    Rcpp::Rcout << "n_coords: " << n_coords << std::endl;
-    // line_counter will be 
-    
     int n = sfg.length();
     int i, j;
     Rcpp::List polygons( n ); 
@@ -191,32 +179,31 @@ namespace encode {
       return sv;
     }
     
+    std::vector< std::string > lines;
+    
     for( i = 0; i < n; ++i ) {
       Rcpp::List polygon = sfg[ i ];
-      polygons[ i ] = encode_polygon( polygon );
       line_counter = line_counter + polygon.size() + 1; // to add the SPLIT_CHAR "-" to separate polygons
     }
-    
-    Rcpp::Rcout << "line_counter: " << line_counter << std::endl;
-    
+
     Rcpp::StringVector res( line_counter );
-    // unpack the polygon list 
+
     int counter = 0;
     for( i = 0; i < polygons.size(); ++i ) {
-      Rcpp::List poly = polygons[ i ];
-      for( j = 0; j < poly.size(); ++j ) {
-        std::string line = poly[ j ];
-        res[ counter ] = line;
+
+    Rcpp::List polygon = sfg[ i ];
+  
+      for( j = 0; j < polygon.size(); ++j ) {  
+        Rcpp::NumericMatrix line = polygon[ j ];
+        res[ counter ] = encode( line );
         counter = counter + 1;
       }
+    
       res[ counter ] = SPLIT_CHAR;
       counter = counter + 1;
     }
-    
     // remove the final SPLIT_CHAR
     res.erase( line_counter - 1 );
-    
-    //return polygons;
     return res;
   }
 
@@ -224,22 +211,18 @@ namespace encode {
     Rcpp::List& sfc,
     bool& strip
   ) {
-    // Rcpp::Rcout << "encode_sfc " << std::endl;
+
     R_xlen_t n = sfc.size();
     R_xlen_t i;
     Rcpp::List res( n );
     Rcpp::CharacterVector cls;
     std::string geometry;
     
-    // Rcpp::Rcout << "n: " << n << std::endl;
-    
     for( i = 0; i < n; ++i ) {
       
       SEXP sfg = sfc[ i ];
       cls = sfheaders::df::getSfgClass( sfg );
       geometry = cls[1];
-      
-      // Rcpp::Rcout << "geometry: " << geometry << std::endl;
       
       Rcpp::StringVector sv;
       
@@ -266,10 +249,8 @@ namespace encode {
       }
       
       if( !strip ) {
-        //Rcpp::Rcout << "setting sfg attr" << std::endl;
         std::string dim = "XY";
         sv.attr("sfg") = sfheaders::sfg::sfg_attributes(dim, geometry);
-        //sv = sfheaders::sfg::attach_sfg_attribute(sv, dim, geometry);
       }
       
       res[i] = sv;

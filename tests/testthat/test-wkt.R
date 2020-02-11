@@ -52,16 +52,16 @@ test_that("wkt converted back to encoded_column", {
   expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfg'), attr(e[r, 'geo'][[1]], 'sfg')))
   r <- 3
   #expect_true(enc[r, 'geo'][[1]] == e[r, 'geo'][[1]])
-  expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfg'), attr(e[r, 'geo'][[1]], 'sfc')))
+  expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfg'), attr(e[r, 'geo'][[1]], 'sfg')))
   r <- 4
   #expect_true(enc[r, 'geo'][[1]][1] == e[r, 'geo'][[1]][1])  
-  expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfg'), attr(e[r, 'geo'][[1]], 'sfc')))
+  expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfg'), attr(e[r, 'geo'][[1]], 'sfg')))
   r <- 5
   #expect_true(enc[r, 'geo'][[1]][1] == e[r, 'geo'][[1]][1])
-  expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfg'), attr(e[r, 'geo'][[1]], 'sfc')))
+  expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfg'), attr(e[r, 'geo'][[1]], 'sfg')))
   r <- 6
   #expect_true(enc[r, 'geo'][[1]][1] == e[r, 'geo'][[1]][1])  
-  expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfg'), attr(e[r, 'geo'][[1]], 'sfc')))
+  expect_true(all.equal(attr(enc[r, 'geo'][[1]], 'sfg'), attr(e[r, 'geo'][[1]], 'sfg')))
   
   ## test errors
   expect_error(wkt_polyline(enc),"Can not find the wkt_column")

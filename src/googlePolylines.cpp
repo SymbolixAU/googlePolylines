@@ -197,9 +197,6 @@ std::string rcpp_encode_polyline(
     Rcpp::NumericVector longitude,
     Rcpp::NumericVector latitude
 ) {
-  //global_vars::lons = longitude;
-  //global_vars::lats = latitude;
-  //return encode_polyline();
   return googlepolylines::encode::encode( longitude, latitude );
 }
 
@@ -215,20 +212,11 @@ Rcpp::StringVector rcpp_encode_polyline_byrow(
   R_xlen_t n = longitude.length();
   R_xlen_t i;
   Rcpp::StringVector res( n );
-  // std::vector<std::string> res;
-  // global_vars::lons.clear();
-  // global_vars::lons.resize(1);
-  // global_vars::lats.clear();
-  // global_vars::lats.resize(1);
   Rcpp::NumericVector lons(1);
   Rcpp::NumericVector lats(1);
   
   for ( i = 0; i < n; i++ ) {
 
-    // global_vars::lons[0] = longitude[i];
-    // global_vars::lats[0] = latitude[i];
-    // 
-    // res.push_back(encode_polyline());
     lons[0] = longitude[ i ];
     lats[0] = latitude[ i ];
     
