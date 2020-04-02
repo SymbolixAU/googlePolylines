@@ -15,7 +15,10 @@ SystemRequirements: C++11
 Depends: R (>= 3.3.0)
 Imports:
   Rcpp (>= 0.12.13)
-LinkingTo: Rcpp, BH
+LinkingTo: 
+    Rcpp, 
+    BH,
+    sfheaders
 RoxygenNote: 6.1.0
 Suggests:
     covr,

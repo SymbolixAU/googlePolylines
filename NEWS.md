@@ -1,4 +1,6 @@
 
+* `attr(x, "sfc")` is replaced with `attr(x, "sfg")` for each geometry
+
 # v0.7.2+
 
 * fix [issue #40](https://github.com/SymbolixAU/googlePolylines/issues/40)

@@ -39,7 +39,7 @@ void split(const std::string &s, char delim, Out result);
 
 void split(const std::string &s, char delim);
 
-Rcpp::CharacterVector getSfClass(SEXP sf);
+//Rcpp::CharacterVector getSfClass(SEXP sf);
 
 Rcpp::List decode_polyline(std::string encoded, 
                            std::vector<std::string>& col_headers, 
@@ -57,7 +57,7 @@ void EncodeSignedNumber(std::ostringstream& os, int num);
 std::string encode_polyline();
 
 Rcpp::List decode_data(Rcpp::StringVector pl,
-                 const char *cls = NULL);
+                       const char *cls = NULL);
 
 
 namespace global_vars {

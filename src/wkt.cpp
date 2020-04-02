@@ -11,7 +11,7 @@
 
 using namespace Rcpp;
 namespace bg = boost::geometry;
-namespace bgm = bg::model;
+//namespace bgm = bg::model;
 
 void addLonLatToWKTStream(std::ostringstream& os, float lon, float lat ) {
   os << std::to_string(lon) << " " << std::to_string(lat);
@@ -121,8 +121,8 @@ Rcpp::StringVector rcpp_polyline_to_wkt(Rcpp::List sfencoded) {
 
     pl = sfencoded[i];
 
-    if(!Rf_isNull(pl.attr("sfc"))){
-      cls = pl.attr("sfc"); 
+    if(!Rf_isNull(pl.attr("sfg"))){
+      cls = pl.attr("sfg"); 
     }else{
       Rcpp::stop("No geometry attribute found");
     }
@@ -237,15 +237,9 @@ void encode_wkt_point(Point const& p, std::ostringstream& os) {
 template <typename MultiPoint>
 void encode_wkt_multipoint(MultiPoint const& mp, std::ostringstream& os) {
   
-  typedef typename boost::range_iterator
-  <
-    multi_point_type const
-  >::type iterator_type;
+  typedef typename boost::range_iterator< multi_point_type const >::type iterator_type;
   
-  for (iterator_type it = boost::begin(mp); 
-       it != boost::end(mp);
-       ++it) 
-  {
+  for(iterator_type it = boost::begin(mp); it != boost::end(mp); ++it ) {
     encode_wkt_point(*it, os);
   }
   
@@ -277,10 +271,7 @@ void encode_wkt_linestring(LineString const& ls, std::ostringstream& os) {
 template <typename MultiLinestring>
 void encode_wkt_multi_linestring(MultiLinestring const& mls, std::ostringstream& os) {
   
-  typedef typename boost::range_iterator
-  <
-    multi_linestring_type const
-  >::type iterator_type;
+  typedef typename boost::range_iterator< multi_linestring_type const >::type iterator_type;
   
   for (iterator_type it = boost::begin(mls);
        it != boost::end(mls);
@@ -306,10 +297,7 @@ void encode_wkt_polygon(Polygon const& pl, std::ostringstream& os) {
 template <typename MultiPolygon>
 void encode_wkt_multi_polygon(MultiPolygon const& mpl, std::ostringstream& os) {
   
-  typedef typename boost::range_iterator
-  <
-    multi_polygon_type const
-  >::type iterator_type;
+  typedef typename boost::range_iterator< multi_polygon_type const >::type iterator_type;
   
   global_vars::encodedString = SPLIT_CHAR;
   for (iterator_type it = boost::begin(mpl);
@@ -401,7 +389,7 @@ Rcpp::List rcpp_wkt_to_polyline(Rcpp::StringVector wkt) {
     }
     
     sv = wrap(global_vars::elems);
-    sv.attr("sfc") = cls;
+    sv.attr("sfg") = cls;
     resultPolylines[i] = sv;
   }
   
