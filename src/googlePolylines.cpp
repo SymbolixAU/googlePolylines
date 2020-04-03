@@ -22,24 +22,24 @@ Rcpp::List rcpp_decode_polyline_list(
   // a 2-column data.frame? 
   // probably
   
-  size_t n = encodedList.size();
+  R_xlen_t n = encodedList.size();
   Rcpp::List output(n);
   Rcpp::CharacterVector sfg_dim;
   std::vector<double> pointsLat;
   std::vector<double> pointsLon;
   std::vector<std::string> col_headers;
-  
-  for (size_t i = 0; i < n; i++) {
+  R_xlen_t i;
+  for( i = 0; i < n; ++i ) {
     
     Rcpp::StringVector polylines = encodedList[i];
     
     sfg_dim = polylines.attr( attribute );
     col_headers = get_col_headers(sfg_dim[0]);
     
-    size_t pn = polylines.size();
+    R_xlen_t pn = polylines.size();
     Rcpp::List polyline_output(pn);
 
-    for (size_t j = 0; j < pn; j++ ) {
+    for (R_xlen_t j = 0; j < pn; j++ ) {
       
       // If polylines[j] is NA, assign a data frame of NA values
       if( Rcpp::StringVector::is_na( polylines[j] ) ) {
@@ -177,7 +177,7 @@ std::string encode_polyline(){
 
   std::ostringstream os;
 
-  for(unsigned int i = 0; i < global_vars::lats.size(); i++){
+  for(R_xlen_t i = 0; i < global_vars::lats.size(); i++){
 
     late5 = global_vars::lats[i] * 1e5;
     lone5 = global_vars::lons[i] * 1e5;

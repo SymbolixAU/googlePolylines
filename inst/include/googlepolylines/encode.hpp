@@ -4,7 +4,7 @@
 #include <Rcpp.h>
 #include "googlepolylines/googlepolylines.h"
 
-#include "sfheaders/df/sfg.hpp"
+//#include "sfheaders/df/sfg.hpp"
 #include "sfheaders/sfg/sfg_attributes.hpp"
 
 namespace googlepolylines {
@@ -37,9 +37,10 @@ namespace encode {
     encode_number(os, ui);
   }
 
+  template < int RTYPE >
   inline void encode(
-    Rcpp::NumericVector& lons,
-    Rcpp::NumericVector& lats,
+    Rcpp::Vector< RTYPE >& lons,
+    Rcpp::Vector< RTYPE >& lats,
     std::ostringstream& os
   ) {
     int plat = 0;
@@ -63,31 +64,33 @@ namespace encode {
     }
   }
 
+  template< int RTYPE >
   inline std::string encode(
-    Rcpp::NumericVector& lons,
-    Rcpp::NumericVector& lats
+    Rcpp::Vector< RTYPE >& lons,
+    Rcpp::Vector< RTYPE >& lats
   ) {
     std::ostringstream os;
     encode( lons, lats, os );
-    // Rcpp::Rcout << "os" << os.str() <<  std::endl;
     return os.str();
   }
 
+  template< int RTYPE >
   inline std::string encode(
-    Rcpp::NumericMatrix& mat
+    Rcpp::Matrix< RTYPE >& mat
   ) {
     if( mat.ncol() < 2 ) {
       Rcpp::stop("googlepolylines - expecting at least 2 columns in a matrix");
     }
 
-    Rcpp::NumericVector lons = mat( Rcpp::_, 0 );
-    Rcpp::NumericVector lats = mat( Rcpp::_, 1 );
+    Rcpp::Vector< RTYPE > lons = mat( Rcpp::_, 0 );
+    Rcpp::Vector< RTYPE > lats = mat( Rcpp::_, 1 );
     return encode( lons, lats );
   }
 
   // encode sfg objects
+  template< int RTYPE >
   inline Rcpp::StringVector encode_point(
-    Rcpp::NumericVector& sfg
+    Rcpp::Vector< RTYPE >& sfg
   ) {
     
     //Rcpp::DataFrame df = sfheaders::df::sfg_to_df(sfg);
@@ -96,8 +99,8 @@ namespace encode {
     if( sfg.length() < 2 ) {
       Rcpp::stop("googlepolylines - not enough values in a point");
     }
-    Rcpp::NumericVector lons(1);
-    Rcpp::NumericVector lats(1);
+    Rcpp::Vector< RTYPE > lons(1);
+    Rcpp::Vector< RTYPE > lats(1);
     lons[0] = sfg[0];
     lats[0] = sfg[1];
     Rcpp::StringVector res(1);
@@ -105,8 +108,9 @@ namespace encode {
     return res;
   }
 
+  template< int RTYPE >
   inline Rcpp::StringVector encode_multipoint(
-    Rcpp::NumericMatrix& sfg
+    Rcpp::Matrix< RTYPE >& sfg
   ) {
 
     if( sfg.ncol() < 2 ) {
@@ -124,8 +128,8 @@ namespace encode {
     for( i = 0; i < n; ++i ) {
       double lon = sfg( i, 0 );
       double lat = sfg( i, 1 );
-      Rcpp::NumericVector lons(1);
-      Rcpp::NumericVector lats(1);
+      Rcpp::Vector< RTYPE > lons(1);
+      Rcpp::Vector< RTYPE > lats(1);
       lons[0] = lon;
       lats[0] = lat;
       res[i] = encode( lons, lats );
@@ -133,8 +137,9 @@ namespace encode {
     return res;
   }
 
+  template< int RTYPE >
   inline Rcpp::StringVector encode_linestring(
-    Rcpp::NumericMatrix& sfg
+    Rcpp::Matrix< RTYPE >& sfg
   ) {
     
     R_xlen_t n = sfg.nrow();
@@ -221,7 +226,7 @@ namespace encode {
     for( i = 0; i < n; ++i ) {
       
       SEXP sfg = sfc[ i ];
-      cls = sfheaders::df::getSfgClass( sfg );
+      cls = sfheaders::sfg::getSfgClass( sfg );
       geometry = cls[1];
       
       Rcpp::StringVector sv;

@@ -107,14 +107,15 @@ void coordSeparateWKT(std::ostringstream& os) {
 // [[Rcpp::export]]
 Rcpp::StringVector rcpp_polyline_to_wkt(Rcpp::List sfencoded) {
   
-  unsigned int nrow = sfencoded.size();
+  R_xlen_t nrow = sfencoded.size();
   Rcpp::StringVector res(nrow);
   std::string stdspl;
   Rcpp::CharacterVector cls;
   Rcpp::StringVector pl;
   Rcpp::String spl;
-
-  for (size_t i = 0; i < nrow; i++ ){
+  R_xlen_t i;
+  
+  for ( i = 0; i < nrow; i++ ){
     
     std::ostringstream os;
     stdspl.clear();
@@ -128,9 +129,9 @@ Rcpp::StringVector rcpp_polyline_to_wkt(Rcpp::List sfencoded) {
     }
 
     beginWKT(os, cls);
-    unsigned int n =  pl.size();
+    R_xlen_t n =  pl.size();
   
-    for(size_t j = 0; j < n; j ++ ) {
+    for(R_xlen_t j = 0; j < n; j ++ ) {
   
       spl = pl[j];
       
@@ -211,7 +212,7 @@ void ReplaceStringInPlace(std::string& subject, const std::string& search,
  * Finds the 'GEOMETRY' text
  */
 std::string geomFromWKT(std::string& pl) {
-  size_t s = pl.find_first_of("(");
+  R_xlen_t s = pl.find_first_of("(");
   std::string geom = pl.substr(0, s);
   boost::trim(geom);
 //  pl.replace(0, s, "");
@@ -312,7 +313,7 @@ void encode_wkt_multi_polygon(MultiPolygon const& mpl, std::ostringstream& os) {
 // [[Rcpp::export]]
 Rcpp::List rcpp_wkt_to_polyline(Rcpp::StringVector wkt) {
   
-  size_t n = wkt.length();
+  R_xlen_t n = wkt.length();
   Rcpp::String r_wkt;
   std::string str_wkt;
   std::string geomType;
@@ -320,8 +321,8 @@ Rcpp::List rcpp_wkt_to_polyline(Rcpp::StringVector wkt) {
   Rcpp::CharacterVector sv;
   
   Rcpp::List resultPolylines(n);
-  int lastItem;
-  unsigned int i;
+  R_xlen_t lastItem;
+  R_xlen_t i;
   
   for (i = 0; i < n; i++ ) {
     
