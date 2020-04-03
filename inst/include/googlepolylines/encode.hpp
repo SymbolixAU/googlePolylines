@@ -6,6 +6,7 @@
 
 //#include "sfheaders/df/sfg.hpp"
 #include "sfheaders/sfg/sfg_attributes.hpp"
+#include "sfheaders/utils/lists/list.hpp"
 
 namespace googlepolylines {
 namespace encode {
@@ -89,13 +90,10 @@ namespace encode {
 
   // encode sfg objects
   template< int RTYPE >
-  inline Rcpp::StringVector encode(
+  inline std::string encode(
     Rcpp::Vector< RTYPE >& sfg
   ) {
     
-    //Rcpp::DataFrame df = sfheaders::df::sfg_to_df(sfg);
-    // but I don't know what type of sfg it is yet...
-
     if( sfg.length() < 2 ) {
       Rcpp::stop("googlepolylines - not enough values in a point");
     }
@@ -104,8 +102,9 @@ namespace encode {
     lons[0] = sfg[0];
     lats[0] = sfg[1];
     Rcpp::StringVector res(1);
-    res[0] = encode( lons, lats );
-    return res;
+    return encode( lons, lats );
+    // res[0] = encode( lons, lats );
+    // return res;
   }
 
   // template< int RTYPE >
@@ -162,6 +161,7 @@ namespace encode {
       Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( sfg );
       return encode( iv );
     }
+    }
     case REALSXP: {
     if( Rf_isMatrix( sfg ) ) {
       Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( sfg );
@@ -173,85 +173,94 @@ namespace encode {
     }
     case VECSXP: {
     if( Rf_isNewList( sfg ) ) {
+      Rcpp::Rcout << "new_list" << std::endl;
       Rcpp::List lst = Rcpp::as< Rcpp::List >( sfg );
       R_xlen_t n = lst.size();
       R_xlen_t i;
+      Rcpp::List res( n ); // to add in a SPLIT_CHAR
       for( i = 0; i < n; ++i ) {
         // loop and encode?
+        Rcpp::Rcout << "i: " << i << std::endl;
         SEXP sfgi = lst[ i ];
-        encode( sfgi );
+        res[ i ] = encode( sfgi );
       }
+      //Rcpp::Rcout << "SPLIT_CHAR" << std::endl;
+      //res[ n ] = SPLIT_CHAR;
+      Rcpp::StringVector enc = sfheaders::utils::unlist_list( res );
+      //return res;
+      Rcpp::Rcout << "encoded list " << std::endl;
+      
+      return enc;
     }
     }
     default: {
       Rcpp::stop("googlePolylines - numeric values required");
     }
     }
-    }
     return Rcpp::StringVector::create(); // #nocov - never reaches
   }
 
-  inline Rcpp::StringVector encode_multilinestring(
-    Rcpp::List& sfg
-  ) {
-    int n = sfg.length();
-    int i;
-    Rcpp::StringVector res( n );
-    
-    for( i = 0; i < n; ++i ) {
-      Rcpp::NumericMatrix line = sfg[ i ];
-      res[ i ] = encode( line );
-    }
-    return res;
-  }
-
-  inline Rcpp::StringVector encode_polygon(
-    Rcpp::List& sfg
-  ) {
-    return encode_multilinestring( sfg );
-  }
-
-  inline Rcpp::StringVector encode_multipolygon(
-    Rcpp::List& sfg
-  ) {
-
-    int n = sfg.length();
-    int i, j;
-    Rcpp::List polygons( n ); 
-    int line_counter = 0;
-    
-    if( n == 0 ) {
-      Rcpp::StringVector sv(0);
-      return sv;
-    }
-    
-    std::vector< std::string > lines;
-    
-    for( i = 0; i < n; ++i ) {
-      Rcpp::List polygon = sfg[ i ];
-      line_counter = line_counter + polygon.size() + 1; // to add the SPLIT_CHAR "-" to separate polygons
-    }
-
-    Rcpp::StringVector res( line_counter );
-
-    int counter = 0;
-    for( i = 0; i < polygons.size(); ++i ) {
-
-      Rcpp::List polygon = sfg[ i ];
-  
-      for( j = 0; j < polygon.size(); ++j ) {  
-        Rcpp::NumericMatrix line = polygon[ j ];
-        res[ counter ] = encode( line );
-        counter = counter + 1;
-      }
-    
-      res[ counter ] = SPLIT_CHAR;
-      counter = counter + 1;
-    }
-    // remove the final SPLIT_CHAR
-    res.erase( line_counter - 1 );
-    return res;
-  }
+  // inline Rcpp::StringVector encode_multilinestring(
+  //   Rcpp::List& sfg
+  // ) {
+  //   int n = sfg.length();
+  //   int i;
+  //   Rcpp::StringVector res( n );
+  // 
+  //   for( i = 0; i < n; ++i ) {
+  //     Rcpp::NumericMatrix line = sfg[ i ];
+  //     res[ i ] = encode( line );
+  //   }
+  //   return res;
+  // }
+  // 
+  // inline Rcpp::StringVector encode_polygon(
+  //   Rcpp::List& sfg
+  // ) {
+  //   return encode_multilinestring( sfg );
+  // }
+  // 
+  // inline Rcpp::StringVector encode_multipolygon(
+  //   Rcpp::List& sfg
+  // ) {
+  // 
+  //   int n = sfg.length();
+  //   int i, j;
+  //   Rcpp::List polygons( n ); 
+  //   int line_counter = 0;
+  //   
+  //   if( n == 0 ) {
+  //     Rcpp::StringVector sv(0);
+  //     return sv;
+  //   }
+  //   
+  //   std::vector< std::string > lines;
+  //   
+  //   for( i = 0; i < n; ++i ) {
+  //     Rcpp::List polygon = sfg[ i ];
+  //     line_counter = line_counter + polygon.size() + 1; // to add the SPLIT_CHAR "-" to separate polygons
+  //   }
+  // 
+  //   Rcpp::StringVector res( line_counter );
+  // 
+  //   int counter = 0;
+  //   for( i = 0; i < polygons.size(); ++i ) {
+  // 
+  //     Rcpp::List polygon = sfg[ i ];
+  // 
+  //     for( j = 0; j < polygon.size(); ++j ) {  
+  //       Rcpp::NumericMatrix line = polygon[ j ];
+  //       res[ counter ] = encode( line );
+  //       counter = counter + 1;
+  //     }
+  //   
+  //     res[ counter ] = SPLIT_CHAR;
+  //     counter = counter + 1;
+  //   }
+  //   // remove the final SPLIT_CHAR
+  //   res.erase( line_counter - 1 );
+  //   return res;
+  // }
 
   inline Rcpp::List encode_sfc(
     Rcpp::List& sfc,
@@ -270,29 +279,11 @@ namespace encode {
       cls = sfheaders::sfg::getSfgClass( sfg );
       geometry = cls[1];
       
-      Rcpp::StringVector sv;
-      
-      if( geometry == "POINT" ) {
-        Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( sfg );
-        sv = encode( nv );
-      } else if ( geometry == "MULTIPOINT" ) {
-        Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( sfg );
-        sv = encode( nm );
-      } else if ( geometry == "LINESTRING" ) {
-        Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( sfg );
-        sv = encode( nm );
-      } else if ( geometry == "MULTILINESTRING" ) {
-        Rcpp::List mls = Rcpp::as< Rcpp::List >( sfg );
-        sv = encode_multilinestring( mls );
-      } else if ( geometry == "POLYGON" ) {
-        Rcpp::List pl = Rcpp::as< Rcpp::List >( sfg );
-        sv = encode_polygon( pl );
-      } else if ( geometry == "MULTIPOLYGON" ) {
-        Rcpp::List mpl = Rcpp::as< Rcpp::List >( sfg );
-        sv = encode_multipolygon( mpl );
-      } else {
-        Rcpp::stop("googlepolylines - unknown sfg type");
-      }
+      Rcpp::StringVector sv = encode( sfg );
+
+      // TODO:
+      // - stop if unknown sfg type (e.g. geometry collection??);
+      // - or will this loop handle it?
       
       if( !strip ) {
         std::string dim = "XY";

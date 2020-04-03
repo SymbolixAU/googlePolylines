@@ -19,7 +19,7 @@ LinkingTo:
     Rcpp (>= 1.0.4.6), 
     BH (>= 1.72.0-3),
     sfheaders
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.0
 Suggests:
     covr,
     knitr,
