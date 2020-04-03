@@ -89,7 +89,7 @@ namespace encode {
 
   // encode sfg objects
   template< int RTYPE >
-  inline Rcpp::StringVector encode_point(
+  inline Rcpp::StringVector encode(
     Rcpp::Vector< RTYPE >& sfg
   ) {
     
@@ -108,46 +108,87 @@ namespace encode {
     return res;
   }
 
-  template< int RTYPE >
-  inline Rcpp::StringVector encode_multipoint(
-    Rcpp::Matrix< RTYPE >& sfg
-  ) {
+  // template< int RTYPE >
+  // inline Rcpp::StringVector encode(
+  //   Rcpp::Matrix< RTYPE >& sfg
+  // ) {
+  // 
+  //   if( sfg.ncol() < 2 ) {
+  //     Rcpp::stop("googlepolylines - not enough columns in the matrix");
+  //   }
+  //   R_xlen_t n = sfg.nrow();
+  //   R_xlen_t i;
+  //   Rcpp::StringVector res( n );
+  //   
+  //   if( n == 0 ) {
+  //     // empty geometry - return empty string
+  //     return res;
+  //   }
+  //   
+  //   for( i = 0; i < n; ++i ) {
+  //     double lon = sfg( i, 0 );
+  //     double lat = sfg( i, 1 );
+  //     Rcpp::Vector< RTYPE > lons(1);
+  //     Rcpp::Vector< RTYPE > lats(1);
+  //     lons[0] = lon;
+  //     lats[0] = lat;
+  //     res[i] = encode( lons, lats );
+  //   }
+  //   return res;
+  // }
 
-    if( sfg.ncol() < 2 ) {
-      Rcpp::stop("googlepolylines - not enough columns in the matrix");
-    }
-    R_xlen_t n = sfg.nrow();
-    R_xlen_t i;
-    Rcpp::StringVector res( n );
-    
-    if( n == 0 ) {
-      // empty geometry - return empty string
-      return res;
-    }
-    
-    for( i = 0; i < n; ++i ) {
-      double lon = sfg( i, 0 );
-      double lat = sfg( i, 1 );
-      Rcpp::Vector< RTYPE > lons(1);
-      Rcpp::Vector< RTYPE > lats(1);
-      lons[0] = lon;
-      lats[0] = lat;
-      res[i] = encode( lons, lats );
-    }
-    return res;
-  }
-
-  template< int RTYPE >
-  inline Rcpp::StringVector encode_linestring(
-    Rcpp::Matrix< RTYPE >& sfg
+  // template< int RTYPE >
+  // inline Rcpp::StringVector encode_linestring(
+  //   Rcpp::Matrix< RTYPE >& sfg
+  // ) {
+  //   
+  //   R_xlen_t n = sfg.nrow();
+  //   if( n == 0 ) {
+  //     Rcpp::StringVector res(0);
+  //     return res;
+  //   }
+  //   return encode( sfg );
+  // }
+  
+  inline Rcpp::StringVector encode(
+    SEXP& sfg
   ) {
-    
-    R_xlen_t n = sfg.nrow();
-    if( n == 0 ) {
-      Rcpp::StringVector res(0);
-      return res;
+    switch( TYPEOF( sfg ) ) {
+    case INTSXP: {
+    if( Rf_isMatrix( sfg ) ) {
+      Rcpp::IntegerMatrix im = Rcpp::as< Rcpp::IntegerMatrix >( sfg );
+      return encode( im );
+    } else {
+      Rcpp::IntegerVector iv = Rcpp::as< Rcpp::IntegerVector >( sfg );
+      return encode( iv );
     }
-    return encode( sfg );
+    case REALSXP: {
+    if( Rf_isMatrix( sfg ) ) {
+      Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( sfg );
+      return encode( nm );
+    } else {
+      Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( sfg );
+      return encode( nv );
+    }
+    }
+    case VECSXP: {
+    if( Rf_isNewList( sfg ) ) {
+      Rcpp::List lst = Rcpp::as< Rcpp::List >( sfg );
+      R_xlen_t n = lst.size();
+      R_xlen_t i;
+      for( i = 0; i < n; ++i ) {
+        // loop and encode?
+        SEXP sfgi = lst[ i ];
+        encode( sfgi );
+      }
+    }
+    }
+    default: {
+      Rcpp::stop("googlePolylines - numeric values required");
+    }
+    }
+    }
+    return Rcpp::StringVector::create(); // #nocov - never reaches
   }
 
   inline Rcpp::StringVector encode_multilinestring(
@@ -196,7 +237,7 @@ namespace encode {
     int counter = 0;
     for( i = 0; i < polygons.size(); ++i ) {
 
-    Rcpp::List polygon = sfg[ i ];
+      Rcpp::List polygon = sfg[ i ];
   
       for( j = 0; j < polygon.size(); ++j ) {  
         Rcpp::NumericMatrix line = polygon[ j ];
@@ -233,13 +274,13 @@ namespace encode {
       
       if( geometry == "POINT" ) {
         Rcpp::NumericVector nv = Rcpp::as< Rcpp::NumericVector >( sfg );
-        sv = encode_point( nv );
+        sv = encode( nv );
       } else if ( geometry == "MULTIPOINT" ) {
         Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( sfg );
-        sv = encode_multipoint( nm );
+        sv = encode( nm );
       } else if ( geometry == "LINESTRING" ) {
         Rcpp::NumericMatrix nm = Rcpp::as< Rcpp::NumericMatrix >( sfg );
-        sv = encode_linestring( nm );
+        sv = encode( nm );
       } else if ( geometry == "MULTILINESTRING" ) {
         Rcpp::List mls = Rcpp::as< Rcpp::List >( sfg );
         sv = encode_multilinestring( mls );
