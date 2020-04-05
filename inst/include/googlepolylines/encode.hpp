@@ -7,6 +7,7 @@
 //#include "sfheaders/df/sfg.hpp"
 #include "sfheaders/sfg/sfg_attributes.hpp"
 #include "sfheaders/utils/lists/list.hpp"
+#include "sfheaders/utils/sexp/sexp.hpp"
 
 namespace googlepolylines {
 namespace encode {
@@ -97,6 +98,7 @@ namespace encode {
     if( sfg.length() < 2 ) {
       Rcpp::stop("googlepolylines - not enough values in a point");
     }
+    
     Rcpp::Vector< RTYPE > lons(1);
     Rcpp::Vector< RTYPE > lats(1);
     lons[0] = sfg[0];
@@ -107,47 +109,19 @@ namespace encode {
     // return res;
   }
 
-  // template< int RTYPE >
-  // inline Rcpp::StringVector encode(
-  //   Rcpp::Matrix< RTYPE >& sfg
-  // ) {
-  // 
-  //   if( sfg.ncol() < 2 ) {
-  //     Rcpp::stop("googlepolylines - not enough columns in the matrix");
-  //   }
-  //   R_xlen_t n = sfg.nrow();
-  //   R_xlen_t i;
-  //   Rcpp::StringVector res( n );
-  //   
-  //   if( n == 0 ) {
-  //     // empty geometry - return empty string
-  //     return res;
-  //   }
-  //   
-  //   for( i = 0; i < n; ++i ) {
-  //     double lon = sfg( i, 0 );
-  //     double lat = sfg( i, 1 );
-  //     Rcpp::Vector< RTYPE > lons(1);
-  //     Rcpp::Vector< RTYPE > lats(1);
-  //     lons[0] = lon;
-  //     lats[0] = lat;
-  //     res[i] = encode( lons, lats );
-  //   }
-  //   return res;
-  // }
-
-  // template< int RTYPE >
-  // inline Rcpp::StringVector encode_linestring(
-  //   Rcpp::Matrix< RTYPE >& sfg
-  // ) {
-  //   
-  //   R_xlen_t n = sfg.nrow();
-  //   if( n == 0 ) {
-  //     Rcpp::StringVector res(0);
-  //     return res;
-  //   }
-  //   return encode( sfg );
-  // }
+  
+  inline bool is_empty( SEXP& sfg ) {
+    
+    // need to iterate through lists to find empty multipolygons
+    
+    int n;
+    if( Rf_isMatrix( sfg ) ) {
+      n = sfheaders::utils::sexp_n_row( sfg );
+    } else {
+      n = sfheaders::utils::get_sexp_length( sfg );
+    }
+    return n == 0;
+  }
   
   /*
    *
@@ -160,6 +134,11 @@ namespace encode {
     int depth = 0,
     int depth_split = 0
   ) {
+    
+    if( is_empty( sfg ) ) {
+      return Rcpp::StringVector::create();
+    }
+    
     switch( TYPEOF( sfg ) ) {
     case INTSXP: {
     if( Rf_isMatrix( sfg ) ) {
@@ -183,7 +162,6 @@ namespace encode {
     if( Rf_isNewList( sfg ) ) {
       
       depth = depth + 1;
-      // Rcpp::Rcout << "new_list" << std::endl;
       Rcpp::List lst = Rcpp::as< Rcpp::List >( sfg );
       R_xlen_t n = lst.size();
       R_xlen_t i;
@@ -194,23 +172,14 @@ namespace encode {
       Rcpp::List res( res_n ); 
       
       for( i = 0; i < n; ++i ) {
-        // loop and encode?
-        // Rcpp::Rcout << "i: " << i << std::endl;
         SEXP sfgi = lst[ i ];
         res[ i ] = encode( sfgi, depth, depth_split );
       }
-      // Rcpp::Rcout << "depth: " << depth << std::endl;
-      // Rcpp::Rcout << "depth_split: " << depth_split << std::endl;
-      // Rcpp::Rcout << "is split_depth: " << split_depth << std::endl;
-      // Rcpp::Rcout << "SPLIT_CHAR " << std::endl;
       if( split_depth ) {
         res[ n ] = SPLIT_CHAR;
       }
       Rcpp::StringVector enc = sfheaders::utils::unlist_list( res );
       return enc;
-      //Rcpp::Rcout << "encoded list " << std::endl;
-      
-      //return res;
     }
     }
     default: {
