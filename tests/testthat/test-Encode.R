@@ -160,7 +160,7 @@ test_that("GEOMETRYCOLLECTIONS error", {
   polygon <- sf::st_polygon(x = list(p1, p2))
   linestring <- sf::st_linestring(p3)
   sf <- sf::st_sfc(geo = sf::st_geometrycollection(x = list(point, linestring, polygon)))
-  expect_error(encode(sf),"encoding this sf type is currently not supported")
+  expect_error(encode(sf),"googlePolylines - encoding this sf type is currently not supported")
 })
 
 

@@ -149,8 +149,16 @@ namespace encode {
   //   return encode( sfg );
   // }
   
+  /*
+   *
+   * @param depth_split the depth (list[[ list[[ ]] ]] ) where a SPLIT_CHAR is required
+   * so a MULTIPOLYGON will have a depth_split of 1, all the other geometries will be 0
+   * 
+   */
   inline Rcpp::StringVector encode(
-    SEXP& sfg
+    SEXP& sfg,
+    int depth = 0,
+    int depth_split = 0
   ) {
     switch( TYPEOF( sfg ) ) {
     case INTSXP: {
@@ -173,24 +181,36 @@ namespace encode {
     }
     case VECSXP: {
     if( Rf_isNewList( sfg ) ) {
-      Rcpp::Rcout << "new_list" << std::endl;
+      
+      depth = depth + 1;
+      // Rcpp::Rcout << "new_list" << std::endl;
       Rcpp::List lst = Rcpp::as< Rcpp::List >( sfg );
       R_xlen_t n = lst.size();
       R_xlen_t i;
-      Rcpp::List res( n ); // to add in a SPLIT_CHAR
+      
+      // to add in a SPLIT_CHAR
+      bool split_depth = depth == depth_split;
+      R_xlen_t res_n = split_depth ? n + 1 : n;
+      Rcpp::List res( res_n ); 
+      
       for( i = 0; i < n; ++i ) {
         // loop and encode?
-        Rcpp::Rcout << "i: " << i << std::endl;
+        // Rcpp::Rcout << "i: " << i << std::endl;
         SEXP sfgi = lst[ i ];
-        res[ i ] = encode( sfgi );
+        res[ i ] = encode( sfgi, depth, depth_split );
       }
-      //Rcpp::Rcout << "SPLIT_CHAR" << std::endl;
-      //res[ n ] = SPLIT_CHAR;
+      // Rcpp::Rcout << "depth: " << depth << std::endl;
+      // Rcpp::Rcout << "depth_split: " << depth_split << std::endl;
+      // Rcpp::Rcout << "is split_depth: " << split_depth << std::endl;
+      // Rcpp::Rcout << "SPLIT_CHAR " << std::endl;
+      if( split_depth ) {
+        res[ n ] = SPLIT_CHAR;
+      }
       Rcpp::StringVector enc = sfheaders::utils::unlist_list( res );
-      //return res;
-      Rcpp::Rcout << "encoded list " << std::endl;
-      
       return enc;
+      //Rcpp::Rcout << "encoded list " << std::endl;
+      
+      //return res;
     }
     }
     default: {
@@ -262,7 +282,7 @@ namespace encode {
   //   return res;
   // }
 
-  inline Rcpp::List encode_sfc(
+  inline SEXP encode_sfc(
     Rcpp::List& sfc,
     bool& strip
   ) {
@@ -279,12 +299,18 @@ namespace encode {
       cls = sfheaders::sfg::getSfgClass( sfg );
       geometry = cls[1];
       
-      Rcpp::StringVector sv = encode( sfg );
-
-      // TODO:
-      // - stop if unknown sfg type (e.g. geometry collection??);
-      // - or will this loop handle it?
+      if( geometry == "GEOMETRYCOLLECTION" ) {
+        Rcpp::stop("googlePolylines - encoding this sf type is currently not supported");
+      }
       
+      int depth_split = geometry == "MULTIPOLYGON" ? 2 : 0;
+      int depth = 0;
+      Rcpp::StringVector sv = encode( sfg, depth, depth_split );
+      
+      if( geometry == "MULTIPOLYGON" ) {
+        sv.erase( sv.length() - 1 );
+      }
+
       if( !strip ) {
         std::string dim = "XY";
         sv.attr("sfg") = sfheaders::sfg::sfg_attributes(dim, geometry);
