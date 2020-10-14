@@ -4,8 +4,7 @@
 \alias{geometryRow}
 \title{Geometry Row}
 \usage{
-geometryRow(x, geometry = c("POINT", "LINESTRING", "POLYGON"),
-  multi = TRUE)
+geometryRow(x, geometry = c("POINT", "LINESTRING", "POLYGON"), multi = TRUE)
 }
 \arguments{
 \item{x}{\code{sfencoded} object}

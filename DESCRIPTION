@@ -1,8 +1,8 @@
 Package: googlePolylines
 Type: Package
 Title: Encoding Coordinates into 'Google' Polylines
-Version: 0.7.2001
-Date: 2018-11-23
+Version: 0.8
+Date: 2020-10-15
 Authors@R: c(
     person("David", "Cooley", ,"dcooley@symbolix.com.au", role = c("aut", "cre")),
     person("Paulo", "Barcelos", role = "ctb", comment = "Author of c++ decode_polyline"),
@@ -10,17 +10,19 @@ Authors@R: c(
     )
 Description: Encodes simple feature ('sf') objects and coordinates, and decodes polylines 
     using the 'Google' polyline encoding algorithm (<https://developers.google.com/maps/documentation/utilities/polylinealgorithm>).
-License: GPL-3
+License: MIT + file LICENSE
+Encoding: UTF-8
 SystemRequirements: C++11
 Depends: R (>= 3.3.0)
 Imports:
   Rcpp (>= 0.12.13)
 LinkingTo: Rcpp, BH
-RoxygenNote: 6.1.0
+RoxygenNote: 7.1.0
 Suggests:
     covr,
     knitr,
     rmarkdown,
     sf,
+    sfheaders,
     testthat
 VignetteBuilder: knitr

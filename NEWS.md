@@ -1,6 +1,7 @@
 
-# v0.7.2+
+# v0.8
 
+* chnaged licence to MIT
 * fix [issue #40](https://github.com/SymbolixAU/googlePolylines/issues/40)
 
 # v0.7.2
