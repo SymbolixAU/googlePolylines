@@ -1,9 +1,8 @@
 
+[![R build status](https://github.com/SymbolixAU/googlePolylines/workflows/R-CMD-check/badge.svg)](https://github.com/SymbolixAU/googlePolylines/actions)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/googlePolylines)](https://CRAN.R-project.org/package=googlePolylines)
+[![Codecov test coverage](https://codecov.io/gh/SymbolixAU/googlePolylines/branch/master/graph/badge.svg)](https://codecov.io/gh/SymbolixAU/googlePolylines?branch=master)
 ![downloads](http://cranlogs.r-pkg.org/badges/grand-total/googlePolylines)
-[![Github Stars](https://img.shields.io/github/stars/SymbolixAU/googlePolylines.svg?style=social&label=Github)](https://github.com/SymbolixAU/googlePolylines)
-[![Travis-CI Build Status](https://travis-ci.org/SymbolixAU/googlePolylines.svg?branch=master)](https://travis-ci.org/SymbolixAU/googlePolylines)
-[![Coverage Status](https://img.shields.io/codecov/c/github/SymbolixAU/googlePolylines/master.svg)](https://codecov.io/github/SymbolixAU/googlePolylines?branch=master)
 
 
 # googlePolylines
@@ -16,17 +15,16 @@ A **fast** and light-weight implementation of [Google's polyline encoding algori
 
 ## Installation
 
-Version 0.7.0 is on CRAN and can be installed through
+From CRAN
 
 ```r
 install.packages("googlePolylines")
 ```
 
-The development version can be installed from github with:
+From github (dev version)
 
 ```r
-# install.packages("devtools")
-devtools::install_github("SymbolixAU/googlePolylines")
+remotes::install_github("SymbolixAU/googlePolylines")
 ```
 
 ## Scope
