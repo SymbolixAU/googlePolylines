@@ -3,7 +3,6 @@
 ^\.Rproj\.user$
 ^\.travis\.yml$
 ^codecov\.yml$
-^NEWS\.md$
 ^cran-comments\.md$
 ^revdep$
 ^LICENSE\.md$
