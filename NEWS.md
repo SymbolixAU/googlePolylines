@@ -1,4 +1,8 @@
 
+# v0.8.1
+
+* fixed erroneous console print
+
 # v0.8
 
 * chnaged licence to MIT

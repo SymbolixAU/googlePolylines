@@ -71,7 +71,7 @@ Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String 
       continue;
     }
     
-    Rcpp::Rcout << encodedStrings << std::endl;
+    // Rcpp::Rcout << encodedStrings << std::endl;
     
     std::string encoded = Rcpp::as< std::string >(encodedStrings[i]);
     
