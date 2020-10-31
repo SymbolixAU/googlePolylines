@@ -1,5 +1,5 @@
 
 ## Release summary
 
-* updates v0.7.2 to v0.8
-* fixed CRAN warnings
+* updates v0.8 to v0.8.1
+* patch update to remove a print statement added during last update
