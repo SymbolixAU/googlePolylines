@@ -1,4 +1,9 @@
 
+# v0.8.2
+
+* updated to C++14 due to Boost requirements [issue 49](https://github.com/SymbolixAU/googlePolylines/issues/49)
+* removed pointless R dependency
+
 # v0.8.1
 
 * fixed erroneous console print
