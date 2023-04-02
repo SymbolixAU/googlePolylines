@@ -19,16 +19,16 @@ sfGeometryAttributes <- function(sf) UseMethod("sfGeometryAttributes")
 sfGeometryAttributes.sf <- function(sf) sfGeometryAttributes(sf[[sfGeometryColumn(sf)]])
 
 #' @export
-sfGeometryAttributes.sfc <- function(sfc) {
+sfGeometryAttributes.sfc <- function(sf) {
   
   list(
-    type = sfGeometryType(sfc),
-    dim  = sfDimension(sfc),
-    bbox = sfBbox(sfc),
-    epsg = sfEpsg(sfc),
-    proj = sfProj(sfc),
-    prec = sfPrecision(sfc),
-    n_em = sfNEmpty(sfc)
+    type = sfGeometryType(sf),
+    dim  = sfDimension(sf),
+    bbox = sfBbox(sf),
+    epsg = sfEpsg(sf),
+    proj = sfProj(sf),
+    prec = sfPrecision(sf),
+    n_em = sfNEmpty(sf)
   )
 }
 
@@ -42,42 +42,42 @@ sfGeometryColumn.sf <- function(sf) attr(sf, "sf_column")
 sfGeometryType <- function(sf) UseMethod("sfGeometryType")
 
 #' @export
-sfGeometryType.sfc <- function(sfc) substr(class(sfc)[1], 5, nchar(class(sfc)[1]))
+sfGeometryType.sfc <- function(sf) substr(class(sf)[1], 5, nchar(class(sf)[1]))
 
 ### DIMENSION
 sfDimension <- function(sf) UseMethod("sfDimension")
 
 #' @export
-sfDimension.sfc <- function(sfc) class(sfc[[1]])[1]
+sfDimension.sfc <- function(sf) class(sf[[1]])[1]
 
 ### BBOX
 sfBbox <- function(sf) UseMethod("sfBbox")
 
-sfBbox.sfc <- function(sfc) attr(sfc, "bbox")
+sfBbox.sfc <- function(sf) attr(sf, "bbox")
 
 ### EPSG
 sfEpsg <- function(sf) UseMethod("sfEpsg") 
 
 #' @export
-sfEpsg.sfc <- function(sfc) attr(sfc, "crs")$epsg
+sfEpsg.sfc <- function(sf) attr(sf, "crs")$epsg
 
 ### PROJ4STRINg
 sfProj <- function(sf) UseMethod("sfProj")
 
 #' @export
-sfProj.sfc <- function(sfc) attr(sfc, "crs")$proj4string
+sfProj.sfc <- function(sf) attr(sf, "crs")$proj4string
 
 ### PRECISION
 sfPrecision <- function(sf) UseMethod("sfPrecision")
 
 #' @export
-sfPrecision.sfc <- function(sfc) attr(sfc, "precision")
+sfPrecision.sfc <- function(sf) attr(sf, "precision")
 
 ### N_EMPTY
 sfNEmpty <- function(sf) UseMethod("sfNEmpty")
 
 #' @export
-sfNEmpty.sfc <- function(sfc) attr(sfc, "n_empty")
+sfNEmpty.sfc <- function(sf) attr(sf, "n_empty")
 
 
 #' Geometry Row

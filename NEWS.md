@@ -1,3 +1,6 @@
+# v0.8.3
+
+* updated s3 generic method arguments
 
 # v0.8.2
 

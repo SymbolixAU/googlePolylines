@@ -7,3 +7,4 @@
 ^revdep$
 ^LICENSE\.md$
 ^\.github$
+^CRAN-SUBMISSION$

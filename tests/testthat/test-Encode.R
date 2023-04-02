@@ -417,9 +417,9 @@ test_that("emptry geometries are handled", {
   sfempl <- sf::st_sf(geometry = empl)
   
   enc <- encode(ept)
-  expect_true(enc[[1]] == ">>")
+  expect_true(enc[[1]] == "??")
   enc <- encode(sfept)
-  expect_true(enc$geometry[[1]] == ">>")
+  expect_true(enc$geometry[[1]] == "??")
   
   enc <- encode(emp)
   expect_true(length(enc[[1]]) == 0)
