@@ -1,7 +1,7 @@
 
 [![R build status](https://github.com/SymbolixAU/googlePolylines/workflows/R-CMD-check/badge.svg)](https://github.com/SymbolixAU/googlePolylines/actions)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/googlePolylines)](https://CRAN.R-project.org/package=googlePolylines)
-[![Codecov test coverage](https://codecov.io/gh/SymbolixAU/googlePolylines/branch/master/graph/badge.svg)](https://codecov.io/gh/SymbolixAU/googlePolylines?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/SymbolixAU/googlePolylines/branch/master/graph/badge.svg)](https://app.codecov.io/gh/SymbolixAU/googlePolylines?branch=master)
 ![downloads](http://cranlogs.r-pkg.org/badges/grand-total/googlePolylines)
 
 
