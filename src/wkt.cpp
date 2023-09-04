@@ -10,8 +10,6 @@
 #include "variants.h"
 
 using namespace Rcpp;
-namespace bg = boost::geometry;
-namespace bgm = bg::model;
 
 void addLonLatToWKTStream(std::ostringstream& os, float lon, float lat ) {
   os << std::to_string(lon) << " " << std::to_string(lat);
@@ -225,8 +223,8 @@ void encode_wkt_point(Point const& p, std::ostringstream& os) {
   global_vars::lons.clear();
   global_vars::lats.clear();
 
-  global_vars::lons.push_back(bg::get<0>(p));
-  global_vars::lats.push_back(bg::get<1>(p));
+  global_vars::lons.push_back(boost::geometry::get<0>(p));
+  global_vars::lats.push_back(boost::geometry::get<1>(p));
   
   global_vars::encodedString = encode_polyline();
   
@@ -261,14 +259,12 @@ void encode_wkt_linestring(LineString const& ls, std::ostringstream& os) {
       linestring_type const
     >::type iterator_type;
   
-  int i = 0;
   for (iterator_type it = boost::begin(ls);
        it != boost::end(ls);
        ++it)
   {
-    global_vars::lons.push_back(bg::get<0>(*it));
-    global_vars::lats.push_back(bg::get<1>(*it));
-    i++;
+    global_vars::lons.push_back(boost::geometry::get<0>(*it));
+    global_vars::lats.push_back(boost::geometry::get<1>(*it));
   }
   global_vars::encodedString = encode_polyline();
   addToStream(os);
@@ -355,37 +351,37 @@ Rcpp::List rcpp_wkt_to_polyline(Rcpp::StringVector wkt) {
     if (geomType == "POINT" ) {
       
       point_type pt;
-      bg::read_wkt(str_wkt, pt);
+      boost::geometry::read_wkt(str_wkt, pt);
       encode_wkt_point(pt, os);
       
     }else if (geomType == "MULTIPOINT" ) {
       
       multi_point_type mp;
-      bg::read_wkt(str_wkt, mp);
+      boost::geometry::read_wkt(str_wkt, mp);
       encode_wkt_multipoint(mp, os);
       
     }else if (geomType == "LINESTRING" ) {
       
       linestring_type ls;
-      bg::read_wkt(str_wkt, ls);
+      boost::geometry::read_wkt(str_wkt, ls);
       encode_wkt_linestring(ls, os);
       
     }else if (geomType == "MULTILINESTRING" ) {
       
       multi_linestring_type mls;
-      bg::read_wkt(str_wkt, mls);
+      boost::geometry::read_wkt(str_wkt, mls);
       encode_wkt_multi_linestring(mls, os);
       
     }else if (geomType == "POLYGON" ) { 
       
       polygon_type pl;
-      bg::read_wkt(str_wkt, pl);
+      boost::geometry::read_wkt(str_wkt, pl);
       encode_wkt_polygon(pl, os);
       
     }else if (geomType == "MULTIPOLYGON" ) {
       
       multi_polygon_type mpl;
-      bg::read_wkt(str_wkt, mpl);
+      boost::geometry::read_wkt(str_wkt, mpl);
       encode_wkt_multi_polygon(mpl, os);
     }
     
