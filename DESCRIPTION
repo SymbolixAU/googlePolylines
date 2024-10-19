@@ -15,7 +15,6 @@ Encoding: UTF-8
 Imports:
   Rcpp (>= 1.0.10)
 LinkingTo: 
-  BH,
   Rcpp
 RoxygenNote: 7.2.3
 Suggests:

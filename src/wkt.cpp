@@ -1,10 +1,7 @@
 
-// [[Rcpp::depends(BH)]]
-
 #include <Rcpp.h>
 #include <boost/algorithm/string.hpp>
-//#include <boost/geometry.hpp>
-#include "boost/geometry.hpp"
+#include <boost/geometry.hpp>
 
 #include "wkt.h"
 #include "googlePolylines.h"
