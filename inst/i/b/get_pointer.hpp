@@ -11,7 +11,7 @@
 // we make sure that our include of <memory> doesn't try to
 // pull in the TR1 headers: that's why we use this header 
 // rather than including <memory> directly:
-#include <b/config/no_tr1/memory.hpp>  // std::auto_ptr
+//#include <b/config/no_tr1/memory.hpp>  // std::auto_ptr
 
 namespace boost { 
 
@@ -45,10 +45,10 @@ template<class T> T * get_pointer(T * p)
 #define BOOST_CORE_DETAIL_DISABLED_DEPRECATED_WARNINGS
 #endif
 
-template<class T> T * get_pointer(std::auto_ptr<T> const& p)
-{
-    return p.get();
-}
+// template<class T> T * get_pointer(std::auto_ptr<T> const& p)
+// {
+//     return p.get();
+// }
 
 #if defined( BOOST_CORE_DETAIL_DISABLE_LIBSTDCXX_DEPRECATED_WARNINGS )
 #pragma GCC diagnostic pop
