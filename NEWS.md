@@ -1,3 +1,7 @@
+# v0.8.5
+
+* removed BH CRAN dependency and added local copy [issue 52](https://github.com/SymbolixAU/googlePolylines/issues/52)
+
 # v0.8.3
 
 * updated s3 generic method arguments
