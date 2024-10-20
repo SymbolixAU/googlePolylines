@@ -1,1 +1,1 @@
-PKG_CPPFLAGS = -I../in/i
+PKG_CPPFLAGS = -I../inst/i
