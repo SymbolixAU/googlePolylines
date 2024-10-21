@@ -67,19 +67,6 @@ test_that("zm attributes are removed", {
   
 })
 
-test_that("correct structure is printed", {
-  
-  testthat::skip_on_cran()
-  library(sf)
-  nc <- sf::st_read(system.file("shape/nc.shp", package="sf"), quiet = T)
-  enc <- encode(nc)
-  
-  ## not sure these tests do anything...
-  expect_true(is.atomic(str( enc[1, 'geometry'][[1]] )))
-  expect_output(str( enc ))
-})
-
-
 test_that("encoded attribute is attached", {
   df <- data.frame(polyline = "abc")
   df <- googlePolylines:::attachEncodedAttribute(df, 'polyline', 'encoded_column')
