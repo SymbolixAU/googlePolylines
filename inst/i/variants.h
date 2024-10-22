@@ -11,7 +11,6 @@ using namespace Rcpp;
 #include <b/geometry/geometries/polygon.hpp>
 #include <b/geometry/geometries/multi_linestring.hpp>
 #include <b/geometry/geometries/multi_polygon.hpp>
-#include <iostream>
 
 namespace bg = boost::geometry;
 namespace bgm = bg::model;
