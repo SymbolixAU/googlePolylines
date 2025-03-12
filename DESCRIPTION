@@ -25,3 +25,4 @@ Suggests:
     sfheaders,
     testthat
 VignetteBuilder: knitr
+URL: https://github.com/SymbolixAU/googlePolylines
