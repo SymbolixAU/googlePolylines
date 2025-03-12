@@ -13,8 +13,10 @@ Description: Encodes simple feature ('sf') objects and coordinates, and decodes 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Imports:
+  BH (>= 1.87.0),
   Rcpp (>= 1.0.10)
 LinkingTo: 
+  BH,
   Rcpp
 RoxygenNote: 7.2.3
 Suggests:

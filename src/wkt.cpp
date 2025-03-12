@@ -1,7 +1,7 @@
 
 #include <Rcpp.h>
-#include <b/algorithm/string.hpp>
-#include <b/geometry.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/geometry.hpp>
 
 #include "wkt.h"
 #include "googlePolylines.h"

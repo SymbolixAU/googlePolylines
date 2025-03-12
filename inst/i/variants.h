@@ -4,13 +4,13 @@ using namespace Rcpp;
 #ifndef GOOGLEVARIANTS_H
 #define GOOGLEVARIANTS_H
 
-#include <b/geometry.hpp>
-#include <b/geometry/geometries/linestring.hpp>
-#include <b/geometry/geometries/point_xy.hpp>
-#include <b/geometry/geometries/multi_point.hpp>
-#include <b/geometry/geometries/polygon.hpp>
-#include <b/geometry/geometries/multi_linestring.hpp>
-#include <b/geometry/geometries/multi_polygon.hpp>
+#include <boost/geometry.hpp>
+#include <boost/geometry/geometries/linestring.hpp>
+#include <boost/geometry/geometries/point_xy.hpp>
+#include <boost/geometry/geometries/multi_point.hpp>
+#include <boost/geometry/geometries/polygon.hpp>
+#include <boost/geometry/geometries/multi_linestring.hpp>
+#include <boost/geometry/geometries/multi_polygon.hpp>
 
 namespace bg = boost::geometry;
 namespace bgm = bg::model;
