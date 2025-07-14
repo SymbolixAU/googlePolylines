@@ -95,7 +95,7 @@ Rcpp::List decode_polyline(std::string encoded,
                            std::vector<std::string>& col_headers, 
                            std::vector<double>& pointsLat, 
                            std::vector<double>& pointsLon,
-                           double precision = 1e-6) {
+                           double precision) {
   
   int len = encoded.size();
   int index = 0;
