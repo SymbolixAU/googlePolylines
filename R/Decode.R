@@ -3,6 +3,7 @@
 #' Decodes encoded polylines into a list of data.frames.
 #' 
 #' @param polylines vector of encoded polyline strings
+#' @param precision 
 #' 
 #' @examples
 #' polylines <- c(
@@ -13,33 +14,27 @@
 #' decode(polylines)
 #' 
 #' @export
-decode <- function(polylines) UseMethod("decode")
+decode <- function(polylines, precision) UseMethod("decode")
 
 #' @export
-decode.character <- function(polylines) {
-  rcpp_decode_polyline(polylines, 'coords')
+decode.character <- function(polylines, precision) {
+  rcpp_decode_polyline(polylines, 'coords', precision)
 }
 
-## TODO(decode encoded object)
-
 #' @export
-decode.encoded_column <- function( polylines ) {
+decode.encoded_column <- function( polylines, precision ) {
   ## encoded_columns are a list
-  ## TODO(use rcpp_decode_polyline_list())
-  #lapply(polylines, decode)
-  rcpp_decode_polyline_list( polylines, 'sfc' )
+  rcpp_decode_polyline_list( polylines, 'sfc', precision )
 }
 
 #' @export
-decode.zm_column <- function( polylines ) {
-  ## TODO( return ZM, rather than lat/lon )
-  ##lapply(polylines, function(x) rcpp_decode_polyline(x, attr(x, 'class')))
-  rcpp_decode_polyline_list( polylines, 'zm' )
+decode.zm_column <- function( polylines, precision ) {
+  rcpp_decode_polyline_list( polylines, 'zm', precision )
 }
 
 ## TODO(rcpp_decode_polyline_list()) to handle the encoded columns of coords and ZM dims
 
 #' @export
-decode.default <- function(polylines) stop("I don't know how to decode this object")
+decode.default <- function(polylines, precision) stop("I don't know how to decode this object")
 
 
