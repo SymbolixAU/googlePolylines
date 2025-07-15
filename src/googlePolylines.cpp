@@ -101,7 +101,7 @@ Rcpp::List decode_polyline(std::string encoded,
   int index = 0;
   float lat = 0;
   float lng = 0;
-  
+  float factor = pow(10, -precision);
   pointsLat.clear();
   pointsLon.clear();
   
@@ -127,7 +127,6 @@ Rcpp::List decode_polyline(std::string encoded,
     float dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
     lng += dlng;
 
-    float factor = pow(10, -precision);
     pointsLat.push_back(lat * factor);
     pointsLon.push_back(lng * factor);
   }
