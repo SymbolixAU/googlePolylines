@@ -19,6 +19,25 @@ test_that("NA inputs handled properly", {
 })
 
 
+## issue 17
+test_that("decoding precision", {
+  
+  p5 <- googlePolylines::decode("k_cecBeqjlX`@xeA")
+
+  # lat      lon
+  # 1 525.2916 133.2612
+  # 2 525.2914 133.2498
+  
+  p6 <- googlePolylines::decode("k_cecBeqjlX`@xeA", precision = 6)
+  # lat      lon
+  # 1 52.52916 13.32611
+  # 2 52.52914 13.32498
+  
+  expect_equal(p5[[1]]$lat, p6[[1]]$lat * 10, tolerance = 0.00001)
+  expect_equal(p5[[1]]$lon, p6[[1]]$lon * 10, tolerance = 0.00001)
+  
+})
+
 # test_that("decoding ZM columns", {
 #   
 #   ## the correct Z and M columns are returned
