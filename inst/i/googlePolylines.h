@@ -44,7 +44,8 @@ Rcpp::CharacterVector getSfClass(SEXP sf);
 Rcpp::List decode_polyline(std::string encoded, 
                            std::vector<std::string>& col_headers, 
                            std::vector<double>& pointsLat, 
-                           std::vector<double>& pointsLon);
+                           std::vector<double>& pointsLon,
+                           double precision);
 
 std::vector<std::string> get_col_headers(Rcpp::String sfg_dim);
 

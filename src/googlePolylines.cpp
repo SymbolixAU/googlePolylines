@@ -11,7 +11,7 @@ namespace global_vars {
 }
 
 // [[Rcpp::export]]
-Rcpp::List rcpp_decode_polyline_list( Rcpp::List encodedList, std::string attribute ) {
+Rcpp::List rcpp_decode_polyline_list( Rcpp::List encodedList, std::string attribute, double precision) {
 
   // If the DIM is just Z or just M, should the result return a vector, rather than
   // a 2-column data.frame? 
@@ -46,7 +46,7 @@ Rcpp::List rcpp_decode_polyline_list( Rcpp::List encodedList, std::string attrib
       sv[0] = polylines[j];
       
       std::string s = Rcpp::as< std::string >(sv);
-      polyline_output[j] = decode_polyline(s, col_headers, pointsLat, pointsLon);
+      polyline_output[j] = decode_polyline(s, col_headers, pointsLat, pointsLon, precision);
     }
     output[i] = polyline_output;
   }
@@ -55,7 +55,7 @@ Rcpp::List rcpp_decode_polyline_list( Rcpp::List encodedList, std::string attrib
 }
 
 // [[Rcpp::export]]
-Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String encoded_type) {
+Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String encoded_type, double precision) {
 
   int encodedSize = encodedStrings.size();
   Rcpp::List results(encodedSize);
@@ -75,7 +75,13 @@ Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String 
     
     std::string encoded = Rcpp::as< std::string >(encodedStrings[i]);
     
-    Rcpp::List decoded = decode_polyline(encoded, col_headers, pointsLat, pointsLon);
+    Rcpp::List decoded = decode_polyline(
+      encoded, 
+      col_headers, 
+      pointsLat, 
+      pointsLon, 
+      precision
+      );
     
     results[i] = decoded;
   }
@@ -88,13 +94,14 @@ Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String 
 Rcpp::List decode_polyline(std::string encoded, 
                            std::vector<std::string>& col_headers, 
                            std::vector<double>& pointsLat, 
-                           std::vector<double>& pointsLon) {
+                           std::vector<double>& pointsLon,
+                           double precision) {
   
   int len = encoded.size();
   int index = 0;
   float lat = 0;
   float lng = 0;
-  
+  float factor = pow(10, -precision);
   pointsLat.clear();
   pointsLon.clear();
   
@@ -120,8 +127,8 @@ Rcpp::List decode_polyline(std::string encoded,
     float dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
     lng += dlng;
 
-    pointsLat.push_back(lat * (float)1e-5);
-    pointsLon.push_back(lng * (float)1e-5);
+    pointsLat.push_back(lat * factor);
+    pointsLon.push_back(lng * factor);
   }
   
   //TODO(ZM attributes)

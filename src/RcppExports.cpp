@@ -23,26 +23,28 @@ BEGIN_RCPP
 END_RCPP
 }
 // rcpp_decode_polyline_list
-Rcpp::List rcpp_decode_polyline_list(Rcpp::List encodedList, std::string attribute);
-RcppExport SEXP _googlePolylines_rcpp_decode_polyline_list(SEXP encodedListSEXP, SEXP attributeSEXP) {
+Rcpp::List rcpp_decode_polyline_list(Rcpp::List encodedList, std::string attribute, double precision);
+RcppExport SEXP _googlePolylines_rcpp_decode_polyline_list(SEXP encodedListSEXP, SEXP attributeSEXP, SEXP precisionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::List >::type encodedList(encodedListSEXP);
     Rcpp::traits::input_parameter< std::string >::type attribute(attributeSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_decode_polyline_list(encodedList, attribute));
+    Rcpp::traits::input_parameter< double >::type precision(precisionSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_decode_polyline_list(encodedList, attribute, precision));
     return rcpp_result_gen;
 END_RCPP
 }
 // rcpp_decode_polyline
-Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String encoded_type);
-RcppExport SEXP _googlePolylines_rcpp_decode_polyline(SEXP encodedStringsSEXP, SEXP encoded_typeSEXP) {
+Rcpp::List rcpp_decode_polyline(Rcpp::StringVector encodedStrings, Rcpp::String encoded_type, double precision);
+RcppExport SEXP _googlePolylines_rcpp_decode_polyline(SEXP encodedStringsSEXP, SEXP encoded_typeSEXP, SEXP precisionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type encodedStrings(encodedStringsSEXP);
     Rcpp::traits::input_parameter< Rcpp::String >::type encoded_type(encoded_typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_decode_polyline(encodedStrings, encoded_type));
+    Rcpp::traits::input_parameter< double >::type precision(precisionSEXP);
+    rcpp_result_gen = Rcpp::wrap(rcpp_decode_polyline(encodedStrings, encoded_type, precision));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -95,8 +97,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_googlePolylines_rcpp_encodeSfGeometry", (DL_FUNC) &_googlePolylines_rcpp_encodeSfGeometry, 2},
-    {"_googlePolylines_rcpp_decode_polyline_list", (DL_FUNC) &_googlePolylines_rcpp_decode_polyline_list, 2},
-    {"_googlePolylines_rcpp_decode_polyline", (DL_FUNC) &_googlePolylines_rcpp_decode_polyline, 2},
+    {"_googlePolylines_rcpp_decode_polyline_list", (DL_FUNC) &_googlePolylines_rcpp_decode_polyline_list, 3},
+    {"_googlePolylines_rcpp_decode_polyline", (DL_FUNC) &_googlePolylines_rcpp_decode_polyline, 3},
     {"_googlePolylines_rcpp_encode_polyline", (DL_FUNC) &_googlePolylines_rcpp_encode_polyline, 2},
     {"_googlePolylines_rcpp_encode_polyline_byrow", (DL_FUNC) &_googlePolylines_rcpp_encode_polyline_byrow, 2},
     {"_googlePolylines_rcpp_polyline_to_wkt", (DL_FUNC) &_googlePolylines_rcpp_polyline_to_wkt, 1},
