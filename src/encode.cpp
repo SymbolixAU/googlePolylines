@@ -301,6 +301,7 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
   
   Rcpp::List output(sfc.size());
   //Rcpp::List output_zm(sfc.size());
+  reset_skipped_points();
   int lastItem;
   Rcpp::List thisSfc;
   std::string str;
@@ -360,5 +361,6 @@ Rcpp::List rcpp_encodeSfGeometry(Rcpp::List sfc, bool strip){
   //   _["XY"] = output
   //   _["ZM"] = output_zm
   // );
+  warn_skipped_points();
   return output;
 }

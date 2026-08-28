@@ -3,8 +3,9 @@
 #' Decodes encoded polylines into a list of data.frames.
 #' 
 #' @param polylines vector of encoded polyline strings
-#' @param precision 
-#' 
+#' @param precision number of decimal places the coordinates were encoded
+#' with (5 is the precision used by the Google polyline encoding algorithm)
+#'
 #' @examples
 #' polylines <- c(
 #'   "ohlbDnbmhN~suq@am{tAw`qsAeyhGvkz`@fge}A",

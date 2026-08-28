@@ -57,6 +57,10 @@ void EncodeSignedNumber(std::ostringstream& os, int num);
 
 std::string encode_polyline();
 
+void reset_skipped_points();
+
+void warn_skipped_points();
+
 Rcpp::List decode_data(Rcpp::StringVector pl,
                  const char *cls = NULL);
 
@@ -66,6 +70,7 @@ namespace global_vars {
   extern std::vector<double> lats;
   extern std::string encodedString;
   extern std::vector<std::string> elems;
+  extern R_xlen_t skipped_points;
 }
 
 #endif

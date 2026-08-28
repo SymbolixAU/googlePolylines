@@ -14,6 +14,11 @@ encodeCoordinates(lon, lat)
 \description{
 Encodes a vector of lon & lat coordinates
 }
+\note{
+Coordinates with missing or non-finite values (\code{NA}, \code{NaN},
+\code{Inf}) cannot be represented in a polyline. They are skipped during
+encoding and a warning is issued.
+}
 \examples{
 \dontrun{
 

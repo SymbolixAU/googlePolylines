@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <cmath>
 #include "googlePolylines.h"
 
 using namespace Rcpp;
@@ -8,6 +9,21 @@ namespace global_vars {
   std::vector<double> lats;
   std::string encodedString;
   std::vector<std::string> elems;
+  R_xlen_t skipped_points = 0;
+}
+
+void reset_skipped_points() {
+  global_vars::skipped_points = 0;
+}
+
+void warn_skipped_points() {
+  if (global_vars::skipped_points > 0) {
+    std::ostringstream msg;
+    msg << global_vars::skipped_points <<
+      " coordinate pair(s) with missing or non-finite (NA/NaN/Inf) values" <<
+      " could not be encoded";
+    Rcpp::warning(msg.str());
+  }
 }
 
 // [[Rcpp::export]]
@@ -207,7 +223,15 @@ std::string encode_polyline(){
   std::ostringstream os;
 
   for(unsigned int i = 0; i < global_vars::lats.size(); i++){
-    
+
+    // NA/NaN/Inf coordinates cannot be represented in a polyline: the
+    // double -> int cast below is undefined behaviour for them and (in
+    // practice) corrupts the whole string with out-of-range characters
+    if (!std::isfinite(global_vars::lats[i]) || !std::isfinite(global_vars::lons[i])) {
+      global_vars::skipped_points++;
+      continue;
+    }
+
     late5 = global_vars::lats[i] * 1e5;
     lone5 = global_vars::lons[i] * 1e5;
     
@@ -228,29 +252,41 @@ std::string rcpp_encode_polyline(
 ) {
   global_vars::lons = longitude;
   global_vars::lats = latitude;
-  return encode_polyline();
+  reset_skipped_points();
+  std::string res = encode_polyline();
+  warn_skipped_points();
+  return res;
 }
 
 // [[Rcpp::export]]
-std::vector<std::string> rcpp_encode_polyline_byrow(
+Rcpp::StringVector rcpp_encode_polyline_byrow(
     Rcpp::NumericVector longitude,
     Rcpp::NumericVector latitude
-  ) { 
-  
-  size_t n = longitude.length();
-  std::vector<std::string> res;
+  ) {
+
+  R_xlen_t n = longitude.length();
+  Rcpp::StringVector res(n);
   global_vars::lons.clear();
   global_vars::lons.resize(1);
   global_vars::lats.clear();
   global_vars::lats.resize(1);
-  
-  for ( size_t i = 0; i < n; i++ ) {
+  reset_skipped_points();
+
+  for ( R_xlen_t i = 0; i < n; i++ ) {
+
+    // a row without finite coordinates has no polyline representation
+    if (!std::isfinite(longitude[i]) || !std::isfinite(latitude[i])) {
+      global_vars::skipped_points++;
+      res[i] = NA_STRING;
+      continue;
+    }
 
     global_vars::lons[0] = longitude[i];
     global_vars::lats[0] = latitude[i];
 
-    res.push_back(encode_polyline());
+    res[i] = encode_polyline();
   }
+  warn_skipped_points();
   return res;
 }
 
