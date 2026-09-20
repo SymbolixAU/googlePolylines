@@ -1,3 +1,11 @@
+# v0.8.8.9000
+
+- coordinates with missing or non-finite values (`NA`, `NaN`, `Inf`) are now
+  skipped during encoding, with a warning. Previously they corrupted the whole
+  polyline with invalid characters (undefined behaviour in the C++ code).
+  With `byrow = TRUE`, such rows now return `NA`. Empty `sf` points are no
+  longer encoded as `"??"` (which decodes to the real coordinate `(0,0)`)
+
 # v0.8.8
 
 - added `precision` argument to `decode()` [issue 17](https://github.com/SymbolixAU/googlePolylines/issues/17)

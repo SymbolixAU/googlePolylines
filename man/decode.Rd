@@ -4,10 +4,13 @@
 \alias{decode}
 \title{Decode Polyline}
 \usage{
-decode(polylines)
+decode(polylines, precision = 5)
 }
 \arguments{
 \item{polylines}{vector of encoded polyline strings}
+
+\item{precision}{number of decimal places the coordinates were encoded
+with (5 is the precision used by the Google polyline encoding algorithm)}
 }
 \description{
 Decodes encoded polylines into a list of data.frames.

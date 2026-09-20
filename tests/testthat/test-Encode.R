@@ -416,10 +416,12 @@ test_that("emptry geometries are handled", {
   empl <- sf::st_sfc(sf::st_multipolygon())
   sfempl <- sf::st_sf(geometry = empl)
   
-  enc <- encode(ept)
-  expect_true(enc[[1]] == "??")
-  enc <- encode(sfept)
-  expect_true(enc$geometry[[1]] == "??")
+  ## empty points used to encode as "??", which decodes to the real
+  ## coordinate (0,0); they are now skipped (with a warning) instead
+  expect_warning(enc <- encode(ept), "could not be encoded")
+  expect_true(enc[[1]] == "")
+  expect_warning(enc <- encode(sfept), "could not be encoded")
+  expect_true(enc$geometry[[1]] == "")
   
   enc <- encode(emp)
   expect_true(length(enc[[1]]) == 0)
@@ -445,4 +447,64 @@ test_that("emptry geometries are handled", {
   expect_true(length(enc[[1]]) == 0)
   enc <- encode( sfempl )
   expect_true(length(enc$geometry[[1]]) == 0)
+})
+
+
+test_that("missing and non-finite coordinates are skipped with a warning", {
+
+  df <- data.frame(lat = c(38.5, 40.7, 43.252), lon = c(-120.2, -120.95, -126.453))
+  df_nan <- df
+  df_nan[2, c("lat", "lon")] <- NaN
+
+  ## the NaN pair is dropped, the remaining points encode as if it was not there
+  expect_warning(
+    enc <- encode(df_nan),
+    "1 coordinate pair\\(s\\) with missing or non-finite \\(NA/NaN/Inf\\) values could not be encoded"
+  )
+  expect_equal(enc, encode(df[-2, ]))
+
+  ## NA and Inf are treated the same way
+  df_na <- df
+  df_na$lat[1] <- NA
+  df_na$lon[3] <- Inf
+  expect_warning(enc_na <- encode(df_na), "2 coordinate pair\\(s\\)")
+  expect_equal(enc_na, encode(df[2, ]))
+
+  ## nothing encodable left
+  expect_warning(enc_empty <- encode(data.frame(lat = NaN, lon = NaN)))
+  expect_equal(enc_empty, "")
+
+  ## encodeCoordinates() goes through the same path
+  expect_warning(
+    enc_coords <- encodeCoordinates(lon = df_nan$lon, lat = df_nan$lat),
+    "could not be encoded"
+  )
+  expect_equal(enc_coords, encode(df[-2, ]))
+
+  ## no warning when everything is finite
+  expect_silent(encode(df))
+})
+
+test_that("byrow encoding returns NA for missing coordinates", {
+
+  df <- data.frame(lat = c(38, NaN, 43), lon = c(-120, NaN, -126))
+  expect_warning(enc <- encode(df, byrow = TRUE), "could not be encoded")
+  expect_length(enc, 3)
+  expect_true(is.na(enc[2]))
+  expect_equal(enc[c(1, 3)], encode(df[c(1, 3), ], byrow = TRUE))
+
+  ## NA rows decode back to NA coordinates
+  dec <- decode(enc)
+  expect_true(is.na(dec[[2]]$lat) && is.na(dec[[2]]$lon))
+})
+
+test_that("empty sf POINT encodes to an empty string with a warning", {
+
+  testthat::skip_on_cran()
+  library(sf)
+
+  pts <- sf::st_sfc(sf::st_point(), sf::st_point(c(144, -37)))
+  expect_warning(enc <- encode(pts), "could not be encoded")
+  expect_equal(unclass(enc[[1]])[1], "")
+  expect_equal(unclass(enc[[2]])[1], "~py`F__|mZ")
 })

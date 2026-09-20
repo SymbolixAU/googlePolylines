@@ -70,7 +70,12 @@
 #' 
 #' @note When encoding an \code{sf} object, only the XY dimensions will be used,
 #' the Z or M (3D and/or Measure) dimensions are dropped.
-#' 
+#'
+#' @note Coordinates with missing or non-finite values (\code{NA}, \code{NaN},
+#' \code{Inf}) cannot be represented in a polyline. They are skipped during
+#' encoding and a warning is issued. With \code{byrow = TRUE}, rows with such
+#' coordinates return \code{NA} instead of being skipped.
+#'
 #' @seealso \link{encodeCoordinates}
 #' 
 #' @export
@@ -196,8 +201,12 @@ encode.default <- function(obj, ...) {
 #' 
 #' }
 #' 
+#' @note Coordinates with missing or non-finite values (\code{NA}, \code{NaN},
+#' \code{Inf}) cannot be represented in a polyline. They are skipped during
+#' encoding and a warning is issued.
+#'
 #' @seealso \link{encode}
-#' 
+#'
 #' @export
 encodeCoordinates <- function(lon, lat) rcpp_encode_polyline(lon, lat)
 

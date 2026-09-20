@@ -52,6 +52,11 @@ attributes are dropped by default. See examples.
 
 When encoding an \code{sf} object, only the XY dimensions will be used,
 the Z or M (3D and/or Measure) dimensions are dropped.
+
+Coordinates with missing or non-finite values (\code{NA}, \code{NaN},
+\code{Inf}) cannot be represented in a polyline. They are skipped during
+encoding and a warning is issued. With \code{byrow = TRUE}, rows with such
+coordinates return \code{NA} instead of being skipped.
 }
 \examples{
 

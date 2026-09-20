@@ -61,7 +61,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // rcpp_encode_polyline_byrow
-std::vector<std::string> rcpp_encode_polyline_byrow(Rcpp::NumericVector longitude, Rcpp::NumericVector latitude);
+Rcpp::StringVector rcpp_encode_polyline_byrow(Rcpp::NumericVector longitude, Rcpp::NumericVector latitude);
 RcppExport SEXP _googlePolylines_rcpp_encode_polyline_byrow(SEXP longitudeSEXP, SEXP latitudeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
